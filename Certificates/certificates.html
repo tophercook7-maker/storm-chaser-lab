@@ -353,7 +353,7 @@
 
   // name / call sign fields
   var nm=document.getElementById("nm"), cs=document.getElementById("cs");
-  if(nm){ nm.value=get(NKEY); nm.addEventListener("input",function(){ set(NKEY,nm.value); fillHolder(); }); }
+  if(nm){ if(!get(NKEY)) set(NKEY,"Aidan"); nm.value=get(NKEY); nm.addEventListener("input",function(){ set(NKEY,nm.value); fillHolder(); }); }
   if(cs){ cs.value=get(CKEY); cs.addEventListener("input",function(){ set(CKEY,cs.value); fillHolder(); }); }
 
   fillHolder();
