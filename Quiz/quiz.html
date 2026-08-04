@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flashcards — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+/* Widgets only — everything reuses lab.css variables. */
+section{scroll-margin-top:20px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+.tab{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;
+     padding:9px 16px;border:1px solid var(--line);border-radius:7px;background:var(--card2);
+     color:var(--dim);cursor:pointer;user-select:none}
+.tab:hover{border-color:var(--accent);color:var(--text)}
+.tab.on{border-color:var(--accent);color:var(--accent);background:#161f2b}
+
+.pane{display:none}
+.pane.on{display:block}
+
+/* Flashcard */
+.deckbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;
+         font-family:var(--mono);font-size:12px;color:var(--dim)}
+.card3d{perspective:1400px;margin:0 0 18px}
+.flip{position:relative;width:100%;min-height:280px;transform-style:preserve-3d;
+      transition:transform .5s cubic-bezier(.4,.15,.2,1);cursor:pointer}
+.flip.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+      background:var(--card);border:1px solid var(--line);border-radius:12px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding:34px 30px}
+.face.front{border-left:4px solid var(--accent)}
+.face.back{transform:rotateY(180deg);border-left:4px solid var(--green)}
+.face .kind{font-family:var(--mono);font-size:10.5px;letter-spacing:2px;text-transform:uppercase;
+            color:var(--dim);margin-bottom:14px}
+.face.front .term{font-size:34px;font-weight:700;letter-spacing:-.5px;line-height:1.2}
+.face .abbr{font-family:var(--mono);color:var(--accent);font-size:15px;margin-top:8px}
+.face.back .def{font-size:17px;line-height:1.6;max-width:640px;color:var(--text)}
+.face.back .cat{margin-top:16px}
+.hint{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:1px;
+      color:var(--dim);margin-bottom:18px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{font-family:var(--mono);font-size:12.5px;letter-spacing:1px;padding:11px 20px;
+     border:1px solid var(--line);border-radius:8px;background:var(--card2);color:var(--text);
+     cursor:pointer;user-select:none}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.pri{border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Quiz */
+.qhead{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;
+       font-family:var(--mono);font-size:12.5px;color:var(--dim);margin-bottom:16px}
+.qhead b{color:var(--accent)}
+.qprompt{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+         border-radius:9px;padding:20px 22px;margin-bottom:18px}
+.qprompt .ask{font-family:var(--mono);font-size:10.5px;letter-spacing:2px;text-transform:uppercase;
+              color:var(--dim);margin-bottom:10px}
+.qprompt .body{font-size:18px;line-height:1.55}
+.choices{display:grid;gap:11px;margin-bottom:18px}
+.choice{text-align:left;padding:14px 18px;border:1px solid var(--line);border-radius:9px;
+        background:var(--card2);color:var(--text);cursor:pointer;font-size:15.5px;line-height:1.4}
+.choice:hover{border-color:var(--accent)}
+.choice .lab{font-family:var(--mono);color:var(--accent);margin-right:12px}
+.choice.right{border-color:var(--green);background:rgba(53,234,122,.10)}
+.choice.right .lab{color:var(--green)}
+.choice.wrong{border-color:var(--red);background:rgba(255,47,69,.09)}
+.choice.wrong .lab{color:var(--red)}
+.choice.locked{cursor:default;opacity:.62}
+.choice.locked.right,.choice.locked.wrong{opacity:1}
+.verdict{border-radius:9px;padding:15px 19px;margin-bottom:18px;display:none;font-size:15px;line-height:1.55}
+.verdict.show{display:block}
+.verdict.ok{border:1px solid #17542f;background:rgba(53,234,122,.08);color:#a5f0c4}
+.verdict.no{border:1px solid #4d1620;background:rgba(255,47,69,.08);color:#ffb3bb}
+.verdict b{color:#fff}
+.result{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:26px 24px;
+        text-align:center}
+.result .score{font-size:40px;font-weight:700;letter-spacing:-1px;margin:6px 0 4px}
+.result .grade{font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;font-size:13px;
+               margin-bottom:16px}
+
+/* Mastery */
+.barwrap{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:20px 22px;margin-bottom:20px}
+.barwrap .lead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.barwrap .big{font-size:26px;font-weight:700}
+.barwrap .big b{color:var(--green)}
+.track{height:16px;background:#05070a;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--green));
+      transition:width .4s ease}
+.masterlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:7px;margin-top:18px}
+.mtag{font-family:var(--mono);font-size:11.5px;padding:7px 10px;border:1px solid var(--line);
+      border-radius:6px;background:var(--card2);color:var(--dim);display:flex;justify-content:space-between;gap:6px}
+.mtag.got{border-color:#17542f;color:#7cf0a8;background:rgba(53,234,122,.06)}
+.mtag .mk{opacity:.6}
+.mtag.got .mk{color:var(--green);opacity:1}
+
+@media (max-width:620px){
+  .face.front .term{font-size:26px}
+  .flip{min-height:240px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">FLASHCARDS</div>
+  <a href="#cards">Flashcards</a>
+  <a href="#quiz">Quiz</a>
+  <a href="#mastery">Mastery</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← The Station</a>
+  <a href="../Academy/academy.html">Academy</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+  <a href="../Atlas/atlas.html">Storm Atlas</a>
+  <a href="../Trainers/radar.html">Radar Trainer</a>
+  <a href="../Trainers/decode.html">Decode</a>
+  <a href="../Trainers/skewt.html">Skew-T</a>
+  <a href="../Code School/python.html">Code School</a>
+  <a href="../Gear Bench/gear.html">Gear Bench</a>
+  <a href="../SKYWARN/skywarn.html">SKYWARN</a>
+</nav>
+
+<main>
+  <h1><span class="num">FLASHCARDS</span>The Language of the Sky</h1>
+  <p class="lede">Every skill in this lab — reading radar, decoding a METAR, calling a storm on
+  SKYWARN — runs on vocabulary. Learn these terms cold and the rest gets easier. Flip cards to
+  study, take a quiz to test yourself, and watch your mastery bar fill up.</p>
+
+  <label class="chk" data-k="vocab_started"><input type="checkbox" data-k="vocab_started"><span>I'm learning the language of the sky.</span></label>
+
+  <div class="box why">
+    <h4>How to use this</h4>
+    <p style="margin:0">Start in <b>Flashcards</b> to meet the terms. When a batch feels familiar,
+    switch to <b>Quiz</b> — get a term right there and it counts as <b>mastered</b> for good.
+    <b>Mastery</b> shows how much of the deck you own so far. All progress is saved on this
+    computer only.</p>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <div class="tab on" data-pane="cards">Flashcards</div>
+    <div class="tab" data-pane="quiz">Quiz</div>
+    <div class="tab" data-pane="mastery">Mastery</div>
+  </div>
+
+  <!-- ============ FLASHCARDS ============ -->
+  <section id="cards" class="pane on">
+    <h2>Flashcards</h2>
+    <div class="deckbar">
+      <span id="counter">card 1 of 0</span>
+      <button class="btn" id="shuffle" type="button">Shuffle</button>
+      <button class="btn" id="reset-order" type="button">Reset order</button>
+    </div>
+    <div class="card3d">
+      <div class="flip" id="flip" tabindex="0" role="button" aria-label="flashcard, click to flip">
+        <div class="face front">
+          <div class="kind" id="f-kind">TERM</div>
+          <div class="term" id="f-term">—</div>
+          <div class="abbr" id="f-abbr"></div>
+        </div>
+        <div class="face back">
+          <div class="kind">DEFINITION</div>
+          <div class="def" id="f-def">—</div>
+          <div class="cat"><span class="pill" id="f-cat">—</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="hint">Click the card to flip · ← / → to move · Space or Enter to flip</div>
+    <div class="btns">
+      <button class="btn" id="prev" type="button">← Previous</button>
+      <button class="btn pri" id="flipbtn" type="button">Flip</button>
+      <button class="btn" id="next" type="button">Next →</button>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="quiz" class="pane">
+    <h2>Quiz</h2>
+    <div class="qhead">
+      <span>Question <b id="q-num">1</b> of <b id="q-total">10</b></span>
+      <span>Score <b id="q-score">0</b></span>
+      <span id="q-mode">definition → term</span>
+    </div>
+    <div id="q-live">
+      <div class="qprompt">
+        <div class="ask" id="q-ask">Which term matches this definition?</div>
+        <div class="body" id="q-body">—</div>
+      </div>
+      <div class="choices" id="q-choices"></div>
+      <div class="verdict" id="q-verdict"></div>
+      <div class="btns" style="justify-content:flex-start">
+        <button class="btn pri" id="q-next" type="button" disabled>Next question →</button>
+      </div>
+    </div>
+    <div id="q-done" style="display:none">
+      <div class="result">
+        <div class="ask" style="font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--dim)">ROUND COMPLETE</div>
+        <div class="score" id="r-score">0 / 10</div>
+        <div class="grade" id="r-grade"></div>
+        <p id="r-note" style="color:var(--dim);margin-bottom:18px"></p>
+        <button class="btn pri" id="q-new" type="button">New round →</button>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn" id="q-restart" type="button">Restart round</button>
+    </div>
+  </section>
+
+  <!-- ============ MASTERY ============ -->
+  <section id="mastery" class="pane">
+    <h2>Mastery</h2>
+    <div class="barwrap">
+      <div class="lead">
+        <div class="big"><b id="m-count">0</b> of <span id="m-total">0</span> mastered</div>
+        <div style="font-family:var(--mono);color:var(--dim);font-size:13px" id="m-pct">0%</div>
+      </div>
+      <div class="track"><div class="fill" id="m-fill"></div></div>
+      <p style="color:var(--dim);font-size:13px;margin:14px 0 0">A term counts as mastered the first
+      time you pick it correctly in the Quiz. Green tags below are ones you own.</p>
+    </div>
+    <div class="btns" style="justify-content:flex-start;margin-bottom:6px">
+      <button class="btn" id="m-reset" type="button">Reset mastery</button>
+    </div>
+    <div class="masterlist" id="m-list"></div>
+  </section>
+
+  <div class="box pro" style="margin-top:34px">
+    <h4>Why the words matter</h4>
+    <p style="margin:0">A trained spotter reports what they <i>see</i> in plain, agreed-on terms so a
+    forecaster 100 miles away pictures it exactly. "Wall cloud, rotating, on the southwest flank"
+    means one specific thing. Fuzzy words waste the few minutes a warning buys. Precision is the job.</p>
+  </div>
+</main>
+</div>
+
+<script>
+/* ============================================================
+   DATA — 58 NWS-grounded terms. term / abbr / def / cat
+   ============================================================ */
+var TERMS = [
+  {t:"Supercell", a:"", cat:"storm", d:"A thunderstorm with a deep, persistent rotating updraft called a mesocyclone. It is the rarest storm type but produces most strong tornadoes, giant hail, and damaging wind."},
+  {t:"Mesocyclone", a:"meso", cat:"storm", d:"The rotating updraft at the core of a supercell, typically 2–6 miles wide. Radar sees its rotation as a velocity couplet; it is the parent circulation a tornado can form from."},
+  {t:"Wall cloud", a:"", cat:"cloud", d:"A localized, often abrupt lowering of the cloud base beneath a supercell's rain-free updraft base. A persistently rotating wall cloud is a prime pre-tornado sign."},
+  {t:"Shelf cloud", a:"", cat:"cloud", d:"A low, wedge-shaped cloud attached to the leading edge of a storm's outflow (gust front). It signals straight-line wind arriving — it is outflow, not the rotating inflow of a wall cloud."},
+  {t:"Scud", a:"", cat:"cloud", d:"Ragged, low fragments of cloud that form in humid air below a storm base. Harmless and fast-moving, scud is often mistaken for a funnel because it can look like a rising or hanging tag."},
+  {t:"Mammatus", a:"", cat:"cloud", d:"Pouch-like lobes hanging under a cloud, usually the anvil of a mature or dying storm. They mark sinking, turbulent air aloft and are a visual curiosity, not a severe-weather threat by themselves."},
+  {t:"Cumulonimbus", a:"Cb", cat:"cloud", d:"The towering thunderstorm cloud, built by a strong updraft and often topped by an anvil. Every thunderstorm is a cumulonimbus; a supercell is one special, rotating kind."},
+  {t:"Anvil", a:"", cat:"cloud", d:"The flat, spreading ice-cloud top of a mature thunderstorm, formed where the updraft hits the stable stratosphere and flows outward downwind."},
+  {t:"Hook echo", a:"", cat:"radar", d:"A hook- or pendant-shaped appendage on the reflectivity image, wrapping precipitation around the mesocyclone. It is a classic radar signature of a supercell capable of a tornado."},
+  {t:"Velocity couplet", a:"", cat:"radar", d:"Two adjacent radar pixels showing strong inbound and outbound winds side by side, revealing rotation. A tight, strong couplet at low levels flags a mesocyclone or possible tornado."},
+  {t:"Tornado vortex signature", a:"TVS", cat:"radar", d:"An algorithm-flagged, very tight and intense velocity couplet marking rotation on the scale of a tornado. It signals gate-to-gate shear, not a confirmed tornado on the ground."},
+  {t:"Tornado debris signature", a:"TDS", cat:"radar", d:"Also called a debris ball: a dual-pol signature where lofted debris shows high reflectivity, low correlation coefficient, and near-zero differential reflectivity, confirming a tornado is on the ground."},
+  {t:"Dual-polarization", a:"dual-pol", cat:"radar", d:"Radar that sends pulses in both horizontal and vertical orientations, so it can gauge the size and shape of targets — separating rain, hail, snow, and tornado debris."},
+  {t:"Bounded weak echo region", a:"BWER", cat:"radar", d:"A pocket of weak reflectivity surrounded by strong echoes, seen in a vertical radar slice. It marks an updraft so strong that precipitation hasn't formed yet — a sign of a healthy supercell."},
+  {t:"Bow echo", a:"", cat:"radar", d:"A line of storms that bows outward on radar as rear-inflow winds surge forward. Bow echoes are notorious for producing widespread damaging straight-line winds."},
+  {t:"Derecho", a:"", cat:"storm", d:"A widespread, long-lived windstorm from a fast line of storms, producing a swath of damaging straight-line winds at least about 240 miles long with frequent gusts of 58 mph or more."},
+  {t:"CAPE", a:"J/kg", cat:"index", d:"Convective Available Potential Energy — the fuel for storms. It measures how much upward buoyancy a rising air parcel gains; higher CAPE means the potential for stronger updrafts."},
+  {t:"Convective inhibition", a:"CIN / cap", cat:"index", d:"A layer of warm, stable air aloft that stops parcels from rising, capping storms. A cap that breaks late can let energy build and then erupt into intense, isolated storms."},
+  {t:"Dewpoint", a:"", cat:"basics", d:"The temperature to which air must cool to become saturated. It is a direct measure of moisture in the air — higher dewpoints mean more moisture available to fuel storms."},
+  {t:"Dewpoint depression", a:"T − Td", cat:"basics", d:"The gap between the air temperature and the dewpoint. A small depression means the air is near saturation (low cloud bases); a large one means dry air and higher cloud bases."},
+  {t:"Relative humidity", a:"RH", cat:"basics", d:"The percentage of moisture the air holds compared with the most it could hold at that temperature. It changes with temperature, so dewpoint is often the better moisture measure."},
+  {t:"Wind shear", a:"", cat:"index", d:"A change in wind speed or direction with height. Strong shear tilts a storm's updraft away from its downdraft, letting it survive and rotate — a key ingredient for supercells."},
+  {t:"Helicity", a:"SRH", cat:"index", d:"A measure of the streamwise, corkscrewing spin in the low-level winds relative to storm motion. High storm-relative helicity favors rotating updrafts and tornadoes."},
+  {t:"Dryline", a:"", cat:"front", d:"A sharp boundary between moist air (often from the Gulf) and dry desert air, common in the southern Plains. It is a favored place for supercells to fire in spring."},
+  {t:"Cold front", a:"", cat:"front", d:"The leading edge of a colder air mass pushing under warmer air. The lifting along it can trigger a line of storms; on a map it is drawn with blue triangles pointing the way it moves."},
+  {t:"Warm front", a:"", cat:"front", d:"The leading edge of a warmer air mass gliding up over cooler air, drawn with red half-circles. It brings gradual, widespread clouds and rain, and its region can enhance low-level rotation."},
+  {t:"Occluded front", a:"", cat:"front", d:"Forms when a faster cold front catches a warm front and lifts the warm air off the ground. It is drawn purple and marks a maturing, often weakening, low-pressure system."},
+  {t:"Stationary front", a:"", cat:"front", d:"A boundary between two air masses that isn't moving much, drawn with alternating blue triangles and red half-circles. Storms can repeatedly train along it."},
+  {t:"Lifted condensation level", a:"LCL", cat:"basics", d:"The height at which a rising, cooling air parcel becomes saturated and cloud forms — essentially the cloud base. Lower LCLs (moist, humid air) are more favorable for tornadoes."},
+  {t:"Radiosonde", a:"", cat:"gear", d:"A small instrument package flown on a weather balloon that radios back temperature, humidity, pressure, and wind as it rises. Its data builds the vertical profile of the atmosphere."},
+  {t:"Skew-T", a:"", cat:"gear", d:"A thermodynamic chart where temperature lines are skewed 45°. Plotting a sounding on it reveals CAPE, CIN, the LCL, and shear at a glance — the forecaster's core diagnostic tool."},
+  {t:"Sounding", a:"", cat:"gear", d:"A vertical profile of the atmosphere — temperature, dewpoint, and wind at each height — usually from a radiosonde. It shows the ingredients for storms stacked from ground to stratosphere."},
+  {t:"Decibels of Z", a:"dBZ", cat:"radar", d:"The unit on a radar reflectivity image. Higher dBZ means more or larger targets returning the signal — light rain near 20 dBZ, heavy rain and hail cores above 50–60 dBZ."},
+  {t:"Reflectivity", a:"Z", cat:"radar", d:"The radar product showing how much energy precipitation bounces back, colored by dBZ. It reveals where rain and hail are and how intense — the standard 'where's the storm' view."},
+  {t:"Velocity (radar)", a:"V", cat:"radar", d:"The Doppler radar product showing wind moving toward (cool colors) or away from (warm colors) the radar. Reading it reveals rotation, gust fronts, and inflow."},
+  {t:"NEXRAD", a:"WSR-88D", cat:"gear", d:"The U.S. network of Doppler weather radars (the WSR-88D). It scans in rotating cones to build 3-D storm pictures and is the backbone of severe-weather warning."},
+  {t:"GOES", a:"", cat:"gear", d:"Geostationary Operational Environmental Satellites that hover over one spot and image clouds around the clock in visible and infrared, tracking storm tops and development."},
+  {t:"Tornado watch", a:"", cat:"alert", d:"Issued by the SPC when conditions are favorable for tornadoes over a large area for several hours. A watch means be ready and stay alert — it is not yet a specific threat."},
+  {t:"Tornado warning", a:"", cat:"alert", d:"Issued by a local NWS office when a tornado is indicated by radar or reported by spotters. A warning means take shelter now for a specific area."},
+  {t:"Particularly Dangerous Situation", a:"PDS", cat:"alert", d:"Rare, enhanced wording added to a watch (or warning) when forecasters expect an outbreak of especially violent, long-track tornadoes. It signals an unusually high threat."},
+  {t:"Enhanced Fujita scale", a:"EF", cat:"index", d:"The scale rating tornado intensity from EF0 to EF5 based on the damage caused to structures and vegetation, from which wind speeds are estimated. Ratings are assigned after a damage survey."},
+  {t:"Rear-flank downdraft", a:"RFD", cat:"storm", d:"A pocket of dry, sinking air that wraps around the back of a supercell's mesocyclone. It helps tighten and lower the rotation and is often present as a tornado forms."},
+  {t:"Inflow", a:"", cat:"storm", d:"The warm, moist air being drawn into a storm's updraft, usually from the southeast of a Plains supercell. Strong, steady inflow feeds a healthy, potentially tornadic storm."},
+  {t:"Updraft", a:"", cat:"storm", d:"The column of rising air that builds and sustains a thunderstorm. A strong, rotating, tilted updraft is what makes a supercell dangerous and long-lived."},
+  {t:"Downdraft", a:"", cat:"storm", d:"A column of sinking air within a storm, cooled by rain evaporation. Reaching the ground it spreads out as damaging wind and cuts off a storm's inflow if it undercuts the updraft."},
+  {t:"Gust front", a:"", cat:"storm", d:"The leading edge of a storm's cool outflow where it collides with warm air ahead, often marked by a shelf cloud and a sudden wind shift and temperature drop."},
+  {t:"Outflow", a:"", cat:"storm", d:"The cool air flowing out of a storm's downdraft along the ground. Outflow-dominant storms have undercut their own inflow and typically weaken and stop rotating."},
+  {t:"Hail", a:"", cat:"storm", d:"Balls or lumps of ice grown inside a strong updraft that repeatedly carries them through supercooled water. Severe hail is 1 inch (quarter-size) or larger by NWS criteria."},
+  {t:"Funnel cloud", a:"", cat:"cloud", d:"A rotating, funnel-shaped cloud extending from the base but not yet reaching the ground. If its circulation touches the surface it becomes a tornado."},
+  {t:"Tornado", a:"", cat:"storm", d:"A violently rotating column of air in contact with both the cloud base and the ground. It is confirmed by a condensation funnel, visible debris, or a radar debris signature."},
+  {t:"Waterspout", a:"", cat:"storm", d:"A tornado-like rotating column over water. 'Fair-weather' spouts form from the surface up under building clouds; tornadic ones descend from severe storms and can be far more dangerous."},
+  {t:"Landspout", a:"", cat:"storm", d:"A weak tornado that forms from the ground up along a boundary under a growing storm, not from a mesocyclone. Usually short-lived and weaker than supercell tornadoes."},
+  {t:"Storm Prediction Center", a:"SPC", cat:"agency", d:"The national NWS center in Norman, Oklahoma that issues convective outlooks and severe thunderstorm and tornado watches for the entire United States."},
+  {t:"SKYWARN", a:"", cat:"agency", d:"The NWS program of trained volunteer storm spotters who report what they see in real time. Ground truth from spotters confirms and refines radar-based warnings."},
+  {t:"METAR", a:"", cat:"gear", d:"A coded routine surface weather observation from an airport station, giving wind, visibility, sky, temperature, dewpoint, and pressure in a compact standard format."},
+  {t:"CoCoRaHS", a:"", cat:"agency", d:"The Community Collaborative Rain, Hail and Snow Network — volunteers who measure and report daily precipitation, filling gaps between official gauges."},
+  {t:"Mesoscale", a:"", cat:"basics", d:"The scale of weather features roughly a few miles to a few hundred miles across — thunderstorms, fronts, and complexes — between tiny (microscale) and large (synoptic) scales."},
+  {t:"Supercell types (LP / classic / HP)", a:"", cat:"storm", d:"Supercells range from Low-Precipitation (little rain, visible structure), to Classic (balanced), to High-Precipitation (heavy rain wrapping the mesocyclone and hiding any tornado)."}
+];
+
+/* ============================================================
+   Shared progress checkbox store (house pattern)
+   ============================================================ */
+const PKEY="stormlab.progress",pl=()=>JSON.parse(localStorage.getItem(PKEY)||"{}"),ps=o=>localStorage.setItem(PKEY,JSON.stringify(o));
+function paintChk(){const p=pl();document.querySelectorAll(".chk").forEach(l=>{const b=l.querySelector("input");b.checked=!!p[b.dataset.k];l.classList.toggle("on",b.checked);});}
+document.querySelectorAll(".chk input").forEach(b=>b.onchange=()=>{const p=pl();p[b.dataset.k]=b.checked;ps(p);paintChk();});
+paintChk();
+
+/* ============================================================
+   Helpers
+   ============================================================ */
+function $(id){return document.getElementById(id);}
+function safe(fn){return function(){try{return fn.apply(this,arguments);}catch(e){/* never throw on a click */}};}
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function catLabel(c){return ({storm:"storm",cloud:"cloud",radar:"radar",index:"index",basics:"basics",front:"front",gear:"gear",alert:"alert",agency:"agency"})[c]||c;}
+
+/* Mastery store */
+var MKEY="stormlab.mastery";
+function loadMastery(){try{var o=JSON.parse(localStorage.getItem(MKEY)||"{}");return o&&typeof o==="object"?o:{};}catch(e){return {};}}
+function saveMastery(o){try{localStorage.setItem(MKEY,JSON.stringify(o));}catch(e){}}
+function markMastered(term){var m=loadMastery();if(!m[term]){m[term]=true;saveMastery(m);paintMastery();}}
+
+/* ============================================================
+   Tabs
+   ============================================================ */
+var panes={cards:$("cards"),quiz:$("quiz"),mastery:$("mastery")};
+function showPane(name){
+  Object.keys(panes).forEach(function(k){if(panes[k])panes[k].classList.toggle("on",k===name);});
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("on",t.dataset.pane===name);});
+  if(name==="mastery")paintMastery();
+}
+document.querySelectorAll(".tab").forEach(function(t){
+  t.addEventListener("click",safe(function(){showPane(t.dataset.pane);}));
+});
+/* Nav links jump + switch pane */
+["cards","quiz","mastery"].forEach(function(id){
+  var a=document.querySelector('nav a[href="#'+id+'"]');
+  if(a)a.addEventListener("click",safe(function(){showPane(id);}));
+});
+
+/* ============================================================
+   FLASHCARDS
+   ============================================================ */
+var order=TERMS.map(function(_,i){return i;}), pos=0, flipped=false;
+function renderCard(){
+  var term=TERMS[order[pos]];
+  if(!term)return;
+  $("f-kind").textContent="TERM";
+  $("f-term").textContent=term.t;
+  $("f-abbr").textContent=term.a?("( "+term.a+" )"):"";
+  $("f-def").textContent=term.d;
+  $("f-cat").textContent=catLabel(term.cat);
+  $("counter").textContent="card "+(pos+1)+" of "+order.length;
+  setFlip(false);
+}
+function setFlip(v){flipped=v;$("flip").classList.toggle("flipped",flipped);}
+function toggleFlip(){setFlip(!flipped);}
+function nextCard(){pos=(pos+1)%order.length;renderCard();}
+function prevCard(){pos=(pos-1+order.length)%order.length;renderCard();}
+
+$("flip").addEventListener("click",safe(toggleFlip));
+$("flipbtn").addEventListener("click",safe(toggleFlip));
+$("next").addEventListener("click",safe(nextCard));
+$("prev").addEventListener("click",safe(prevCard));
+$("shuffle").addEventListener("click",safe(function(){order=shuffle(order);pos=0;renderCard();}));
+$("reset-order").addEventListener("click",safe(function(){order=TERMS.map(function(_,i){return i;});pos=0;renderCard();}));
+
+/* keyboard: only when cards pane is visible */
+document.addEventListener("keydown",safe(function(e){
+  if(!panes.cards.classList.contains("on"))return;
+  var tag=(e.target&&e.target.tagName)||"";
+  if(tag==="INPUT"||tag==="TEXTAREA")return;
+  if(e.key==="ArrowRight"){nextCard();e.preventDefault();}
+  else if(e.key==="ArrowLeft"){prevCard();e.preventDefault();}
+  else if(e.key===" "||e.key==="Enter"){toggleFlip();e.preventDefault();}
+}));
+renderCard();
+
+/* ============================================================
+   QUIZ
+   10 questions/round. Mix: definition->term and term->definition.
+   ============================================================ */
+var ROUND=10, round=[], qi=0, score=0, answered=false;
+
+function buildRound(){
+  var picks=shuffle(TERMS.map(function(_,i){return i;})).slice(0,Math.min(ROUND,TERMS.length));
+  round=picks.map(function(idx){
+    var reverse=Math.random()<0.5; // term->definition when reverse
+    // build 3 distractors from other terms
+    var others=shuffle(TERMS.map(function(_,i){return i;}).filter(function(i){return i!==idx;})).slice(0,3);
+    var opts=shuffle([idx].concat(others));
+    return {idx:idx,reverse:reverse,opts:opts};
+  });
+  qi=0;score=0;answered=false;
+  $("q-total").textContent=round.length;
+  $("q-done").style.display="none";
+  $("q-live").style.display="";
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered=false;
+  var q=round[qi];if(!q)return;
+  var correct=TERMS[q.idx];
+  $("q-num").textContent=(qi+1);
+  $("q-score").textContent=score;
+  $("q-verdict").className="verdict";$("q-verdict").textContent="";
+  $("q-next").disabled=true;
+  $("q-next").textContent=(qi+1>=round.length)?"See results →":"Next question →";
+
+  var choicesEl=$("q-choices");choicesEl.innerHTML="";
+  var labels=["A","B","C","D"];
+
+  if(!q.reverse){
+    /* show definition, pick term */
+    $("q-mode").textContent="definition → term";
+    $("q-ask").textContent="Which term matches this definition?";
+    $("q-body").textContent=correct.d;
+    q.opts.forEach(function(oi,n){
+      var term=TERMS[oi];
+      addChoice(choicesEl,labels[n],term.t+(term.a?"  ("+term.a+")":""),oi===q.idx);
+    });
+  }else{
+    /* show term, pick definition */
+    $("q-mode").textContent="term → definition";
+    $("q-ask").textContent="Which definition matches this term?";
+    $("q-body").textContent=correct.t+(correct.a?"  ("+correct.a+")":"");
+    q.opts.forEach(function(oi,n){
+      addChoice(choicesEl,labels[n],TERMS[oi].d,oi===q.idx);
+    });
+  }
+}
+
+function addChoice(container,label,text,isCorrect){
+  var b=document.createElement("button");
+  b.type="button";b.className="choice";
+  b.innerHTML='<span class="lab">'+label+'</span>'+escapeHtml(text);
+  b.addEventListener("click",safe(function(){onAnswer(b,isCorrect);}));
+  container.appendChild(b);
+}
+function escapeHtml(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+
+function onAnswer(btn,isCorrect){
+  if(answered)return;
+  answered=true;
+  var q=round[qi];var correct=TERMS[q.idx];
+  var all=$("q-choices").querySelectorAll(".choice");
+  all.forEach(function(c){c.classList.add("locked");});
+  if(isCorrect){
+    btn.classList.add("right");
+    score++;$("q-score").textContent=score;
+    markMastered(correct.t);
+    var v=$("q-verdict");v.className="verdict ok show";
+    v.innerHTML="<b>Correct.</b> "+escapeHtml(correct.t)+" — mastered.";
+  }else{
+    btn.classList.add("wrong");
+    markCorrectChoice();
+    var v2=$("q-verdict");v2.className="verdict no show";
+    v2.innerHTML="<b>Not quite.</b> The answer is <b>"+escapeHtml(correct.t)+"</b>. "+escapeHtml(correct.d);
+  }
+  $("q-next").disabled=false;
+}
+
+function markCorrectChoice(){
+  var q=round[qi];var correct=TERMS[q.idx];
+  var all=$("q-choices").querySelectorAll(".choice");
+  q.opts.forEach(function(oi,n){
+    if(oi===q.idx && all[n]){all[n].classList.add("right");}
+  });
+}
+
+$("q-next").addEventListener("click",safe(function(){
+  if(!answered)return;
+  qi++;
+  if(qi>=round.length){finishRound();}
+  else{renderQuestion();}
+}));
+$("q-new").addEventListener("click",safe(buildRound));
+$("q-restart").addEventListener("click",safe(buildRound));
+
+function finishRound(){
+  $("q-live").style.display="none";
+  $("q-done").style.display="";
+  $("r-score").textContent=score+" / "+round.length;
+  var pct=round.length?Math.round(score/round.length*100):0;
+  var grade,note;
+  if(pct>=90){grade="Expert";note="You've got the vocabulary of a trained spotter. Onward to the trainers.";}
+  else if(pct>=70){grade="Solid";note="Strong grip on the language. Run another round to close the gaps.";}
+  else if(pct>=50){grade="Getting there";note="Review the flashcards for the ones you missed, then try again.";}
+  else{grade="Keep studying";note="Spend time in Flashcards first — the terms will start to click.";}
+  $("r-grade").textContent=grade;
+  $("r-note").textContent=note;
+  paintMastery();
+}
+
+/* ============================================================
+   MASTERY
+   ============================================================ */
+function paintMastery(){
+  var m=loadMastery();
+  var got=0;
+  var listEl=$("m-list");
+  if(listEl){
+    listEl.innerHTML="";
+    TERMS.slice().sort(function(a,b){return a.t.localeCompare(b.t);}).forEach(function(term){
+      var owned=!!m[term.t];if(owned)got++;
+      var d=document.createElement("div");
+      d.className="mtag"+(owned?" got":"");
+      d.innerHTML='<span>'+escapeHtml(term.t)+'</span><span class="mk">'+(owned?"✔":"·")+'</span>';
+      listEl.appendChild(d);
+    });
+  } else {
+    TERMS.forEach(function(term){if(m[term.t])got++;});
+  }
+  var total=TERMS.length;
+  var pct=total?Math.round(got/total*100):0;
+  if($("m-count"))$("m-count").textContent=got;
+  if($("m-total"))$("m-total").textContent=total;
+  if($("m-pct"))$("m-pct").textContent=pct+"%";
+  if($("m-fill"))$("m-fill").style.width=pct+"%";
+}
+$("m-reset").addEventListener("click",safe(function(){
+  if(window.confirm("Reset mastery? This clears every term you've mastered so far.")){
+    saveMastery({});paintMastery();
+  }
+}));
+
+/* init counts that depend on total */
+paintMastery();
+buildRound();
+</script>
+</body>
+</html>

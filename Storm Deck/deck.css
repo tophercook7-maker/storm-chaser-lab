@@ -1,0 +1,186 @@
+/* ═══════════════════════════════════════════════════════════════
+   STORM DECK  —  the look.
+   CSS is the language that decides what things LOOK like.
+   MISSION 2 lives in this file. Every color below is fair game.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root{
+  --bg:      #080b10;
+  --panel:   #111721;
+  --panel2:  #0d1219;
+  --line:    #1e2937;
+  --text:    #dbe4ef;
+  --dim:     #7b8ba0;
+  --accent:  #35d6ea;   /* the cyan. change me. */
+  --green:   #35ea7a;
+  --amber:   #ffb020;
+  --red:     #ff2f45;
+  --purple:  #b46bff;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Courier New", monospace;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+header{
+  display:flex; align-items:center; gap:18px;
+  padding:10px 16px;
+  background: linear-gradient(180deg,#141c28,#0d1219);
+  border-bottom:1px solid var(--line);
+  flex:none;
+}
+.brand{ font-size:17px; font-weight:700; letter-spacing:3px; color:var(--accent); white-space:nowrap; }
+.brand small{ display:block; font-size:9px; letter-spacing:2px; color:var(--dim); font-weight:400; }
+.hdr-item{ line-height:1.35; white-space:nowrap; }
+.hdr-item b{ color:var(--text); font-weight:600; display:block; }
+.hdr-item span{ color:var(--dim); font-size:10px; letter-spacing:1px; text-transform:uppercase; }
+.spacer{ flex:1; }
+
+.status{ display:flex; align-items:center; gap:7px; color:var(--dim); font-size:11px; }
+.dot{ width:9px; height:9px; border-radius:50%; background:var(--dim); }
+.dot.live{ background:var(--green); box-shadow:0 0 10px var(--green); animation:pulse 2s infinite; }
+.dot.err { background:var(--red);   box-shadow:0 0 10px var(--red); }
+@keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.35} }
+
+/* ── THE BIG RED BANNER ─────────────────────────────────── */
+#alertBanner{
+  display:none;
+  padding:11px 16px;
+  background:var(--red); color:#fff;
+  font-weight:700; font-size:15px; letter-spacing:1.5px;
+  text-align:center;
+  border-bottom:2px solid #ff8090;
+  flex:none;
+}
+#alertBanner.on{ display:block; animation:flash 1.1s steps(1) infinite; }
+@keyframes flash{ 50%{ background:#8d0716; } }
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+main{ flex:1; display:grid; grid-template-columns: 1fr 340px; gap:8px; padding:8px; min-height:0; }
+.left { display:grid; grid-template-rows: 1fr 172px; gap:8px; min-height:0; }
+.right{ display:grid; grid-template-rows: auto auto 1fr; gap:8px; min-height:0; }
+
+/* ── SPC OUTLOOK ROWS ───────────────────────────────────── */
+.spc{
+  display:flex; align-items:center; gap:10px;
+  padding:8px 11px; border-bottom:1px solid var(--line);
+}
+.spc:last-child{ border-bottom:none; }
+.spc .day{ font-size:9px; letter-spacing:1px; color:var(--dim); width:38px; text-transform:uppercase; }
+.spc .chip{
+  font-size:10.5px; font-weight:700; letter-spacing:1px;
+  padding:3px 9px; border-radius:3px; color:#0a0d12; min-width:56px; text-align:center;
+}
+.spc .lbl{ font-size:10.5px; color:var(--dim); flex:1; }
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:6px;
+  display:flex; flex-direction:column;
+  min-height:0; overflow:hidden;
+}
+.panel > h2{
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--dim); font-weight:600;
+  padding:8px 11px; border-bottom:1px solid var(--line);
+  background:var(--panel2);
+  display:flex; align-items:center; gap:8px; flex:none;
+}
+.panel > h2 .tag{ margin-left:auto; color:var(--accent); letter-spacing:1px; }
+.body{ flex:1; min-height:0; overflow:auto; }
+
+/* ── MAP ────────────────────────────────────────────────── */
+#map{ width:100%; height:100%; background:#05070a; }
+.leaflet-container{ background:#05070a; font-family:var(--mono); }
+.leaflet-control-attribution{ background:rgba(0,0,0,.65)!important; color:#5a6b80!important; font-size:9px!important; }
+.leaflet-control-attribution a{ color:#7b8ba0!important; }
+.leaflet-bar a{ background:#141c28!important; color:var(--accent)!important; border-color:var(--line)!important; }
+.leaflet-bar a:hover{ background:#1d2836!important; }
+.leaflet-control-layers{ background:#141c28!important; color:var(--text)!important; border:1px solid var(--line)!important; }
+
+.me-dot{
+  width:13px;height:13px;border-radius:50%;
+  background:var(--accent); border:2px solid #fff;
+  box-shadow:0 0 0 6px rgba(53,214,234,.22);
+}
+
+/* ── IMAGE STRIP (SPC / satellite / radar loop) ─────────── */
+.strip{ display:grid; grid-template-columns: repeat(2,1fr); gap:8px; min-height:0; }
+.strip .panel .body{ display:flex; align-items:center; justify-content:center; padding:5px; background:#05070a; }
+.strip img{ max-width:100%; max-height:100%; object-fit:contain; cursor:zoom-in; }
+
+/* ── THREAT METER ───────────────────────────────────────── */
+#threatBox{ padding:13px; text-align:center; }
+#threatWord{ font-size:26px; font-weight:700; letter-spacing:3px; margin-bottom:9px; }
+.meter{ height:9px; background:#05070a; border-radius:5px; overflow:hidden; border:1px solid var(--line); }
+.meter i{ display:block; height:100%; width:0; border-radius:5px; transition:width .6s ease, background .6s ease; }
+#threatNote{ margin-top:9px; color:var(--dim); font-size:11px; line-height:1.5; }
+
+.counts{ display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-top:12px; }
+.counts div{ background:var(--panel2); border:1px solid var(--line); border-radius:5px; padding:7px 4px; }
+.counts b{ display:block; font-size:20px; line-height:1.15; }
+.counts span{ font-size:8px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; }
+
+/* ── WARNING FEED ───────────────────────────────────────── */
+.warn{
+  padding:9px 11px; border-bottom:1px solid var(--line);
+  border-left:3px solid var(--dim);
+  cursor:pointer;
+}
+.warn:hover{ background:#161f2c; }
+.warn .ev{ font-weight:700; font-size:12px; margin-bottom:3px; }
+.warn .ar{ color:var(--dim); font-size:10.5px; line-height:1.45; }
+.warn.tornado{ border-left-color:var(--red);    background:rgba(255,47,69,.09); }
+.warn.tornado .ev{ color:var(--red); }
+.warn.severe { border-left-color:var(--amber); }
+.warn.severe .ev{ color:var(--amber); }
+.warn.flood  { border-left-color:var(--green); }
+.warn.flood .ev{ color:var(--green); }
+.warn.watch  { border-left-color:var(--purple); }
+.warn.watch .ev{ color:var(--purple); }
+
+.empty{ padding:26px 16px; text-align:center; color:var(--dim); line-height:1.7; font-size:11.5px; }
+.empty .big{ font-size:30px; display:block; margin-bottom:7px; opacity:.5; }
+
+/* ── LIGHTBOX ───────────────────────────────────────────── */
+#lightbox{
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.93); align-items:center; justify-content:center; padding:26px;
+  cursor:zoom-out;
+}
+#lightbox.on{ display:flex; }
+#lightbox img{ max-width:100%; max-height:100%; object-fit:contain; }
+
+/* ── ERROR / BOOT ───────────────────────────────────────── */
+#boot{
+  position:fixed; inset:0; z-index:10000; background:var(--bg);
+  display:flex; align-items:center; justify-content:center; padding:34px;
+}
+#boot.off{ display:none; }
+.bootcard{ max-width:640px; line-height:1.75; }
+.bootcard h1{ color:var(--red); font-size:19px; letter-spacing:2px; margin-bottom:14px; }
+.bootcard code{ background:#05070a; border:1px solid var(--line); padding:2px 6px; border-radius:3px; color:var(--amber); }
+.bootcard p{ margin-bottom:11px; color:var(--dim); }
+.bootcard b{ color:var(--text); }
+
+::-webkit-scrollbar{ width:9px; height:9px; }
+::-webkit-scrollbar-track{ background:var(--panel2); }
+::-webkit-scrollbar-thumb{ background:#25344a; border-radius:5px; }
+::-webkit-scrollbar-thumb:hover{ background:#33475f; }
+
+@media (max-width:1100px){
+  main{ grid-template-columns:1fr; grid-template-rows:1fr auto; }
+  .right{ grid-template-rows:auto auto; }
+}

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Storm Atlas — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+nav a.sec.cur{border-left-color:var(--accent);color:var(--accent);background:#161f2b}
+section{scroll-margin-top:20px}
+.tier{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.3px;
+      padding:2px 7px;border-radius:9px;text-transform:uppercase;vertical-align:2px;margin-left:7px}
+.t-off{color:var(--green);border:1px solid #17542f;background:rgba(53,234,122,.07)}
+.t-rot{color:var(--amber);border:1px solid #4d3a12;background:rgba(255,176,32,.07)}
+.t-res{color:var(--purple);border:1px solid #3d2a55;background:rgba(180,107,255,.07)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;background:var(--card2);border:1px solid var(--line);
+        border-radius:7px;padding:13px 17px;margin-bottom:24px;font-size:12.5px;color:var(--dim)}
+
+/* page-specific widgets */
+.ladder{border:1px solid var(--line);border-radius:7px;overflow:hidden;margin:0 0 20px}
+.ladder .rung{display:flex;align-items:stretch;border-top:1px solid var(--line)}
+.ladder .rung:first-child{border-top:none}
+.ladder .lvl{width:58px;flex:none;display:flex;align-items:center;justify-content:center;
+     font-family:var(--mono);font-size:20px;font-weight:700;color:#0b0f15;background:var(--accent)}
+.ladder .rung:nth-child(1) .lvl{background:#8fb7d6}
+.ladder .rung:nth-child(2) .lvl{background:#6fa9d1}
+.ladder .rung:nth-child(3) .lvl{background:#4d94cc}
+.ladder .rung:nth-child(4) .lvl{background:#ffb020}
+.ladder .rung:nth-child(5) .lvl{background:#ff2f45;color:#fff}
+.ladder .txt{padding:11px 15px;font-size:13.5px}
+.ladder .txt b{display:block;color:#fff;margin-bottom:2px}
+.ingr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 20px}
+.ingr .cell{border:1px solid var(--line);border-radius:7px;padding:14px 16px;background:var(--card)}
+.ingr .cell h5{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;margin-bottom:6px;color:var(--accent)}
+.ingr .cell .u{font-family:var(--mono);font-size:11px;color:var(--dim);display:block;margin-top:7px}
+.case{border:1px solid var(--line);border-radius:8px;padding:2px 20px 6px;margin:0 0 22px;background:var(--card2)}
+.case .date{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--amber);margin:16px 0 2px}
+.case h3{margin-top:2px}
+@media (max-width:640px){.ingr{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">STORM ATLAS</div>
+  <a href="#clouds" class="sec">1 · Reading the sky</a>
+  <a href="#fronts" class="sec">2 · Fronts &amp; air masses</a>
+  <a href="#engine" class="sec">3 · The engine — why storms spin</a>
+  <a href="#where"  class="sec">4 · Where &amp; when</a>
+  <a href="#cases"  class="sec">5 · Case studies</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← The Station</a>
+  <a href="../Academy/academy.html">Academy</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+  <a href="../Code School/python.html">Code School</a>
+  <a href="../Gear Bench/gear.html">Gear Bench</a>
+  <a href="../Trainers/skewt.html">Skew-T</a>
+  <a href="../Trainers/radar.html">Radar Trainer</a>
+  <a href="../Quiz/quiz.html">Flashcards</a>
+  <a href="../SKYWARN/skywarn.html">SKYWARN</a>
+  <a href="../Chase Log/log.html">Chase Log</a>
+</nav>
+
+<main>
+
+<h1><span class="num">THE STORM ATLAS</span>
+The wider science — how the sky actually works.</h1>
+
+<p class="lede">The Field Manual teaches you to read a storm once it's built — the radar, the
+structure, the safety. This is the book underneath that one. It's the <em>why</em>: what the clouds
+are telling you, what a front actually does, what has to line up before a storm can spin, and where
+and when this all happens. It's long on purpose. You don't read it in an afternoon — you grow into
+it. Every fact was checked against a National Weather Service, Storm Prediction Center, or NSSL
+source, and where the science is honestly unsettled, it says so.</p>
+
+<div class="legend">
+  <span><span class="tier t-off">Official</span> published NWS/SPC/NSSL definition</span>
+  <span><span class="tier t-rot">Rule of thumb</span> forecaster convention, no official source</span>
+  <span><span class="tier t-res">Research</span> from a specific study — describes a sample, not a law</span>
+</div>
+
+<div class="box why"><h4>How this Atlas fits with the Manual</h4>
+<p style="margin-bottom:0">When the Atlas mentions something the Field Manual covers in operational
+detail — radar signatures, the overpass myth, the numbers a forecaster watches — it points you
+there instead of repeating it. Read the Atlas to <em>understand</em> the sky; read the
+<a href="../Field Manual/manual.html">Field Manual</a> to <em>work</em> it. They're the same voice,
+built to be read side by side.</p></div>
+
+<!-- ═══════════════ 1 ═══════════════ -->
+<section id="clouds">
+<h2>1 · Reading the sky</h2>
+
+<p>Long before radar, people read the weather off the clouds — and the clouds have not stopped
+telling the truth. The single most useful idea here is that clouds are a <b>ladder of
+instability</b>. The taller the cloud, the harder the air underneath it is rising, and the more the
+atmosphere is willing to keep lifting it. Learn to read height and you're reading the engine in
+Section 3 with your own eyes.</p>
+
+<h3>The ladder: fair-weather cumulus → towering cumulus → cumulonimbus</h3>
+
+<div class="ladder">
+  <div class="rung"><div class="lvl">1</div><div class="txt">
+    <b>Fair-weather cumulus (Cu humilis)</b>Small, flat-bottomed, white cotton puffs, wider than
+    they are tall. "Fair-weather" is their actual nickname because that's exactly what they mean —
+    the air is rising a little, then hitting a lid and stopping. A sky full of these is a calm sky.
+  </div></div>
+  <div class="rung"><div class="lvl">2</div><div class="txt">
+    <b>Cumulus congestus / towering cumulus (TCU)</b>Now they're taller than they are wide, with a
+    hard, crisp, cauliflower top that's visibly bulging upward. This is a cloud <em>winning</em> —
+    the updraft is punching through, higher and higher. TCU is the "something might happen today"
+    cloud. It hasn't rained yet, but it's building the tower it will rain from.
+  </div></div>
+  <div class="rung"><div class="lvl">3</div><div class="txt">
+    <b>Cumulonimbus (Cb)</b>The thunderstorm cloud itself — a TCU that made it all the way up. Deep,
+    dark base, hard tower, and the top has begun to freeze into ice crystals and go fuzzy. This is
+    the only cloud that makes lightning, hail, and tornadoes. Every storm in the Field Manual is a
+    cumulonimbus.
+  </div></div>
+  <div class="rung"><div class="lvl">4</div><div class="txt">
+    <b>Cumulonimbus with anvil (Cb incus)</b>The tower hit the top of the troposphere — the
+    <b>tropopause</b>, the lid on the whole weather layer — and had nowhere left to go, so it spread
+    sideways into a flat, hard anvil. A crisp, sharp-edged anvil means a violent updraft slamming
+    into the ceiling. A soft, mushy one means a dying storm.
+  </div></div>
+  <div class="rung"><div class="lvl">5</div><div class="txt">
+    <b>Overshooting top</b>Not a new cloud — a warning. It's a dome of cloud punching <em>above</em>
+    the flat anvil, meaning the updraft was so strong it briefly blew straight through the lid before
+    gravity pulled it back. An overshooting top is the sky telling you the engine is running at full
+    power. The Manual calls this out in its supercell anatomy for exactly that reason.
+  </div></div>
+</div>
+
+<div class="box why"><h4>Why the top goes flat</h4>
+<p style="margin-bottom:0">A rising parcel keeps going up as long as it's warmer than the air around
+it. In the troposphere it usually is. But at the tropopause the air <em>stops getting colder</em>
+with height — above it, in the stratosphere, the temperature actually starts rising again. So the
+parcel is suddenly surrounded by air that's warmer than it is, loses its buoyancy, and spreads out.
+That flat anvil is a picture of the atmosphere's ceiling. You'll see this same ceiling as the
+<b>EL</b>, the equilibrium level, on the <a href="../Trainers/skewt.html">Skew-T trainer</a>.</p></div>
+
+<h3>The storm-structure clouds — and the one distinction that keeps you alive</h3>
+
+<p>Once you have a cumulonimbus, it grows features. Some of these are where tornadoes come from.
+Some are harmless. Some are just cosmetic. And two of them look almost identical to a beginner while
+meaning opposite things. Get these right and you can read a storm's intentions from a mile away.</p>
+
+<div class="box danger"><h4>Wall cloud vs shelf cloud — the one that matters</h4>
+<p>Both are a big, dark, dramatic lowering of the cloud base. Beginners mix them up constantly. They
+mean opposite things, and the difference decides whether you're looking at a possible tornado or a
+blast of straight-line wind.</p>
+<p style="margin-bottom:0">A <b>wall cloud</b> hangs down under the <em>back</em> of the storm,
+beneath the rain-free updraft base — the storm's <b>intake</b>. Air is being sucked <em>up into
+it</em>. If it's persistent and rotating, that is the business end, where tornadoes form. A
+<b>shelf cloud</b> is on the <em>leading edge</em>, out front — a low wedge riding on top of cold
+air the storm is <b>exhaling</b>. It is <em>not</em> rotating and it is <em>not</em> a tornado
+threat; it means a wall of straight-line gust-front wind is about to hit.</p></div>
+
+<table>
+<tr><th></th><th>Wall cloud</th><th>Shelf cloud</th></tr>
+<tr><td><b>Where on the storm</b></td>
+    <td>Under the rain-free base, on the <b>back / inflow</b> side</td>
+    <td>On the <b>leading edge</b>, out front, ahead of the rain</td></tr>
+<tr><td><b>Part of the storm's…</b></td>
+    <td>Intake (the updraft)</td>
+    <td>Exhaust (the outflow — cold air spilling out)</td></tr>
+<tr><td><b>Shape</b></td>
+    <td>A blocky lowering, often isolated, hanging beneath the base</td>
+    <td>A long wedge or plow, stretched along the whole leading edge, layered like a shelf</td></tr>
+<tr><td><b>The wind on your face</b></td>
+    <td>Blowing <b>toward</b> the storm — you're in the inflow, feeding it</td>
+    <td>Blowing <b>at you, hard and cold, from</b> the storm</td></tr>
+<tr><td><b>Rotation</b></td>
+    <td>Can rotate. Watch for it.</td>
+    <td>Does not rotate. Rolls and churns, but no organized spin.</td></tr>
+<tr><td><b>Means</b></td>
+    <td>Possible tornado. Report it.</td>
+    <td>Gust front. Strong straight-line wind arriving. Not a tornado.</td></tr>
+</table>
+
+<div class="box do"><h4>The test that beats every photograph</h4>
+<p style="margin-bottom:0"><b>Feel the wind.</b> If it's blowing <em>into</em> the storm, behind that
+lowering, feeding it — wall cloud. If cold wind is blasting <em>out</em> at you from under it —
+shelf cloud, and the gust front is seconds away. Photos lie about this constantly, because a camera
+can't feel wind direction and both look terrifying on a screen. The Field Manual makes the same
+point in its own words — this is the one identification new spotters get wrong most, so it's worth
+seeing twice.</p></div>
+
+<h3>The harmless and the cosmetic — so you don't cry wolf</h3>
+
+<table>
+<tr><th>Feature</th><th>What it is</th><th>What it means</th></tr>
+<tr><td><b>Scud</b><br>(fractus)</td>
+    <td>Ragged, torn fragments of cloud drifting below the base. Forms and vanishes in seconds, often
+    moving a completely different direction from the storm, and not solidly attached to anything.</td>
+    <td><b>Nothing.</b> Harmless. But it looks alarming and has fooled countless people into
+    reporting funnel clouds. A real funnel is smooth, persistent, and rotating — watch any lowering
+    for a full 30 seconds before you believe it.</td></tr>
+<tr><td><b>Mammatus</b></td>
+    <td>Rounded pouches hanging <em>under</em> the anvil, like a bag of oranges. They form where the
+    anvil's cold, sinking air makes lumpy little downdrafts.</td>
+    <td>Cosmetic — often the most beautiful thing in the sky. Usually seen <em>after</em> the worst
+    of a storm has passed, under the trailing anvil. Not a danger sign, just a gorgeous one.</td></tr>
+<tr><td><b>Flanking line</b></td>
+    <td>A stair-step line of towering cumulus building up alongside the main updraft, like a ramp of
+    smaller towers feeding into the big one.</td>
+    <td>A sign of a healthy, organized storm — it's where fresh updraft is being recruited. On a
+    supercell it trails back from the main tower and marks the storm's inflow region. Not a threat by
+    itself; part of the machinery.</td></tr>
+</table>
+
+<div class="box pro"><h4>Read the sky top to bottom, then front to back</h4>
+<p style="margin-bottom:0">A practiced eye scans a storm the way you'd size up an engine. <b>Top:</b>
+how hard is the anvil edge, is there an overshooting top? That's updraft strength. <b>Base, back
+side:</b> is there a wall cloud, and is it rotating? That's the tornado question. <b>Front:</b> is a
+shelf cloud rolling out? That's the gust front's ETA. Everything else — scud, mammatus — is detail
+you can enjoy once you've answered those three. The Field Manual's supercell-anatomy section names
+every part; this is how you sweep them with your eyes in the order that matters.</p></div>
+</section>
+
+<!-- ═══════════════ 2 ═══════════════ -->
+<section id="fronts">
+<h2>2 · Fronts &amp; air masses</h2>
+
+<p>Storms don't come from nowhere. Something has to give the air its first shove upward — the
+<b>lift</b> ingredient from Section 3. Almost always, that something is a <b>front</b> or a
+<b>boundary</b>: a seam where two different air masses are shoving against each other. To read those
+seams, you first have to know what's colliding.</p>
+
+<h3>Air masses — huge blobs of air with a personality</h3>
+
+<p>An <b>air mass</b> is an enormous body of air — hundreds of thousands of square miles — that sat
+over one kind of surface long enough to take on its character. Sit over the Gulf of Mexico and you
+become warm and soaked with moisture. Sit over central Canada in winter and you become bone-dry and
+frigid. Meteorologists label them with two letters: the first (lowercase) is <b>moisture</b>, the
+second (uppercase) is <b>temperature source</b>.</p>
+
+<table>
+<tr><th>Label</th><th>Name</th><th>In plain words</th><th>Where it's born</th></tr>
+<tr><td class="num2">mT</td><td>maritime Tropical</td><td>Warm and wet — the fuel</td><td>Gulf of Mexico, Caribbean, subtropical Atlantic</td></tr>
+<tr><td class="num2">cP</td><td>continental Polar</td><td>Cold and dry — the wedge</td><td>Central and northern Canada</td></tr>
+<tr><td class="num2">cA</td><td>continental Arctic</td><td>Brutally cold and very dry</td><td>The high Arctic — the coldest air that reaches the US</td></tr>
+<tr><td class="num2">mP</td><td>maritime Polar</td><td>Cool and damp</td><td>The cold North Pacific and North Atlantic</td></tr>
+<tr><td class="num2">cT</td><td>continental Tropical</td><td>Hot and very dry</td><td>Deserts of the US Southwest and northern Mexico</td></tr>
+</table>
+
+<div class="box why"><h4>US severe weather is basically two air masses in a fight</h4>
+<p style="margin-bottom:0">Nearly every big severe-weather day in the central and eastern US is the
+same story: warm, wet <b>mT</b> air surging north off the Gulf runs into cold, dry <b>cP</b> air
+diving south out of Canada — and often <b>cT</b> desert air sliding in from the west. Three air
+masses with three completely different characters, meeting over the Plains. That collision zone is
+the most tornado-prone real estate on Earth, and it exists because of the geography in Section 4.</p></div>
+
+<h3>The four fronts</h3>
+
+<p>A <b>front</b> is the boundary where two air masses meet. It's named for whichever air mass is
+<em>advancing</em>. The reason fronts matter to us is simple: at every front, one air mass is being
+forced to <b>rise over</b> another — and rising air is how you build a cloud.</p>
+
+<table>
+<tr><th>Front</th><th>What's happening</th><th>On a weather map</th><th>The storms it makes</th></tr>
+<tr><td><b>Cold front</b></td>
+    <td>Cold, dense air is advancing and shoving in <em>under</em> the warm air, forcing it upward
+    steeply and fast.</td>
+    <td>Blue line with <b>triangles</b> pointing the way it's moving.</td>
+    <td>The classic severe-weather trigger. Steep, fast lift → tall storms, often a squall line right
+    along the front. This is the front that most often kicks off tornadoes and damaging wind.</td></tr>
+<tr><td><b>Warm front</b></td>
+    <td>Warm air is advancing and gliding up <em>over</em> the retreating cold air on a long, gentle
+    ramp.</td>
+    <td>Red line with <b>half-circles</b> pointing the way it's moving.</td>
+    <td>Widespread, layered clouds and steady rain — but see the warning box. The warm front is a
+    quiet tornado favorite.</td></tr>
+<tr><td><b>Stationary front</b></td>
+    <td>Neither air mass is winning; the boundary just sits there, sometimes for days.</td>
+    <td>A line that <b>alternates</b> blue triangles and red half-circles, pointing opposite ways.</td>
+    <td>A parked lifting zone. Storms can fire along it repeatedly, over the same towns — a major
+    flash-flood setup.</td></tr>
+<tr><td><b>Occluded front</b></td>
+    <td>A fast cold front has caught up to a warm front and lifted the warm air completely off the
+    ground, wedging it up into the sky.</td>
+    <td><b>Purple</b> line with alternating triangles and half-circles pointing the <em>same</em>
+    way.</td>
+    <td>Usually a sign a storm system is maturing and starting to wind down — the warm fuel has been
+    cut off from the surface.</td></tr>
+</table>
+
+<div class="box warn"><h4>The warm front is a tornado favorite — and it's not obvious why</h4>
+<p style="margin-bottom:0">A warm front looks gentle. But the ground just north of one is where the
+tornado risk quietly concentrates, and there's a real reason: right along and just north of a warm
+front, the low-level winds <b>turn sharply with height</b> — surface wind from one direction, winds
+just above it from another. That turning is exactly the low-level <b>wind shear</b> and
+<b>helicity</b> that Section 3 says spins up tornadoes. Forecasters watch the "warm front / dryline
+intersection" — the <b>triple point</b> — as one of the highest-odds spots on any given day.</p></div>
+
+<h3>The dryline — the Great Plains storm engine</h3>
+
+<p>Out on the southern Plains — Texas, Oklahoma, Kansas — there's a boundary that isn't taught in
+most weather classes but produces some of the most photogenic supercells on Earth: the
+<b>dryline</b>. It's the seam between the warm, wet <b>mT</b> air coming north off the Gulf and the
+hot, bone-dry <b>cT</b> air coming east off the deserts.</p>
+
+<p>Here's what makes it special. The two air masses can be nearly the <em>same temperature</em> — so
+it barely shows up on a temperature map — but their <b>moisture</b> is wildly different. You can
+drive across a dryline and watch the dewpoint drop from the 70s to the 30s in a few miles. The dry
+air is denser, so it acts like a cold front, wedging under the moist air and forcing it up. During
+the afternoon the dryline typically <b>bulges eastward</b>, and along that bulge, storms explode.</p>
+
+<div class="box why"><h4>Why so many "chaser" storms are dryline storms</h4>
+<p style="margin-bottom:0">A dryline sets up the perfect classroom supercell: it lifts the moist air
+(the trigger), the air behind it is bone-dry so the sky stays <em>clear</em> around the storm (you
+can see everything), and there's usually strong wind shear overhead. The result is an isolated,
+gorgeous, fully-visible supercell standing alone in a blue Plains sky — the LP and classic supercells
+the Field Manual describes. That's why so many famous chase videos are shot in the Texas Panhandle in
+May. It's the dryline doing its work.</p></div>
+
+<h3>So why do we call fronts and boundaries "triggers"?</h3>
+
+<p>Go back to Section 3's four ingredients. Moisture, instability, and shear can all be loaded into
+the atmosphere and just… sit there, capped, doing nothing (the Field Manual's "loaded gun"). What's
+missing is <b>lift</b> — the first shove that gets a parcel of air up past the cap so it can
+free-fall upward on its own. A front is a machine for producing that shove: it physically forces one
+air mass to climb over another. So is a dryline, a sea breeze, a mountain slope, or an
+<b>outflow boundary</b> — the leftover cold-air edge from an earlier storm, which can go on triggering
+new storms for hours after the storm that made it has died.</p>
+
+<div class="box pro"><h4>Boundaries are where forecasters look first</h4>
+<p style="margin-bottom:0">On a big severe-weather day, an experienced forecaster doesn't just ask
+"is the atmosphere unstable?" — they ask "<em>where</em> is the boundary?" Because that's where the
+storms will actually go up, and the intersections of boundaries — a cold front crossing a warm front,
+a dryline crossing an old outflow boundary — are where the local shear gets cranked up and the odds
+concentrate. Storms are a collaboration between the whole atmosphere (Section 3) and one specific
+line on the map (this section).</p></div>
+</section>
+
+<!-- ═══════════════ 3 ═══════════════ -->
+<section id="engine">
+<h2>3 · The engine — why storms spin</h2>
+
+<p>This is the heart of the whole science. Severe-weather forecasters at the Storm Prediction Center
+in Norman, Oklahoma spend their days hunting for <b>four ingredients</b>. Each one is simple on its
+own. The magic — and the danger — is that they have to show up <em>together, in the same place, at
+the same time</em>. Any three without the fourth, and you get nothing. The Field Manual introduces
+these; here's what each one actually <em>is</em>.</p>
+
+<div class="ingr">
+  <div class="cell"><h5>1 · MOISTURE</h5>
+    <b style="color:#fff">The fuel.</b> Water vapor is loaded energy. When it condenses into cloud
+    droplets high in the updraft, it <em>releases</em> the heat it took to evaporate — and that heat
+    is what keeps the updraft warmer than its surroundings and rising. No moisture, no fuel, no
+    storm.
+    <span class="u">You measure it with DEWPOINT — not humidity. Dewpoint is the real amount of
+    water in the air; humidity moves every time the temperature does.</span></div>
+  <div class="cell"><h5>2 · INSTABILITY</h5>
+    <b style="color:#fff">Willingness to rise.</b> If air near the ground is warmer and lighter than
+    the air stacked above it, then once a parcel starts up, it stays warmer than its surroundings and
+    <em>keeps</em> going — like a hot-air balloon that won't stop. That's an unstable atmosphere.
+    <span class="u">You measure it with CAPE (see below).</span></div>
+  <div class="cell"><h5>3 · LIFT</h5>
+    <b style="color:#fff">The trigger.</b> Even a loaded, unstable atmosphere often needs a first
+    shove to get a parcel past the cap. That shove comes from a front, a dryline, a sea breeze, a
+    mountain, or an outflow boundary — all of Section 2.
+    <span class="u">You find it as fronts and boundaries on the map.</span></div>
+  <div class="cell"><h5>4 · WIND SHEAR</h5>
+    <b style="color:#fff">The spin.</b> Wind changing speed <em>and/or direction</em> as you go up.
+    This is the ingredient that turns an ordinary storm into an organized, rotating, long-lived
+    supercell — the difference between a puddle and a whirlpool.
+    <span class="u">You measure it with 0–6 km bulk shear and storm-relative helicity (SRH).</span></div>
+</div>
+
+<h3>CAPE — the fuel gauge</h3>
+
+<p><b>CAPE</b> stands for <b>Convective Available Potential Energy</b>, and the friendly way to think
+about it is a <b>fuel gauge for the updraft</b>: how much energy is stored in the atmosphere for a
+rising parcel to burn, measured in joules per kilogram (J/kg). More CAPE means a parcel can accelerate
+upward harder and faster — stronger updrafts, bigger hail, taller storms.</p>
+
+<p>The <a href="../Trainers/skewt.html">Skew-T trainer</a> in this lab draws CAPE as an actual
+<em>area</em> on a graph — the "positive area" between the temperature of your rising parcel and the
+cooler air around it. The bigger that area, the more fuel. That's not a metaphor; that's literally
+how it's calculated. <span class="tier t-off">Official</span></p>
+
+<div class="box warn"><h4>Big CAPE is not the same as "tornado"</h4>
+<p style="margin-bottom:0">This is the mistake everyone makes with the fuel gauge. A car with a full
+tank isn't automatically going somewhere — it needs a driver and a road. You can have monster CAPE and
+get nothing, because there was no lift to start a storm, or no shear to organize it. And you can get a
+violent tornado on <em>modest</em> CAPE if the shear is extreme — that's a common Southern setup, and
+it's part of why Dixie Alley is so dangerous (Section 4). Forecasters read CAPE and shear
+<em>together</em>. The Field Manual lists SPC's actual CAPE categories and — importantly — the honest
+caveats about them; go there for the numbers.</p></div>
+
+<h3>Wind shear — why this is the one that makes it spin</h3>
+
+<p>Of the four, shear is the one worth slowing down on, because it's the least obvious and it's what
+separates a scary afternoon downpour from a supercell. <b>Wind shear</b> is just wind that
+<em>changes</em> with height — faster higher up, and/or blowing from a different direction higher up.</p>
+
+<p>Picture a pencil lying on a table. Now push the top of it faster than the bottom — it starts to
+<b>roll</b>. Wind shear does the same thing to a tube of air near the ground: the faster wind aloft
+rolls it into a horizontal spinning tube, like an invisible rolling pin lying flat in the sky. By
+itself that's harmless. But then a strong updraft (from your CAPE) tilts that horizontal spinning
+tube <em>upward</em>, stands it on end, and stretches it — and now you have a <b>vertically
+rotating updraft</b>. That rotating updraft is the <b>mesocyclone</b>, and a storm with one is, by
+definition, a <b>supercell</b>.</p>
+
+<div class="box why"><h4>Two kinds of shear, two different jobs</h4>
+<p><b>Speed shear</b> (wind just gets faster with height) mostly tilts the updraft so the rain falls
+away from it instead of choking it — that's what lets a storm live for hours instead of raining
+itself out in 30 minutes. <b>Directional shear</b> (wind <em>turns</em> with height — say, southeast
+at the ground, veering to southwest and west aloft) is what actually curls the low-level air into
+rotation the updraft can stand upright.</p>
+<p style="margin-bottom:0">Forecasters bundle the useful part of directional shear into one number:
+<b>storm-relative helicity (SRH)</b> — roughly, how much "spin" is available in the lowest kilometer
+or three for a storm to ingest. High low-level SRH is one of the better fingerprints of a tornado
+threat. The Field Manual lists SPC's SRH values, along with SPC's own honest admission that there's
+no clean threshold that separates tornadic from non-tornadic storms.</p></div>
+
+<div class="box do"><h4>It's the combination — always the combination</h4>
+<p style="margin-bottom:0">Say it until it's a reflex. <b>Moisture + instability + lift + shear</b>,
+together, in the same place. Fuel with no spark does nothing. A spark with no fuel does nothing. Fuel
+and spark with no shear gives you a strong but disorganized storm that kills itself in half an hour.
+Add the shear and it organizes, rotates, and lasts. Forecasters call the whole package the
+<b>ingredients-based method</b>, and it's how you go from "big scary CAPE number" to actually
+understanding whether a day is dangerous. When you read an SPC outlook and they walk through moisture,
+then instability, then the trigger, then the shear — this is the checklist they're running.</p></div>
+
+<h3>Putting a number on the whole thing</h3>
+
+<p>Because the ingredients matter together, forecasters built combined parameters that multiply them
+into one figure — the best-known being the <b>Significant Tornado Parameter (STP)</b>, which folds
+CAPE, shear, helicity, and cloud-base height into a single number. When STP climbs above 1, significant
+(EF2+) tornadoes become much more likely. It's genuinely useful — and it's genuinely
+<em>not</em> a switch. The Field Manual's numbers section carries STP and the rest, with the tiers
+marking exactly which are official SPC values and which are conventions. Read the engine here; get the
+gauges there.</p>
+</section>
+
+<!-- ═══════════════ 4 ═══════════════ -->
+<section id="where">
+<h2>4 · Where &amp; when</h2>
+
+<p>Severe weather isn't scattered randomly across the country or the calendar. It clusters — in
+specific regions, specific months, and even specific hours of the day — and understanding the pattern
+is part of understanding the science, because the pattern comes straight from the geography of where
+those air masses in Section 2 collide.</p>
+
+<h3>Why the United States, of all places</h3>
+
+<p>The US gets far more tornadoes than anywhere else on Earth — and it's an accident of geography.
+There's a warm ocean to the south (the Gulf of Mexico) pumping <b>mT</b> moisture north, a cold
+continent to the north (Canada) sending <b>cP</b> air south, high deserts and the Rocky Mountains to
+the west feeding hot, dry <b>cT</b> air and a fast jet stream aloft — and, crucially, <b>no
+east–west mountain range in the middle to keep them apart.</b> So they meet, head-on, over the Great
+Plains. Europe and China have pieces of this; nobody has all of it lined up like North America does.</p>
+
+<div class="box why"><h4>The honest number on how many</h4>
+<p style="margin-bottom:0">The United States averages roughly <b>1,200 tornadoes a year</b> — the
+figure NOAA/NSSL cite as a rough annual average. But "average" hides a lot: some years run well under
+1,000, others well over 1,500, and counts have crept up over the decades partly because
+<em>detection</em> improved (dual-pol radar, more spotters, phones with cameras everywhere), not
+necessarily because there are more tornadoes. When you see a tornado count, ask the same question the
+Field Manual trains you to ask about any number: is this measuring the weather, or measuring how well
+we watched it?</p></div>
+
+<h3>Tornado Alley vs Dixie Alley</h3>
+
+<p>Two nicknames you'll hear constantly. Neither is an official NWS boundary — the "alleys" are
+popular shorthand, and scientists are actively still refining where they really are (some research
+argues the tornado hotspot has been drifting eastward over recent decades). Hold them loosely. But
+they capture something real.</p>
+
+<table>
+<tr><th></th><th>Tornado Alley</th><th>Dixie Alley</th></tr>
+<tr><td><b>Roughly where</b></td>
+    <td>The southern/central Plains — Texas, Oklahoma, Kansas, Nebraska, and up through the eastern
+    Dakotas</td>
+    <td>The Deep South and Mid-South — Mississippi, Alabama, Louisiana, Arkansas, Tennessee, Georgia,
+    into western Kentucky</td></tr>
+<tr><td><b>Peak season</b></td>
+    <td>Late spring — <b>May and June</b> — as the collision zone marches north</td>
+    <td>A more spread-out season, with a strong <b>spring (March–May)</b> peak and a real
+    <b>second peak in fall</b> (November)</td></tr>
+<tr><td><b>Classic storm</b></td>
+    <td>Isolated, visible supercells on the dryline — the photogenic ones</td>
+    <td>Often rain-wrapped HP supercells and fast squall-line spin-ups — the hidden ones</td></tr>
+<tr><td><b>Terrain</b></td>
+    <td>Flat, open, treeless — you can see for 40 miles</td>
+    <td>Rolling, hilly, <b>heavily forested</b> — you often can't see the next field</td></tr>
+</table>
+
+<div class="box danger"><h4>Dixie Alley is more dangerous — and here's exactly why</h4>
+<p>Tornado Alley may get the famous <em>photographs</em>, but the Southeast gets a disproportionate
+share of the <em>deaths</em>. Not because the tornadoes are stronger — because of five things
+stacked against the people underneath them:</p>
+<ol style="margin-bottom:0">
+  <li><b>They come at night.</b> The South has far more <em>nocturnal</em> tornadoes than the
+  Plains. You can't see them, you may be asleep, and studies find a tornado at night is roughly
+  <em>twice</em> as likely to kill someone as the same tornado in daylight. This is why the Field
+  Manual insists a tone-alert NOAA Weather Radio is the single best piece of family safety gear.</li>
+  <li><b>Trees hide them.</b> In flat, open Kansas you can watch a tornado approach for many minutes.
+  In the forested South, the trees block the view until it's nearly on top of you — killing the one
+  thing that saves lives: <b>lead time to react.</b></li>
+  <li><b>Mobile homes.</b> The Southeast has a high density of manufactured/mobile homes, and a large
+  fraction of US tornado deaths happen in them. They offer almost no protection even in a weak
+  tornado, and often there's no sturdy shelter nearby.</li>
+  <li><b>The storms move faster.</b> Southern tornadoes are frequently embedded in fast-moving
+  squall lines and cold-season systems screaming along at highway speeds — less time to warn, less
+  time to move.</li>
+  <li><b>Higher population density and more forest cover</b> mean more people in the path and harder
+  storm-spotting than the wide-open Plains.</li>
+</ol></div>
+
+<div class="box why"><h4>Why this lab was built for Arkansas</h4>
+<p style="margin-bottom:0">You live in Dixie Alley. Your storms are more likely to be the
+rain-wrapped, nighttime, fast-moving, forested-terrain kind — the exact conditions where the radar
+algorithms perform worst (the Field Manual has the sobering numbers) and where a trained human watching
+the sky is worth the most. That's not a scary footnote. It's the reason a spotter here matters more
+than one on the open Plains — the place where the machines see least is the place a person sees
+most.</p></div>
+
+<h3>The peak time of day — and the exception that kills</h3>
+
+<p>Most severe weather fires in the <b>late afternoon and early evening</b>, roughly <b>3 to 9
+p.m.</b> The reason is straightforward: the sun spends all day heating the ground, which heats the
+lowest layer of air, which builds instability (CAPE) to its daily maximum in mid-to-late afternoon.
+That's when the atmosphere is most loaded, so that's when it most often goes off.</p>
+
+<div class="box warn"><h4>But storms don't obey the clock</h4>
+<p style="margin-bottom:0">"Afternoon" is the <em>tendency</em>, not a rule — and the exceptions are
+the dangerous part. Squall lines and cold-season Southern systems regularly produce tornadoes at 2
+a.m. A strong warm front or a nocturnal low-level jet can crank up shear overnight even as the CAPE
+fades. The deadliest tornadoes are frequently the ones that arrive when people are asleep and can't
+see them coming — which loops right back to the Dixie Alley danger list above. Peak time tells you
+when to be <em>most</em> alert. It does not tell you when it's safe to stop paying attention.</p></div>
+</section>
+
+<!-- ═══════════════ 5 ═══════════════ -->
+<section id="cases">
+<h2>5 · Case studies — what the big days taught us</h2>
+
+<p>The science in this Atlas was written in ink, but it was <em>learned</em> in the field, often at
+terrible cost. These four days are the ones that changed how the country warns, builds, drives, and
+studies. Read each one for three things: <b>what happened</b>, <b>what the field learned</b>, and
+<b>the safety lesson</b> that came out of it. These are handled with respect. Real people died on
+each of these days, and this Atlas will not dress that up or gloss over it.</p>
+
+<div class="case">
+<p class="date">APRIL 3–4, 1974</p>
+<h3>The 1974 Super Outbreak</h3>
+<p><b>What happened.</b> In about 18 hours, <b>148 tornadoes</b> tore across 13 states from the Deep
+South up into Canada — an outbreak of a scale nobody had documented before. Around <b>330 people</b>
+were killed. It included multiple violent tornadoes on the ground at the same time, including several
+rated F5 on the Fujita scale, which had only just been introduced. Xenia, Ohio was nearly erased.</p>
+<p><b>What the field learned.</b> 1974 was a wake-up call that the country's warning system wasn't
+built for a day like this. It became a foundational dataset for Ted Fujita himself, who mapped every
+track and, studying the damage, first described <b>microbursts</b> and <b>multiple-vortex
+tornadoes</b> — smaller sub-vortices spinning inside the main circulation. It helped drive the long
+national push toward Doppler radar and, eventually, the modern NEXRAD network.</p>
+<p style="margin-bottom:0"><b>The safety lesson.</b> A single day can overwhelm everything. The
+warnings, the radar, the sirens, the shelters — 1974 showed why the whole system had to be rebuilt to
+be faster and more automated, because human forecasters watching teletype could not keep up with 148
+tornadoes at once. Much of the technology the Field Manual teaches you to read exists because of this
+day.</p>
+</div>
+
+<div class="case">
+<p class="date">MAY 3, 1999</p>
+<h3>The Oklahoma Outbreak — Bridge Creek–Moore</h3>
+<p><b>What happened.</b> Roughly <b>70 tornadoes</b> hit Oklahoma and Kansas. The most violent tracked
+from Bridge Creek into Moore, in the Oklahoma City suburbs. A research radar measured winds inside it
+at about <b>301 mph</b> — the highest wind speed ever recorded on Earth. It was rated <b>F5</b> and
+killed 36 people along its path; the whole outbreak killed around 50.</p>
+<p><b>What the field learned.</b> This is the day the <b>overpass myth</b> died on the evidence. That
+day, tornadoes crossed highways where people had taken shelter under bridges — copying a famous 1991
+TV clip — and at three overpasses in the damage path, <b>each produced a fatality</b>, including at a
+weak F2. It proved an overpass is not a shelter but a deadly trap: you climb into faster wind, into a
+funnel aimed straight down the debris stream, with nothing to hold and nowhere lower to go. <b>The
+Field Manual devotes a full section to this</b> — the mechanism, the three deaths, and why the usual
+"Venturi" explanation is itself wrong. If you read one cross-reference from this Atlas, read that one.</p>
+<p style="margin-bottom:0"><b>The safety lesson.</b> <b>Never shelter under an overpass.</b> Not from
+a big tornado, not from a small one. The day also drove home the value of the emergency response and
+the earliest ideas that led to the "tornado emergency" wording the NWS now uses for the most
+catastrophic, life-threatening tornadoes.</p>
+</div>
+
+<div class="case">
+<p class="date">APRIL 25–28, 2011</p>
+<h3>The 2011 Super Outbreak — the modern benchmark</h3>
+<p><b>What happened.</b> The largest tornado outbreak ever recorded: about <b>360 tornadoes</b> over
+four days, with the worst — roughly <b>200 tornadoes</b> — packed into a single day, April 27, across
+the Deep South. Four of them were rated <b>EF5</b>. Around <b>320 people were killed</b>, the
+deadliest US tornado outbreak since 1936. Tuscaloosa and Birmingham, Alabama were hit by a long-track
+EF4 that much of the country watched live on television.</p>
+<p><b>What the field learned.</b> This is the modern benchmark, and its lessons are humbling — because
+the <em>warnings were good</em>. Lead times were solid; the forecasts were, by earlier standards,
+excellent. And 320 people still died. The hard question 2011 forced on the field wasn't "why didn't we
+warn?" but "<b>why didn't the warnings save more people?</b>" It drove serious research into the
+<em>human</em> side: warning fatigue, whether people actually have somewhere safe to go, why some
+ignore sirens, and how to communicate the difference between an ordinary warning and a genuinely
+catastrophic one. It was a Dixie Alley outbreak — daytime, but still with the trees, terrain, mobile
+homes, and speed from Section 4 all in play.</p>
+<p style="margin-bottom:0"><b>The safety lesson.</b> A perfect forecast is worthless if it doesn't
+change what a person <em>does</em>. Knowing a warning is out is not a plan. Having a real shelter, and
+going to it, is. 2011 is why modern messaging pushes so hard on "have your safe place picked out
+before the season starts" — the exact rule the Field Manual leads its safety section with.</p>
+</div>
+
+<div class="case">
+<p class="date">MAY 31, 2013</p>
+<h3>El Reno, Oklahoma — the humility lesson at the center of this lab</h3>
+<p><b>What happened.</b> A tornado near El Reno, west of Oklahoma City, grew to <b>2.6 miles wide</b>
+— the widest tornado ever recorded — with mobile-radar winds measured at <b>295 mph or more</b>. It
+did something tornadoes are not supposed to do: it made a <b>sudden left turn and expanded
+enormously</b>, faster than anyone tracking it expected. Eight people were killed, all of them in
+vehicles.</p>
+<p style="margin-bottom:0"><b>Among them were three of the most careful, most respected researchers
+in the entire field: Tim Samaras, his son Paul Samaras, and their teammate Carl Young.</b> Tim
+Samaras had spent his life studying how to do this <em>safely</em> — he was, by reputation, one of the
+most cautious people ever to point a probe at a tornado. An amateur chaser, Richard Henderson, was
+killed as well. This lab names them, every time, and never softens it.</p>
+<p><b>What the field learned.</b> El Reno rewrote assumptions about how fast a tornado can widen and
+turn, and about the sub-vortices whipping around inside a large circulation moving far faster than the
+tornado's own track. It sharpened how researchers position themselves and reshaped conversations about
+the ethics and crowding of storm chasing. It also became a case study in a scale surprise: it was first
+announced <b>EF5</b>, then changed to <b>EF3</b> — not because it weakened, but because the Enhanced
+Fujita scale rates <em>damage</em>, and those 295 mph winds crossed open field with nothing to
+destroy. The most violent tornado ever measured is officially an EF3. The number describes what it
+<em>hit</em>, not what it <em>was</em>. The Field Manual makes this exact point.</p>
+<p style="margin-bottom:0"><b>The safety lesson — and it's the one this whole lab is built around.</b>
+Tim Samaras did everything right by the standards of the day. He was better at this than you or I will
+be for a very long time, and the atmosphere killed him anyway, because it did something nobody
+predicted. There is no skill level at which the storm agrees to be fair. That is why, in this lab, you
+<b>spot from safety</b> — a fixed, sturdy location, never alone, never in a car. Chasing, if it ever
+comes at all, comes years from now, only with a trained adult, only once you can drive yourself out of
+trouble. El Reno is the reason those rules aren't negotiable. Read the Field Manual's safety section
+in full; it carries these names and this day for the same reason this Atlas does.</p>
+</div>
+
+<div class="box do"><h4>What all four days have in common</h4>
+<p style="margin-bottom:0">Every one of these disasters made the science better — the radar you read,
+the warnings you trust, the myths you now know to reject. But not one of them made the atmosphere
+<em>tamer</em>. The lesson threaded through all four is the quiet one at the center of this whole lab:
+<b>respect the sky, know its structure, and keep your distance.</b> Understanding a storm and
+surviving one are two different skills. This Atlas is the first. Staying in your safe place is the
+second — and it's the one that keeps you around long enough to get good at the first.</p></div>
+</section>
+
+<p style="color:var(--dim);font-size:13px;margin-top:34px">
+Sources for this Atlas: NWS Glossary and cloud/front references · NOAA JetStream (air masses, fronts,
+cloud types) · NSSL Severe Weather 101 (thunderstorm basics, tornado climatology, drylines) · SPC
+outlook and mesoanalysis parameter documentation · NOAA/NSSL US tornado climatology · NWS Norman event
+summaries for May 3, 1999 and El Reno May 31, 2013 · NWS/NOAA summaries of the 1974 and 2011 Super
+Outbreaks · Miller, Doswell, Brooks, Stumpf &amp; Rasmussen, <em>"Highway Overpasses as Tornado
+Shelters"</em> (1999). Where the science is still being refined — the "alley" boundaries, tornado
+counts over time — this Atlas says so rather than pretending it's settled. Every place it overlaps the
+<a href="../Field Manual/manual.html">Field Manual</a>, the Manual carries the operational detail and
+the full source list.</p>
+
+</main>
+</div>
+
+<script>
+const links = [].slice.call(document.querySelectorAll("nav a.sec"));
+const secs  = links.map(function(a){ return document.querySelector(a.getAttribute("href")); });
+function spy(){
+  let cur = 0;
+  secs.forEach(function(s,i){ if (s && s.getBoundingClientRect().top < 160) cur = i; });
+  links.forEach(function(a,i){ a.classList.toggle("cur", i === cur); });
+}
+window.addEventListener("scroll", spy, {passive:true});
+spy();
+</script>
+</body>
+</html>

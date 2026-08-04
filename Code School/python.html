@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Code School — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+/* ---- Code School additions (real Python, run in the browser) ---- */
+.status{position:sticky;top:0;z-index:5;font-family:var(--mono);font-size:12px;letter-spacing:.5px;
+        padding:7px 14px;border-radius:6px;margin-bottom:20px;border:1px solid var(--line);background:var(--card2)}
+.status.load{color:var(--amber);border-color:#4d3a12}
+.status.ready{color:var(--green);border-color:#17542f}
+.status.hide{display:none}
+
+.lab{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:6px 0 20px;background:#05070a}
+.labbar{display:flex;align-items:center;gap:10px;padding:8px 11px;background:var(--card2);border-bottom:1px solid var(--line)}
+.labtag{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+.labbar .sp{flex:1}
+.labbar button{font-family:var(--mono);font-size:12px;padding:5px 13px;border-radius:5px;cursor:pointer;
+        border:1px solid var(--line);background:#111a24;color:var(--text)}
+.labbar button.run{border-color:#17542f;color:var(--green)}
+.labbar button.run:hover{background:rgba(53,234,122,.12)}
+.labbar button.reset:hover{background:#18222f}
+.labbar button:disabled{opacity:.45;cursor:default}
+textarea.editor{width:100%;min-height:118px;resize:vertical;border:none;outline:none;display:block;
+        background:#05070a;color:#cfe0f0;font-family:var(--mono);font-size:13px;line-height:1.6;padding:13px 15px;
+        tab-size:4}
+.out{margin:0;border-top:1px dashed var(--line);background:#070a0e;color:#bfe3c9;
+     font-family:var(--mono);font-size:12.5px;line-height:1.55;padding:11px 15px;min-height:20px;white-space:pre-wrap;overflow-x:auto}
+.out:empty::before{content:"— press Run —";color:#3f5266}
+.out .err{color:#ff8a96}
+
+.lesson{display:none}
+.lesson.show{display:block}
+nav a.done::before{content:"✔ ";}
+.tryhead{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin:22px 0 7px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">CODE SCHOOL · PYTHON</div>
+  <a href="#l0"  data-m="l0">Start · How this works</a>
+  <a href="#l1"  data-m="l1">01 · print — say something</a>
+  <a href="#l2"  data-m="l2">02 · Variables</a>
+  <a href="#l3"  data-m="l3">03 · Numbers &amp; math</a>
+  <a href="#l4"  data-m="l4">04 · Text &amp; f-strings</a>
+  <a href="#l5"  data-m="l5">05 · if / elif / else</a>
+  <a href="#l6"  data-m="l6">06 · Lists</a>
+  <a href="#l7"  data-m="l7">07 · Loops</a>
+  <a href="#l8"  data-m="l8">08 · Functions</a>
+  <a href="#l9"  data-m="l9">09 · Dictionaries</a>
+  <a href="#l10" data-m="l10">10 · Build a nowcast</a>
+  <a href="#next" data-m="next">What comes next</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← Back to the Lab</a>
+  <a href="../Code School/projects.html">Code Projects</a>
+  <a href="../Certificates/certificates.html">Certificates</a>
+  <a href="../Academy/academy.html">Academy</a>
+  <a href="../Gear Bench/gear.html">Gear Bench</a>
+  <a href="../Missions/missions.html">Missions</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+  <a href="../Storm Deck/deck.html">Storm Deck</a>
+</nav>
+
+<main>
+
+<div id="pystatus" class="status load">● starting Python… the first load takes 10–20 seconds. It only happens once.</div>
+
+<!-- ════════════════════════════════════════════ L0 -->
+<section class="lesson" id="l0">
+<h1><span class="num">CODE SCHOOL</span>Real Python. Running right here.</h1>
+<p class="lede">This isn't a video and it isn't fake. The black boxes below run a real Python
+inside your browser — the same language the National Weather Service, NASA, and every
+meteorologist uses to crunch data. You type, you press <b>Run</b>, the computer does exactly
+what you said. Ten lessons. Every one is about weather.</p>
+
+<div class="box why"><h4>Nothing to install</h4>
+<p>Most people who try to learn Python quit in the first hour — not because code is hard, but
+because installing it is a nightmare of versions and error messages before you've written a
+single line. You skip all of that. Python is already here, in the page. Later, when you're
+ready for the real tools, the last lesson shows you how to put Python on the actual computer.</p></div>
+
+<div class="box why"><h4>Read the error. Always.</h4>
+<p>When you get something wrong, the output box turns the last line red and tells you — in
+English — what happened and which line. That is not the computer yelling at you. That is the
+computer <b>helping</b> you. Professional programmers read errors all day long. The only skill
+that separates them from everyone else is that they actually read them instead of panicking.</p></div>
+
+<h2>Try it right now</h2>
+<p>Press <b>Run</b>. (If it says Python is still loading, wait a few seconds and press it again.)</p>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">print("Storm Chaser Lab online.")
+print("Python is working.")</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box do"><h4>Now make it yours</h4>
+<p>Change the words inside the quotes to your own — your name, your town, your call sign if you
+have one — and press Run again. You just edited a program.</p></div>
+
+<label class="chk" data-k="py0"><input type="checkbox" data-k="py0"><span>I ran my first Python and read the output. On to Lesson 1.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L1 -->
+<section class="lesson" id="l1">
+<h1><span class="num">LESSON 01</span>print — making the computer talk</h1>
+<p class="lede"><code>print()</code> is how your program says something out loud. Whatever you put
+between the parentheses shows up in the output box. It's the tool you'll use most — to check what
+your code is doing, you print it and look.</p>
+
+<h2>The rules</h2>
+<ul>
+  <li>Text goes in <b>quotes</b>: <code>print("hello")</code>. Quotes mean "these exact letters."</li>
+  <li>Numbers do <b>not</b> need quotes: <code>print(72)</code>.</li>
+  <li>Each <code>print()</code> makes its own new line.</li>
+</ul>
+
+<div class="tryhead">▶ Try it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">print("Spotter report")
+print("Town: Hot Springs")
+print("Temperature:")
+print(88)</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Make it print a four-line spotter check-in: your call sign, your town, the sky
+(<code>"clear"</code>, <code>"towering cumulus"</code>, whatever), and the temperature as a
+number. Run it.</p></div>
+
+<div class="box pro"><h4>Challenge</h4>
+<p>What happens if you delete one of the quote marks and Run? Do it on purpose. Read the red line.
+That error — <code>SyntaxError</code> — is the single most common one you'll ever see. Meet it now
+while it's cheap.</p></div>
+
+<label class="chk" data-k="py1"><input type="checkbox" data-k="py1"><span>Lesson 1 done — I can make Python print.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L2 -->
+<section class="lesson" id="l2">
+<h1><span class="num">LESSON 02</span>Variables — giving numbers a name</h1>
+<p class="lede">A variable is a labeled box you put a value in. You make one with
+<code>name = value</code>. After that, the name stands for the value everywhere you use it. Real
+weather code is nothing but hundreds of these — temperature, dewpoint, pressure, wind — each in
+its own named box.</p>
+
+<div class="box why"><h4>The <code>=</code> is not "equals"</h4>
+<p>In math, <code>=</code> means "these are the same." In code it means "<b>put this into that box.</b>"
+<code>temp = 88</code> means "put 88 in the box called temp." You can put a new value in the same box
+later, and the old one is just gone.</p></div>
+
+<div class="tryhead">▶ Try it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">town = "Hot Springs"
+temp = 88
+dewpoint = 71
+
+print(town)
+print("Temp is", temp)
+print("Dewpoint is", dewpoint)</textarea>
+  <pre class="out"></pre>
+</div>
+
+<p>Notice you can hand <code>print()</code> several things at once, separated by commas, and it puts
+a space between them.</p>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Add two more boxes: <code>pressure = 29.92</code> and <code>wind = "SE 15"</code>. Print all five
+readings, each on its own line, each labeled. That's a real surface observation.</p></div>
+
+<div class="box pro"><h4>Challenge</h4>
+<p>After all your prints, add <code>temp = 95</code> and then <code>print(temp)</code> again. See how
+the box changed? That's the whole idea.</p></div>
+
+<label class="chk" data-k="py2"><input type="checkbox" data-k="py2"><span>Lesson 2 done — I can store readings in variables.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L3 -->
+<section class="lesson" id="l3">
+<h1><span class="num">LESSON 03</span>Numbers &amp; math — the converter</h1>
+<p class="lede">Python does math with <code>+ - * /</code> (that star is "times," that slash is "divide").
+The rest of the world measures temperature in Celsius; American weather uses Fahrenheit. A
+meteorologist converts between them constantly. Let's make the machine do it.</p>
+
+<h3>The formula</h3>
+<p>Fahrenheit = Celsius × 9 / 5 + 32. In Python that's almost the same line.</p>
+
+<div class="tryhead">▶ Try it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">celsius = 31
+fahrenheit = celsius * 9 / 5 + 32
+
+print(celsius, "C is", fahrenheit, "F")</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box why"><h4>Order matters — just like math class</h4>
+<p>Python does <code>*</code> and <code>/</code> before <code>+</code> and <code>-</code>, same as you
+learned. If you ever need to force an order, wrap it in parentheses: <code>(a + b) * c</code>.</p></div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Write the <b>reverse</b>: start from <code>fahrenheit = 100</code> and compute Celsius. The formula
+is Celsius = (Fahrenheit − 32) × 5 / 9. You'll need parentheses. Print it.</p></div>
+
+<div class="box pro"><h4>Challenge — dewpoint depression</h4>
+<p>Make <code>temp = 88</code> and <code>dewpoint = 71</code>, then compute and print
+<code>temp - dewpoint</code>. That number, the "dewpoint depression," tells a forecaster how close
+the air is to saturating. A small depression on a hot day is storm fuel.</p></div>
+
+<label class="chk" data-k="py3"><input type="checkbox" data-k="py3"><span>Lesson 3 done — I can do math and convert units.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L4 -->
+<section class="lesson" id="l4">
+<h1><span class="num">LESSON 04</span>Text &amp; f-strings — building the report</h1>
+<p class="lede">You'll want to mix words and numbers into one clean line — a real report reads
+<i>"Hot Springs: 88°F, dewpoint 71°F."</i> The tool for that is the <b>f-string</b>: put an
+<code>f</code> right before the opening quote, then drop any variable inside <code>{ }</code>.</p>
+
+<div class="tryhead">▶ Try it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">town = "Hot Springs"
+temp = 88
+dewpoint = 71
+
+report = f"{town}: {temp}F, dewpoint {dewpoint}F"
+print(report)</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box why"><h4>Why this beats commas</h4>
+<p>With an f-string <b>you</b> control every space, comma, and symbol — no surprises. It's how
+almost all modern Python builds text, and you'll see it everywhere. Anything inside the curly
+braces gets computed: <code>{temp - dewpoint}</code> works too.</p></div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Build a one-line report that also includes the dewpoint depression, like:
+<code>Hot Springs: 88F / DP 71F / spread 17</code>. Put the math right inside the braces.</p></div>
+
+<div class="box pro"><h4>Challenge</h4>
+<p>Round a messy number. Try <code>f"{29.92341:.2f}"</code> — the <code>:.2f</code> means "two decimal
+places." Print a pressure that way.</p></div>
+
+<label class="chk" data-k="py4"><input type="checkbox" data-k="py4"><span>Lesson 4 done — I can build clean reports with f-strings.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L5 -->
+<section class="lesson" id="l5">
+<h1><span class="num">LESSON 05</span>if / elif / else — the machine decides</h1>
+<p class="lede">This is where code stops being a calculator and starts being a spotter. An
+<code>if</code> statement checks whether something is true and only runs its block if it is. That's
+how the Storm Deck decides when to sound the tornado alarm — a comparison, exactly like the ones
+you're about to write.</p>
+
+<div class="box why"><h4>Comparisons give you True or False</h4>
+<p><code>&gt;</code> greater, <code>&lt;</code> less, <code>&gt;=</code> at least, <code>==</code> equal
+(two equals signs — one is "put in the box," two is "is it equal?"). The <code>if</code> runs its
+indented block only when the answer is True. <b>Indentation is not decoration in Python — it's how
+the language knows what's inside the <code>if</code>.</b> Four spaces.</p></div>
+
+<div class="tryhead">▶ Try it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">dewpoint = 71
+
+if dewpoint >= 65:
+    print("Juicy air. Real storm fuel today.")
+elif dewpoint >= 55:
+    print("Enough moisture for storms.")
+else:
+    print("Dry. Not much to work with.")</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Change <code>dewpoint</code> to <code>58</code> and Run. Then <code>40</code>. Watch which branch
+fires each time. You just built a three-level moisture check that a forecaster would recognize.</p></div>
+
+<div class="box pro"><h4>Challenge — two conditions</h4>
+<p>You can require two things at once with <code>and</code>. Add variables <code>cape = 2500</code> and
+<code>shear = 45</code>, then: <code>if cape &gt; 2000 and shear &gt; 40:</code> print
+<code>"Supercell setup."</code> Those two numbers together are what a Slight-vs-Enhanced risk really
+comes down to.</p></div>
+
+<label class="chk" data-k="py5"><input type="checkbox" data-k="py5"><span>Lesson 5 done — my code can make decisions.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L6 -->
+<section class="lesson" id="l6">
+<h1><span class="num">LESSON 06</span>Lists — a whole week of weather</h1>
+<p class="lede">One temperature is a variable. Seven of them is a <b>list</b>. A list holds many values
+in order, inside square brackets. Every stream of weather data — a week of highs, an hour of radar
+scans, a day of pressure readings — is a list.</p>
+
+<div class="tryhead">▶ Try it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">highs = [88, 91, 94, 90, 85, 79, 83]
+
+print("Days recorded:", len(highs))
+print("Monday's high:", highs[0])
+print("Hottest:", max(highs))
+print("Coolest:", min(highs))</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box why"><h4>Counting starts at zero</h4>
+<p><code>highs[0]</code> is the <b>first</b> item, <code>highs[1]</code> the second. This trips up
+everyone at first — computers count from 0. <code>len()</code> gives how many items, <code>max()</code>
+and <code>min()</code> find the biggest and smallest for free.</p></div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Make a list called <code>dewpoints</code> with seven values. Print how many there are, the last one
+(<code>dewpoints[-1]</code> — negative counts from the end!), and the highest.</p></div>
+
+<div class="box pro"><h4>Challenge</h4>
+<p>Add today's reading to the end with <code>highs.append(96)</code>, then print the list and its new
+length. A list can grow while the program runs — that's how a log fills up.</p></div>
+
+<label class="chk" data-k="py6"><input type="checkbox" data-k="py6"><span>Lesson 6 done — I can store many readings in a list.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L7 -->
+<section class="lesson" id="l7">
+<h1><span class="num">LESSON 07</span>Loops — do it to every reading</h1>
+<p class="lede">You have a week of highs. You want to check every one without writing seven lines. A
+<code>for</code> loop runs the same block once for each item in a list. This is the real power of
+code: whether the list has 7 items or 7 million, the loop is the same three lines.</p>
+
+<div class="tryhead">▶ Try it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">highs = [88, 91, 94, 90, 85, 79, 83]
+
+hot_days = 0
+for h in highs:
+    if h >= 90:
+        print(h, "— hot")
+        hot_days = hot_days + 1
+
+print("Days at or above 90:", hot_days)</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box why"><h4>What just happened</h4>
+<p>The loop set <code>h</code> to each high in turn — 88, then 91, then 94… — and ran the indented
+block every time. The <code>if</code> inside decided what to do. And <code>hot_days</code> kept a
+running count, a "counter." Loop + if + counter is a pattern you'll use forever.</p></div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Loop over a list of <code>dewpoints</code> and print <code>"storm fuel"</code> next to every value at
+or above 60. Count how many days qualified.</p></div>
+
+<div class="box pro"><h4>Challenge — the countdown</h4>
+<p>A <code>while</code> loop runs as long as something stays true. Try:</p>
+<pre><code>seconds = 5
+while seconds > 0:
+    print(seconds)
+    seconds = seconds - 1
+print("Warning issued.")</code></pre>
+<p>Change it to count down from 10.</p></div>
+
+<label class="chk" data-k="py7"><input type="checkbox" data-k="py7"><span>Lesson 7 done — I can loop over data.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L8 -->
+<section class="lesson" id="l8">
+<h1><span class="num">LESSON 08</span>Functions — your own tools</h1>
+<p class="lede">A function is a machine you build once and use forever. You already use Python's
+built-in ones — <code>print()</code>, <code>len()</code>, <code>max()</code>. Now you make your own
+with <code>def</code>. Real weather software is thousands of small functions, each doing one job.</p>
+
+<div class="tryhead">▶ Try it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">def to_fahrenheit(celsius):
+    return celsius * 9 / 5 + 32
+
+print(to_fahrenheit(0))
+print(to_fahrenheit(31))
+print(to_fahrenheit(100))</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box why"><h4>Feed it in, get an answer back</h4>
+<p><code>def to_fahrenheit(celsius):</code> builds a tool that takes one thing in (called
+<code>celsius</code> while inside). <code>return</code> is the answer it hands back. Build it once, call
+it as many times as you want. No copy-pasting the formula ever again.</p></div>
+
+<div class="box do"><h4>Your lab — the wind chill machine</h4>
+<p>Write <code>def dewpoint_ok(dp):</code> that <code>return dp &gt;= 60</code> — it hands back True or
+False. Then print <code>dewpoint_ok(71)</code> and <code>dewpoint_ok(45)</code>. You just made a
+reusable moisture test.</p></div>
+
+<div class="box pro"><h4>Challenge — two inputs</h4>
+<p>Functions can take more than one thing. Write <code>def spread(temp, dp): return temp - dp</code> and
+call it with <code>spread(88, 71)</code>. That's the dewpoint depression from Lesson 3, now a
+permanent tool.</p></div>
+
+<label class="chk" data-k="py8"><input type="checkbox" data-k="py8"><span>Lesson 8 done — I can build my own functions.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L9 -->
+<section class="lesson" id="l9">
+<h1><span class="num">LESSON 09</span>Dictionaries — a real observation</h1>
+<p class="lede">A list is values in order. A <b>dictionary</b> is values with <i>labels</i> — exactly how
+real weather data arrives. When the Storm Deck asks the National Weather Service for conditions, it
+gets back a dictionary: <code>"temperature"</code> → 88, <code>"dewpoint"</code> → 71, and so on. This
+is the shape of live data.</p>
+
+<div class="tryhead">▶ Try it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">obs = {
+    "town": "Hot Springs",
+    "temp": 88,
+    "dewpoint": 71,
+    "wind": "SE 15",
+    "pressure": 29.92,
+}
+
+print("Reading for", obs["town"])
+print("Temp:", obs["temp"])
+print("Dewpoint:", obs["dewpoint"])</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box why"><h4>Look things up by name, not by number</h4>
+<p>With a list you'd have to remember that position 2 is the dewpoint. With a dictionary you just ask
+for <code>obs["dewpoint"]</code>. When you pull real data in the next lesson of your life — from the
+NWS, from your own weather station — it comes exactly like this.</p></div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Add a key <code>"sky"</code> with a value like <code>"towering cumulus"</code>. Then build an f-string
+report that pulls three values out of <code>obs</code> and prints one clean line.</p></div>
+
+<div class="box pro"><h4>Challenge — loop the whole reading</h4>
+<pre><code>for key, value in obs.items():
+    print(key, "=", value)</code></pre>
+<p>That prints every label and value in the observation. Add it and Run.</p></div>
+
+<label class="chk" data-k="py9"><input type="checkbox" data-k="py9"><span>Lesson 9 done — I understand the shape of real weather data.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ L10 -->
+<section class="lesson" id="l10">
+<h1><span class="num">LESSON 10</span>Capstone — build a nowcast</h1>
+<p class="lede">Everything at once. You're going to take an observation, compute the numbers a
+forecaster actually looks at, and have your program print a plain-English call. This is a real —
+if simple — nowcast, and every piece of it is something you built in the last nine lessons.</p>
+
+<div class="box why"><h4>The one real formula here</h4>
+<p>"Relative humidity" is the number on a phone, but forecasters live on <b>dewpoint</b>. The line
+below turns temperature + humidity into an approximate dewpoint using the Magnus formula — the
+actual equation in meteorology textbooks. You don't have to understand the math yet. You have to
+see that it's just a function you can call.</p></div>
+
+<div class="tryhead">▶ Try it — then finish the lab</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">import math
+
+def dewpoint_f(temp_f, rh):
+    # Magnus formula — the real one, in Celsius, then back to F
+    t = (temp_f - 32) * 5 / 9
+    a, b = 17.625, 243.04
+    g = math.log(rh / 100) + (a * t) / (b + t)
+    dp_c = (b * g) / (a - g)
+    return dp_c * 9 / 5 + 32
+
+def nowcast(obs):
+    dp = dewpoint_f(obs["temp"], obs["rh"])
+    spread = obs["temp"] - dp
+    print(f'{obs["town"]}: {obs["temp"]}F, dewpoint {dp:.0f}F, spread {spread:.0f}')
+    if dp >= 65 and obs["cape"] >= 2000:
+        print("  -> Loaded atmosphere. Watch for supercells.")
+    elif dp >= 55:
+        print("  -> Enough moisture for storms.")
+    else:
+        print("  -> Limited fuel today.")
+
+today = {"town": "Hot Springs", "temp": 92, "rh": 55, "cape": 2600}
+nowcast(today)</textarea>
+  <pre class="out"></pre>
+</div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Make a second dictionary <code>tomorrow</code> with different numbers — a cooler, drier day — and
+call <code>nowcast(tomorrow)</code> too. Run both through the same function. That's the whole point of
+functions: one tool, any day's data.</p></div>
+
+<div class="box pro"><h4>Challenge — a week of nowcasts</h4>
+<p>Put several day-dictionaries in a <b>list</b>, then <code>for day in week:</code> call
+<code>nowcast(day)</code>. Ten lessons, and your program just forecast a whole week. That is not a toy
+version of the job. That is a small, honest piece of the real one.</p></div>
+
+<label class="chk" data-k="py10"><input type="checkbox" data-k="py10"><span>Capstone done — I built a working nowcast.</span></label>
+</section>
+
+<!-- ════════════════════════════════════════════ NEXT -->
+<section class="lesson" id="next">
+<h1><span class="num">WHAT COMES NEXT</span>From this page to the real tools</h1>
+<p class="lede">The Python you just learned is the same Python the pros use — you were running the
+real thing, not a training-wheels copy. The only difference is that they run it on the computer
+itself, with extra libraries bolted on. Here's the honest path from here.</p>
+
+<h2>1 · Put Python on the actual computer</h2>
+<p>Go to <b>python.org</b> and download it (free, forever). On Windows, check the box that says
+<b>"Add Python to PATH"</b> during install — that one checkbox saves hours. Then you can write
+programs that save files, read your Chase Log, and run without a browser.</p>
+
+<div class="box do"><h4>The tool that installs other tools</h4>
+<p>Python comes with <code>pip</code>. In a terminal, <code>pip install thing</code> downloads a
+library. That's how you add the weather superpowers below.</p></div>
+
+<h2>2 · The real meteorology libraries</h2>
+<table>
+  <tr><th>Library</th><th>What it gives you</th></tr>
+  <tr><td><code>numpy</code></td><td>Fast math on huge piles of numbers — the base everything sits on.</td></tr>
+  <tr><td><code>matplotlib</code></td><td>Turns your data into charts. Your first plotted temperature graph is a great feeling.</td></tr>
+  <tr><td><code>pandas</code></td><td>Spreadsheets in code. Load a year of readings, ask it questions.</td></tr>
+  <tr><td><code>MetPy</code></td><td>Built by meteorologists <b>for</b> meteorologists — dewpoint, CAPE, and the Skew-T sounding chart from the Gear Bench, all as functions.</td></tr>
+  <tr><td><code>siphon</code></td><td>Pulls live, real data straight from the National Weather Service into your code.</td></tr>
+</table>
+<p>With <code>MetPy</code> and <code>siphon</code>, the nowcast you just wrote by hand becomes a program
+that reads the actual atmosphere over your town, right now. That is a real thing a real 15-year-old
+has built.</p>
+
+<h2>3 · Point it at hardware</h2>
+<p>The <b>Gear Bench</b> shows how to build a weather station from a Raspberry Pi and a $5 sensor.
+The code that reads that sensor is Python — the same language on this page. Learn it here, wire it
+to real instruments there. That loop, from your keyboard to the actual sky, is the entire craft.</p>
+
+<div class="box warn"><h4>The one that decides everything</h4>
+<p>Read <b>The Long Game</b> if you haven't. The short version: being a real meteorologist is gated
+behind <b>math</b> — calculus, then differential equations. Code is how you'll <i>use</i> that math,
+and starting now gives you a running head start most people never get. Keep coding. And get into the
+most advanced math class your school offers, and stay in it.</p></div>
+
+<p style="margin-top:26px"><a href="../Gear Bench/gear.html">→ Gear Bench: build the hardware</a>
+&nbsp;·&nbsp; <a href="../The Long Game/roadmap.html">→ The Long Game: the plan</a>
+&nbsp;·&nbsp; <a href="../Missions/missions.html">→ Missions: change the live Deck</a></p>
+
+<label class="chk" data-k="pynext"><input type="checkbox" data-k="pynext"><span>I read what comes next. I know where this goes.</span></label>
+</section>
+
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script>
+/* ── progress + navigation (shares the lab's progress store) ────── */
+const KEY = "stormlab.progress";
+const load = () => JSON.parse(localStorage.getItem(KEY) || "{}");
+const save = o  => localStorage.setItem(KEY, JSON.stringify(o));
+
+function show(id){
+  document.querySelectorAll(".lesson").forEach(s => s.classList.toggle("show", s.id === id));
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("cur", a.dataset.m === id));
+  window.scrollTo(0,0);
+}
+function paint(){
+  const p = load();
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("done", !!p[a.dataset.m]));
+  document.querySelectorAll(".chk").forEach(l => {
+    const box = l.querySelector("input");
+    box.checked = !!p[box.dataset.k];
+    l.classList.toggle("on", box.checked);
+  });
+}
+document.querySelectorAll("nav a[data-m]").forEach(a => {
+  a.onclick = e => { e.preventDefault(); show(a.dataset.m); history.replaceState(null,"","#"+a.dataset.m); };
+});
+document.querySelectorAll(".chk input").forEach(box => {
+  box.onchange = () => { const p = load(); p[box.dataset.k] = box.checked; save(p); paint(); };
+});
+
+/* ── the Python runner (Pyodide) ────────────────────────────────── */
+let pyodide = null, pyReady = false;
+const statusEl = document.getElementById("pystatus");
+function setStatus(cls, text){ statusEl.className = "status " + cls; statusEl.textContent = text; }
+
+async function bootPython(){
+  try{
+    pyodide = await loadPyodide();
+    pyReady = true;
+    setStatus("ready", "● Python ready. Press Run on any box.");
+    setTimeout(() => statusEl.classList.add("hide"), 4000);
+  }catch(e){
+    setStatus("load", "Couldn't start Python — check your internet and press F5. (It loads once from the web.)");
+  }
+}
+const bootPromise = bootPython();
+
+function escapeHtml(s){ return s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+async function runLab(editor, out, btn){
+  if(!pyReady){
+    out.textContent = "Python is still loading… hang on.";
+    statusEl.classList.remove("hide");
+    await bootPromise;
+    if(!pyReady){ out.innerHTML = '<span class="err">Python isn\'t available — check your connection.</span>'; return; }
+  }
+  btn.disabled = true;
+  let buf = "";
+  const write = s => { buf += s; out.textContent = buf; };
+  pyodide.setStdout({ batched: write });
+  pyodide.setStderr({ batched: write });
+  try{
+    await pyodide.loadPackagesFromImports(editor.value);   // auto-loads numpy/etc if imported
+    await pyodide.runPythonAsync(editor.value);
+    if(buf === "") out.textContent = "(ran fine — add a print() to see something)";
+  }catch(e){
+    const msg = String((e && e.message) ? e.message : e);
+    out.innerHTML = escapeHtml(buf) + '<span class="err">' + escapeHtml(msg.trim().split("\n").slice(-6).join("\n")) + '</span>';
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+document.querySelectorAll(".lab").forEach(lab => {
+  const editor = lab.querySelector(".editor");
+  const out    = lab.querySelector(".out");
+  const runBtn = lab.querySelector(".run");
+  const resetBtn = lab.querySelector(".reset");
+  const original = editor.value;
+  runBtn.onclick   = () => runLab(editor, out, runBtn);
+  resetBtn.onclick = () => { editor.value = original; out.textContent = ""; };
+  // Tab inserts four spaces instead of leaving the box (Python needs indentation)
+  editor.addEventListener("keydown", e => {
+    if(e.key === "Tab"){
+      e.preventDefault();
+      const s = editor.selectionStart, en = editor.selectionEnd;
+      editor.value = editor.value.slice(0, s) + "    " + editor.value.slice(en);
+      editor.selectionStart = editor.selectionEnd = s + 4;
+    }
+  });
+});
+
+show((location.hash || "#l0").slice(1));
+paint();
+</script>
+
+</body>
+</html>

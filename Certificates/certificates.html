@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Certificates — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+/* ── name / call sign field ── */
+.namebar{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:16px 19px;margin:0 0 30px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+.namebar .fld{display:flex;flex-direction:column;gap:5px;flex:1;min-width:180px}
+.namebar label{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;
+    text-transform:uppercase;color:var(--dim)}
+.namebar input{background:#05070a;border:1px solid var(--line);border-radius:5px;
+    color:var(--text);font-family:var(--sans);font-size:15px;padding:9px 12px}
+.namebar input:focus{outline:none;border-color:var(--accent)}
+.namebar .hint{flex-basis:100%;font-size:12.5px;color:var(--dim);margin:0}
+
+/* ── certificate panel ── */
+.cert{position:relative;border:2px solid var(--acc);border-radius:10px;
+    background:linear-gradient(180deg,var(--card),var(--card2));
+    padding:6px;margin:0 0 34px}
+.cert .inner{border:1px solid var(--acc);border-radius:6px;padding:34px 38px 30px;
+    text-align:center;position:relative}
+.cert .kicker{font-family:var(--mono);font-size:11px;letter-spacing:3px;
+    text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.cert .rankname{font-size:27px;letter-spacing:-.3px;margin:0 0 4px;color:#fff;line-height:1.2}
+.cert .tagline{font-size:14.5px;color:var(--dim);font-style:italic;margin:0 auto 20px;max-width:520px}
+.cert .presented{font-family:var(--mono);font-size:10.5px;letter-spacing:2px;
+    text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.cert .holder{font-size:23px;color:var(--acc);font-weight:700;margin:0 0 3px;
+    min-height:29px;letter-spacing:.2px}
+.cert .callsign{font-family:var(--mono);font-size:12px;color:var(--dim);margin:0 0 22px;min-height:15px}
+.cert .callsign span{color:var(--acc)}
+.cert .footline{display:flex;justify-content:space-between;gap:20px;
+    margin-top:22px;padding-top:16px;border-top:1px solid var(--line);text-align:left}
+.cert .footline .f{flex:1}
+.cert .footline .lab{font-family:var(--mono);font-size:9.5px;letter-spacing:1.6px;
+    text-transform:uppercase;color:var(--dim);margin-bottom:3px}
+.cert .footline .val{font-size:13.5px;color:var(--text)}
+.cert .footline .issuer{text-align:right}
+.cert .footline .issuer .val{color:var(--acc);font-weight:600;letter-spacing:.5px}
+
+/* seal */
+.seal{width:82px;height:82px;margin:0 auto 16px;display:block}
+.seal circle,.seal path,.seal polygon{vector-effect:non-scaling-stroke}
+
+/* earned / locked marks */
+.cert .status{position:absolute;top:16px;right:20px;font-family:var(--mono);font-size:11px;
+    letter-spacing:1.6px;text-transform:uppercase;padding:4px 11px;border-radius:20px;
+    border:1px solid var(--acc);color:var(--acc)}
+.cert.locked{opacity:.62;filter:saturate(.5)}
+.cert.locked .status{border-color:var(--line);color:var(--dim)}
+.cert.locked .holder{color:var(--dim)}
+
+.lockmsg{text-align:center;margin:2px auto 4px;font-size:13.5px;color:var(--dim);max-width:520px}
+.lockmsg b{color:var(--text)}
+.lockmsg .pbar{height:6px;border-radius:4px;background:#05070a;margin:10px auto 12px;
+    overflow:hidden;max-width:340px;border:1px solid var(--line)}
+.lockmsg .pbar>i{display:block;height:100%;width:0;background:var(--acc);transition:width .35s}
+
+.certbtns{text-align:center;margin-top:8px}
+.printbtn{font-family:var(--mono);font-size:12px;letter-spacing:1.2px;text-transform:uppercase;
+    background:var(--acc);color:#0b0f15;border:none;border-radius:6px;padding:10px 20px;
+    cursor:pointer;font-weight:700}
+.printbtn:hover{filter:brightness(1.1)}
+
+/* per-rank accent colors */
+#rookie {--acc:var(--green)}
+#spotter{--acc:var(--accent)}
+#analyst{--acc:var(--amber)}
+#chaser {--acc:var(--purple)}
+
+/* ══════════ PRINT ══════════ */
+@media print{
+  @page{margin:14mm}
+  body{background:#fff !important;color:#111 !important}
+  nav,.namebar,.lede,h1,#howto,#intronote,.certbtns,.status.locked,
+  .cert.locked,.lockmsg{display:none !important}
+  .wrap{display:block !important}
+  main{max-width:none !important;padding:0 !important}
+  /* only the one flagged cert prints */
+  .cert{display:none !important}
+  .cert.printing{display:block !important;page-break-inside:avoid;break-inside:avoid;
+    opacity:1 !important;filter:none !important;
+    border-color:#333 !important;background:#fff !important;
+    box-shadow:none;margin:0 auto;max-width:660px}
+  .cert.printing .inner{border-color:#777 !important}
+  .cert.printing .kicker,.cert.printing .presented,.cert.printing .tagline,
+  .cert.printing .footline .lab,.cert.printing .footline .val,
+  .cert.printing .callsign{color:#333 !important}
+  .cert.printing .rankname{color:#111 !important}
+  .cert.printing .holder{color:#111 !important;-webkit-print-color-adjust:exact}
+  .cert.printing .footline{border-top-color:#bbb !important}
+  .cert.printing .footline .issuer .val{color:#111 !important}
+  .cert.printing .status{border-color:#111 !important;color:#111 !important}
+  .cert.printing .seal *{stroke:#333 !important;fill:#333 !important}
+  .cert.printing .seal .fillnone{fill:none !important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">CERTIFICATES</div>
+  <a href="#rookie">Rookie</a>
+  <a href="#spotter">Spotter</a>
+  <a href="#analyst">Analyst</a>
+  <a href="#chaser">Chaser-in-Training</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← The Station</a>
+  <a href="../Academy/academy.html">The Academy</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+  <a href="../Code School/python.html">Code School</a>
+  <a href="../Atlas/atlas.html">Storm Atlas</a>
+  <a href="../Trainers/radar.html">Radar Trainer</a>
+  <a href="../Quiz/quiz.html">Flashcards</a>
+  <a href="../SKYWARN/skywarn.html">SKYWARN</a>
+  <a href="../Chase Log/log.html">Chase Log</a>
+</nav>
+
+<main>
+  <h1><span class="num">CERTIFICATES</span>Rank Certificates</h1>
+  <p class="lede">Real milestones, not participation ribbons. Each certificate below stays
+     locked until you finish every step of that rank in the Academy. When you earn one,
+     print it and hang it up — you did the work.</p>
+
+  <div class="box why" id="intronote">
+    <h4>What this certificate is (and isn't)</h4>
+    <p style="margin-bottom:8px">A certificate here means one thing: <b>you finished this lab's training
+       for that rank.</b> That's a personal milestone, and it's worth being proud of.</p>
+    <p style="margin-bottom:0">It is not a government license. The one official, government-recognized
+       credential in this whole lab is <a href="../SKYWARN/skywarn.html">SKYWARN spotter training</a>,
+       run by the National Weather Service. These certificates are the map that walks you toward it —
+       Rookie and Spotter get you ready to take the real class.</p>
+  </div>
+
+  <div class="namebar">
+    <div class="fld">
+      <label for="nm">Your name (goes on every certificate)</label>
+      <input id="nm" type="text" placeholder="e.g. Alex Rivera" autocomplete="off" maxlength="42">
+    </div>
+    <div class="fld">
+      <label for="cs">Call sign (optional)</label>
+      <input id="cs" type="text" placeholder="e.g. SKY-7 or your ham callsign" autocomplete="off" maxlength="24">
+    </div>
+    <p class="hint">Saved on this computer only. Type it once and it fills in below automatically.</p>
+  </div>
+
+  <!-- ROOKIE -->
+  <div class="cert locked" id="rookie" data-rank="1">
+    <div class="inner">
+      <div class="status">Locked</div>
+      <svg class="seal" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="50" cy="50" r="44" class="fillnone"/>
+        <circle cx="50" cy="50" r="37" class="fillnone" stroke-dasharray="2 4"/>
+        <path d="M50 24 L58 44 L79 44 L62 57 L69 78 L50 65 L31 78 L38 57 L21 44 L42 44 Z"
+              fill="currentColor" stroke="none"/>
+      </svg>
+      <div class="kicker">Storm Chaser Lab · Rank 1</div>
+      <div class="rankname">Rookie</div>
+      <p class="tagline">Watches the sky and knows what she's looking at.</p>
+      <div class="presented">This certifies that</div>
+      <div class="holder" data-holder>—</div>
+      <div class="callsign" data-callsign></div>
+      <div class="footline">
+        <div class="f"><div class="lab">Date earned</div><div class="val" data-date>—</div></div>
+        <div class="f issuer"><div class="lab">Issued by</div><div class="val">Storm Chaser Station</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lockmsg" data-lockmsg-for="rookie"></div>
+  <div class="certbtns" data-btns-for="rookie"></div>
+
+  <!-- SPOTTER -->
+  <div class="cert locked" id="spotter" data-rank="2">
+    <div class="inner">
+      <div class="status">Locked</div>
+      <svg class="seal" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="50" cy="50" r="44" class="fillnone"/>
+        <circle cx="50" cy="50" r="37" class="fillnone" stroke-dasharray="2 4"/>
+        <circle cx="50" cy="50" r="26" class="fillnone"/>
+        <circle cx="50" cy="50" r="15" class="fillnone"/>
+        <path d="M50 24 L50 50 L69 60" stroke-width="3"/>
+        <circle cx="50" cy="50" r="3.5" fill="currentColor" stroke="none"/>
+      </svg>
+      <div class="kicker">Storm Chaser Lab · Rank 2</div>
+      <div class="rankname">Spotter</div>
+      <p class="tagline">Reads the radar and is ready for SKYWARN.</p>
+      <div class="presented">This certifies that</div>
+      <div class="holder" data-holder>—</div>
+      <div class="callsign" data-callsign></div>
+      <div class="footline">
+        <div class="f"><div class="lab">Date earned</div><div class="val" data-date>—</div></div>
+        <div class="f issuer"><div class="lab">Issued by</div><div class="val">Storm Chaser Station</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lockmsg" data-lockmsg-for="spotter"></div>
+  <div class="certbtns" data-btns-for="spotter"></div>
+
+  <!-- ANALYST -->
+  <div class="cert locked" id="analyst" data-rank="3">
+    <div class="inner">
+      <div class="status">Locked</div>
+      <svg class="seal" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="50" cy="50" r="44" class="fillnone"/>
+        <circle cx="50" cy="50" r="37" class="fillnone" stroke-dasharray="2 4"/>
+        <path d="M28 68 L42 52 L54 60 L72 34" stroke-width="3" class="fillnone"/>
+        <path d="M64 34 L72 34 L72 42" stroke-width="3" class="fillnone"/>
+        <path d="M28 30 L28 72 L72 72" stroke-width="2.5" class="fillnone"/>
+      </svg>
+      <div class="kicker">Storm Chaser Lab · Rank 3</div>
+      <div class="rankname">Analyst</div>
+      <p class="tagline">Reads the data and calls what the sky will do.</p>
+      <div class="presented">This certifies that</div>
+      <div class="holder" data-holder>—</div>
+      <div class="callsign" data-callsign></div>
+      <div class="footline">
+        <div class="f"><div class="lab">Date earned</div><div class="val" data-date>—</div></div>
+        <div class="f issuer"><div class="lab">Issued by</div><div class="val">Storm Chaser Station</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lockmsg" data-lockmsg-for="analyst"></div>
+  <div class="certbtns" data-btns-for="analyst"></div>
+
+  <!-- CHASER -->
+  <div class="cert locked" id="chaser" data-rank="4">
+    <div class="inner">
+      <div class="status">Locked</div>
+      <svg class="seal" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="50" cy="50" r="44" class="fillnone"/>
+        <circle cx="50" cy="50" r="37" class="fillnone" stroke-dasharray="2 4"/>
+        <path d="M34 66 C30 40 46 24 62 30 C54 34 52 42 56 48 C64 40 74 46 72 58
+                 C68 52 60 54 58 60 C68 62 70 72 60 76 L40 76 C34 74 33 70 34 66 Z"
+              fill="currentColor" stroke="none"/>
+      </svg>
+      <div class="kicker">Storm Chaser Lab · Rank 4</div>
+      <div class="rankname">Chaser-in-Training</div>
+      <p class="tagline">Knows what it takes, and is building toward it the right way.</p>
+      <div class="presented">This certifies that</div>
+      <div class="holder" data-holder>—</div>
+      <div class="callsign" data-callsign></div>
+      <div class="footline">
+        <div class="f"><div class="lab">Date earned</div><div class="val" data-date>—</div></div>
+        <div class="f issuer"><div class="lab">Issued by</div><div class="val">Storm Chaser Station</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lockmsg" data-lockmsg-for="chaser"></div>
+  <div class="certbtns" data-btns-for="chaser"></div>
+
+  <p id="howto" style="color:var(--dim);font-size:14px;margin-top:24px">
+    New here, or a certificate stuck at "locked"? Every step lives in
+    <a href="../Academy/academy.html">The Academy</a> — check the boxes as you finish each one,
+    then come back and print.
+  </p>
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var PKEY="stormlab.progress", NKEY="stormlab.name", CKEY="stormlab.callsign";
+
+  var RANKS={
+    rookie:{n:1,title:"Rookie",keys:["r1-deck","r1-fm1","r1-fm2","r1-atlas","r1-cs1","r1-cs2","r1-cs3","r1-radio","r1-log"]},
+    spotter:{n:2,title:"Spotter",keys:["r2-anat","r2-dbz","r2-vel","r2-sig","r2-blind","r2-radar","r2-decode","r2-cs4","r2-cs67","r2-air","r2-skywarn"]},
+    analyst:{n:3,title:"Analyst",keys:["r3-spc","r3-nums","r3-skewt","r3-cap","r3-cs89","r3-station","r3-cocorahs"]},
+    chaser:{n:4,title:"Chaser-in-Training",keys:["r4-longgame","r4-math","r4-ham","r4-mesonet","r4-numbers"]}
+  };
+
+  function readProgress(){
+    try{ var o=JSON.parse(localStorage.getItem(PKEY)||"{}"); return (o&&typeof o==="object")?o:{}; }
+    catch(e){ return {}; }
+  }
+  function get(k){ try{ return localStorage.getItem(k)||""; }catch(e){ return ""; } }
+  function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function esc(s){ return String(s).replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];}); }
+  function today(){
+    try{ return new Date().toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"}); }
+    catch(e){ return new Date().toDateString(); }
+  }
+
+  var prog=readProgress();
+
+  function count(keys){
+    var c=0;
+    for(var i=0;i<keys.length;i++){ if(prog[keys[i]]===true) c++; }
+    return c;
+  }
+
+  function fillHolder(){
+    var name=get(NKEY).trim(), call=get(CKEY).trim();
+    var shown=name?esc(name):"—";
+    var els=document.querySelectorAll(".cert [data-holder]");
+    for(var i=0;i<els.length;i++){ els[i].textContent=name?name:"—"; }
+    var cs=document.querySelectorAll(".cert [data-callsign]");
+    for(var j=0;j<cs.length;j++){
+      cs[j].innerHTML = call ? ("Call sign · <span>"+esc(call)+"</span>") : "";
+    }
+  }
+
+  function render(id){
+    var r=RANKS[id];
+    var cert=document.getElementById(id);
+    if(!cert||!r) return;
+    var done=count(r.keys), total=r.keys.length, earned=(done>=total);
+    var statusEl=cert.querySelector(".status");
+    var dateEl=cert.querySelector("[data-date]");
+    var lockBox=document.querySelector('[data-lockmsg-for="'+id+'"]');
+    var btnBox=document.querySelector('[data-btns-for="'+id+'"]');
+
+    if(earned){
+      cert.classList.remove("locked");
+      if(statusEl) statusEl.textContent="✓ Earned";
+      if(dateEl) dateEl.textContent=today();
+      if(lockBox) lockBox.innerHTML="";
+      if(btnBox){
+        btnBox.innerHTML='<button class="printbtn" type="button">🖨 Print / Save as PDF</button>';
+        btnBox.querySelector("button").addEventListener("click",function(){ printCert(cert); });
+      }
+    }else{
+      cert.classList.add("locked");
+      if(statusEl){ statusEl.textContent="Locked"; statusEl.classList.add("locked"); }
+      if(dateEl) dateEl.textContent="—";
+      var pct=Math.round(done/total*100);
+      if(lockBox){
+        lockBox.innerHTML=
+          '<div><b>'+done+' of '+total+'</b> steps complete — finish Rank '+r.n+
+          ' in the Academy to unlock this certificate.</div>'+
+          '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
+          '<div><a href="../Academy/academy.html#rank'+r.n+'">Go to Rank '+r.n+' →</a></div>';
+      }
+      if(btnBox) btnBox.innerHTML="";
+    }
+  }
+
+  function printCert(cert){
+    if(cert.classList.contains("locked")) return;
+    var cleanup=function(){
+      cert.classList.remove("printing");
+      window.removeEventListener("afterprint",cleanup);
+    };
+    window.addEventListener("afterprint",cleanup);
+    cert.classList.add("printing");
+    // safety: strip the flag even if afterprint never fires
+    setTimeout(function(){ cert.classList.remove("printing"); },1500);
+    try{ window.print(); }catch(e){ cert.classList.remove("printing"); }
+  }
+
+  // name / call sign fields
+  var nm=document.getElementById("nm"), cs=document.getElementById("cs");
+  if(nm){ nm.value=get(NKEY); nm.addEventListener("input",function(){ set(NKEY,nm.value); fillHolder(); }); }
+  if(cs){ cs.value=get(CKEY); cs.addEventListener("input",function(){ set(CKEY,cs.value); fillHolder(); }); }
+
+  fillHolder();
+  for(var id in RANKS){ if(RANKS.hasOwnProperty(id)) render(id); }
+})();
+</script>
+</body>
+</html>

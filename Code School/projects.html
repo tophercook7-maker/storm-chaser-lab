@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Code Projects — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+.status{position:sticky;top:0;z-index:5;font-family:var(--mono);font-size:12px;letter-spacing:.5px;
+        padding:7px 14px;border-radius:6px;margin-bottom:20px;border:1px solid var(--line);background:var(--card2)}
+.status.load{color:var(--amber);border-color:#4d3a12}
+.status.ready{color:var(--green);border-color:#17542f}
+.status.hide{display:none}
+.lab{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:6px 0 20px;background:#05070a}
+.labbar{display:flex;align-items:center;gap:10px;padding:8px 11px;background:var(--card2);border-bottom:1px solid var(--line)}
+.labtag{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+.labbar .sp{flex:1}
+.labbar button{font-family:var(--mono);font-size:12px;padding:5px 13px;border-radius:5px;cursor:pointer;border:1px solid var(--line);background:#111a24;color:var(--text)}
+.labbar button.run{border-color:#17542f;color:var(--green)}
+.labbar button.run:hover{background:rgba(53,234,122,.12)}
+.labbar button:disabled{opacity:.45;cursor:default}
+textarea.editor{width:100%;min-height:150px;resize:vertical;border:none;outline:none;display:block;
+        background:#05070a;color:#cfe0f0;font-family:var(--mono);font-size:13px;line-height:1.6;padding:13px 15px;tab-size:4}
+.out{margin:0;border-top:1px dashed var(--line);background:#070a0e;color:#bfe3c9;font-family:var(--mono);
+     font-size:12.5px;line-height:1.55;padding:11px 15px;min-height:8px;white-space:pre-wrap;overflow-x:auto}
+.out .err{color:#ff8a96}
+.plotout{background:#0e141d;text-align:center}
+.plotout:empty{display:none}
+.plotout img{max-width:100%;height:auto;display:block;margin:0 auto;padding:8px}
+.lesson{display:none}
+.lesson.show{display:block}
+nav a.done::before{content:"✔ ";}
+.tryhead{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin:22px 0 7px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">CODE PROJECTS</div>
+  <a href="#p0" data-m="p0">Start · charts &amp; real data</a>
+  <a href="#p1" data-m="p1">01 · Your first chart</a>
+  <a href="#p2" data-m="p2">02 · Temp vs dewpoint</a>
+  <a href="#p3" data-m="p3">03 · Plot your Chase Log</a>
+  <a href="#p4" data-m="p4">04 · Severe-day scanner</a>
+  <a href="#more" data-m="more">Where this goes</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← The Station</a>
+  <a href="../Certificates/certificates.html">Certificates</a>
+  <a href="../Code School/python.html">Code School (lessons)</a>
+  <a href="../Academy/academy.html">Academy</a>
+  <a href="../Chase Log/log.html">Chase Log</a>
+  <a href="../Gear Bench/gear.html">Gear Bench</a>
+  <a href="../Trainers/skewt.html">Skew-T</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+</nav>
+
+<main>
+
+<div id="pystatus" class="status load">● starting Python… the first load takes 10–20 seconds. Charts load a bit more the first time you plot.</div>
+
+<!-- ═══════════ P0 -->
+<section class="lesson" id="p0">
+<h1><span class="num">CODE PROJECTS</span>Now make Python draw.</h1>
+<p class="lede">You finished Code School — you can store data, loop it, and make decisions. Time to turn
+numbers into <b>pictures</b>. These projects use <code>matplotlib</code>, the real charting library
+meteorologists use, running right here in the page. The last two plot your <b>own Chase Log</b>.</p>
+
+<div class="box why"><h4>Do Code School first</h4>
+<p>If <code>for</code> loops and <code>lists</code> aren't familiar yet, go back to
+<a href="python.html">Code School</a> and come here after. These build directly on it.</p></div>
+
+<div class="box do"><h4>First plot is slow — that's normal</h4>
+<p>The very first time you run a chart, Python has to download the drawing library (a few seconds).
+After that it's instant. If a chart doesn't show, press Run again.</p></div>
+
+<label class="chk" data-k="proj0"><input type="checkbox" data-k="proj0"><span>I finished Code School and I'm ready to plot.</span></label>
+</section>
+
+<!-- ═══════════ P1 -->
+<section class="lesson" id="p1">
+<h1><span class="num">PROJECT 01</span>Your first chart</h1>
+<p class="lede">A week of high temperatures is just a list. Let's <i>see</i> it. Press Run — give the first
+plot a few seconds to load the library.</p>
+
+<div class="tryhead">▶ Run it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python + matplotlib</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">import matplotlib.pyplot as plt
+
+days  = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+highs = [88, 91, 94, 90, 85, 79, 83]
+
+plt.plot(days, highs, marker="o")
+plt.title("This week's high temperatures")
+plt.ylabel("High (F)")
+plt.grid(True)</textarea>
+  <pre class="out"></pre>
+  <div class="plotout"></div>
+</div>
+
+<div class="box why"><h4>What each line did</h4>
+<p><code>plt.plot(x, y)</code> drew the line. <code>marker="o"</code> put a dot on each day.
+<code>title</code>, <code>ylabel</code>, and <code>grid</code> dressed it up. You don't call
+<code>plt.show()</code> here — this station grabs the finished chart for you automatically.</p></div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Add a second list <code>lows = [70, 72, 74, 71, 66, 60, 63]</code> and a second
+<code>plt.plot(days, lows, marker="o")</code> line before the title. Two lines, one chart. Run it.</p></div>
+
+<label class="chk" data-k="proj1"><input type="checkbox" data-k="proj1"><span>Project 1 done — I made a chart.</span></label>
+</section>
+
+<!-- ═══════════ P2 -->
+<section class="lesson" id="p2">
+<h1><span class="num">PROJECT 02</span>Temperature vs dewpoint — see the fuel</h1>
+<p class="lede">From the Field Manual: the closer temperature and dewpoint are, the more moisture — the
+more storm fuel. Instead of reading two columns of numbers, let's shade the gap and <i>look</i> at it.</p>
+
+<div class="tryhead">▶ Run it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Python + matplotlib</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">import matplotlib.pyplot as plt
+
+hours     = [1,2,3,4,5,6,7,8]
+temp      = [95, 96, 97, 96, 94, 90, 86, 83]
+dewpoint  = [68, 69, 71, 72, 72, 71, 71, 70]
+
+plt.plot(hours, temp, marker="o", label="Temperature")
+plt.plot(hours, dewpoint, marker="o", label="Dewpoint")
+plt.fill_between(hours, temp, dewpoint, alpha=0.15)
+plt.title("The smaller the gap, the juicier the air")
+plt.xlabel("Hour of the afternoon")
+plt.ylabel("Degrees F")
+plt.legend()
+plt.grid(True)</textarea>
+  <pre class="out"></pre>
+  <div class="plotout"></div>
+</div>
+
+<div class="box why"><h4>Reading your own chart</h4>
+<p><code>fill_between</code> shaded the space between the two lines — that shaded band IS the dewpoint
+depression, hour by hour. Watch it pinch shut in the late afternoon: that's the atmosphere loading up.
+A forecaster sees this shape instantly. Now so do you.</p></div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Change the dewpoint list so it climbs into the low 60s and stays there. Run it and watch the shaded
+band get fatter or thinner. You're now testing "what if" scenarios — that's what models do.</p></div>
+
+<label class="chk" data-k="proj2"><input type="checkbox" data-k="proj2"><span>Project 2 done — I can see storm fuel.</span></label>
+</section>
+
+<!-- ═══════════ P3 -->
+<section class="lesson" id="p3">
+<h1><span class="num">PROJECT 03</span>Plot your <em>own</em> Chase Log</h1>
+<p class="lede">This is the real thing. Every entry you've saved in the <a href="../Chase Log/log.html">Chase
+Log</a> is sitting in this browser right now. This project reaches in, reads your actual entries, and
+charts them. (No entries yet? The code falls back to a small sample so it still runs — then go log some
+real weather and come back.)</p>
+
+<div class="tryhead">▶ Run it — it reads YOUR log</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Your real data</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">import json
+import matplotlib.pyplot as plt
+
+# CHASE_LOG_JSON is handed to us by the station — it's your real saved log.
+log = json.loads(CHASE_LOG_JSON)
+
+# no entries yet? use a small sample so the chart still works.
+if not log:
+    print("No entries yet — showing a sample. Go log some real weather!")
+    log = [
+        {"event": "Rain"}, {"event": "Rain"}, {"event": "Hail"},
+        {"event": "Wall cloud"}, {"event": "Rain"}, {"event": "Funnel"},
+    ]
+
+print("Entries found:", len(log))
+
+# count how many of each event type
+counts = {}
+for entry in log:
+    kind = entry.get("event", "Other")
+    counts[kind] = counts.get(kind, 0) + 1
+
+kinds  = list(counts.keys())
+totals = list(counts.values())
+
+plt.bar(kinds, totals)
+plt.title(f"Your Chase Log — {len(log)} reports")
+plt.ylabel("How many times")
+plt.xticks(rotation=30, ha="right")</textarea>
+  <pre class="out"></pre>
+  <div class="plotout"></div>
+</div>
+
+<div class="box why"><h4>You just closed the loop</h4>
+<p>You logged real weather with one tool, and analyzed it with another you wrote yourself. That
+<code>entry.get("event", "Other")</code> is the dictionary trick from Code School Lesson 9 — reading a
+value by its label, out of your real data. This is exactly, structurally, what a research meteorologist
+does with a season of storm reports. Same moves, smaller pile.</p></div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Each entry also has a <code>"where"</code> and a <code>"note"</code>. Change the code to count by
+<code>"where"</code> instead of <code>"event"</code> — a chart of the places you've spotted from.</p></div>
+
+<label class="chk" data-k="proj3"><input type="checkbox" data-k="proj3"><span>Project 3 done — I charted my own log.</span></label>
+</section>
+
+<!-- ═══════════ P4 -->
+<section class="lesson" id="p4">
+<h1><span class="num">PROJECT 04</span>Severe-day scanner</h1>
+<p class="lede">The National Weather Service has a hard line: a storm is <b>severe</b> if it produces hail
+1 inch or bigger, wind 58 mph or more, or any tornado. Let's write code that scans your log and flags
+the severe ones — the same rule the Chase Log itself uses.</p>
+
+<div class="tryhead">▶ Run it</div>
+<div class="lab">
+  <div class="labbar"><span class="labtag">Your real data</span><span class="sp"></span>
+    <button class="reset">↺ Reset</button><button class="run">▶ Run</button></div>
+  <textarea class="editor" spellcheck="false">import json
+log = json.loads(CHASE_LOG_JSON)
+if not log:
+    log = [
+        {"event":"Hail","hail":1.25,"where":"home"},
+        {"event":"Rain","hail":None,"where":"school"},
+        {"event":"Tornado","hail":None,"where":"county line"},
+        {"event":"Hail","hail":0.5,"where":"home"},
+    ]
+
+def is_severe(entry):
+    hail = entry.get("hail")
+    if hail is not None and hail >= 1.00:
+        return True
+    event = entry.get("event", "").lower()
+    return "tornado" in event or "funnel" in event or "damaging" in event
+
+severe = 0
+for entry in log:
+    tag = "  *** SEVERE ***" if is_severe(entry) else ""
+    print(entry.get("event", "?"), "at", entry.get("where", "?"), tag)
+    if is_severe(entry):
+        severe += 1
+
+print()
+print(f"{severe} of {len(log)} reports met NWS severe criteria.")</textarea>
+  <pre class="out"></pre>
+  <div class="plotout"></div>
+</div>
+
+<div class="box why"><h4>A function that encodes a real rule</h4>
+<p><code>is_severe()</code> is a tool that holds an actual federal definition. That 1.00-inch hail line
+isn't made up — it's the legal threshold for a Severe Thunderstorm Warning. You've turned a rule from
+the rulebook into code that applies it, automatically, to real data. That's the whole job in one
+function.</p></div>
+
+<div class="box do"><h4>Your lab</h4>
+<p>Add a <code>plt.bar</code> at the end that shows severe vs non-severe as two bars. You'll need to
+count both. Everything you need is in Projects 1–3.</p></div>
+
+<label class="chk" data-k="proj4"><input type="checkbox" data-k="proj4"><span>Project 4 done — I can scan my log for severe weather.</span></label>
+</section>
+
+<!-- ═══════════ MORE -->
+<section class="lesson" id="more">
+<h1><span class="num">WHERE THIS GOES</span>From a browser to the real thing</h1>
+<p class="lede">You just did real data science — read stored data, applied a rule, drew a chart. Here's
+the honest next rung.</p>
+
+<h2>The same code, on the real computer</h2>
+<p>Install Python (see the last lesson of <a href="python.html">Code School</a>), then
+<code>pip install matplotlib pandas</code>. Everything you wrote here runs there, unchanged — except now
+it can read the <b>.csv file your Chase Log exports</b>, save charts as image files, and handle years of
+data instead of a browser's worth.</p>
+
+<div class="box pro"><h4>The three that turn this into meteorology</h4>
+<p><code>pandas</code> loads your exported log as a spreadsheet you can query. <code>MetPy</code> computes
+the real weather math (CAPE, dewpoint, the Skew-T). <code>siphon</code> pulls live NWS data straight into
+your program. Chain them and your severe-day scanner becomes a program that reads the actual atmosphere
+over your town and charts it. That's not a someday thing — that's your next winter.</p></div>
+
+<div class="box do"><h4>And the hardware</h4>
+<p>The <a href="../Gear Bench/gear.html">Gear Bench</a> weather station (a Raspberry Pi + a $5 sensor)
+produces its own stream of temperature, pressure, and humidity — as Python numbers. Plot those with what
+you learned today and you're reading your <i>own</i> instruments. Keyboard to sensor to chart. That loop
+is the craft.</p></div>
+
+<p style="margin-top:24px"><a href="../Academy/academy.html">→ Back to the Academy</a>
+&nbsp;·&nbsp; <a href="../Chase Log/log.html">→ Go log some weather to plot</a>
+&nbsp;·&nbsp; <a href="../Trainers/skewt.html">→ The Skew-T (what MetPy draws)</a></p>
+
+<label class="chk" data-k="projmore"><input type="checkbox" data-k="projmore"><span>I know where this goes next.</span></label>
+</section>
+
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script>
+const KEY = "stormlab.progress";
+const load = () => JSON.parse(localStorage.getItem(KEY) || "{}");
+const save = o  => localStorage.setItem(KEY, JSON.stringify(o));
+function show(id){
+  document.querySelectorAll(".lesson").forEach(s => s.classList.toggle("show", s.id === id));
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("cur", a.dataset.m === id));
+  window.scrollTo(0,0);
+}
+function paint(){
+  const p = load();
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("done", !!p[a.dataset.m]));
+  document.querySelectorAll(".chk").forEach(l => {
+    const box = l.querySelector("input"); box.checked = !!p[box.dataset.k]; l.classList.toggle("on", box.checked);
+  });
+}
+document.querySelectorAll("nav a[data-m]").forEach(a => {
+  a.onclick = e => { e.preventDefault(); show(a.dataset.m); history.replaceState(null,"","#"+a.dataset.m); };
+});
+document.querySelectorAll(".chk input").forEach(box => {
+  box.onchange = () => { const p = load(); p[box.dataset.k] = box.checked; save(p); paint(); };
+});
+
+/* ---- Python + matplotlib runner ---- */
+let pyodide = null, pyReady = false;
+const statusEl = document.getElementById("pystatus");
+function setStatus(cls, text){ statusEl.className = "status " + cls; statusEl.textContent = text; }
+async function bootPython(){
+  try{
+    pyodide = await loadPyodide();
+    pyReady = true;
+    setStatus("ready", "● Python ready. Press Run on any project.");
+    setTimeout(() => statusEl.classList.add("hide"), 4000);
+  }catch(e){
+    setStatus("load", "Couldn't start Python — check your internet and press F5.");
+  }
+}
+const bootPromise = bootPython();
+function escapeHtml(s){ return s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+const MPL_SETUP = `
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+plt.close('all')
+plt.rcParams.update({
+ 'figure.figsize':(7,4),'figure.facecolor':'#0e141d','axes.facecolor':'#0e141d',
+ 'axes.edgecolor':'#33475a','axes.labelcolor':'#dde6f0','text.color':'#dde6f0',
+ 'xtick.color':'#9fb2c6','ytick.color':'#9fb2c6','axes.titlecolor':'#35d6ea',
+ 'grid.color':'#1c2a38','font.size':11,'axes.prop_cycle':plt.cycler(color=['#35d6ea','#ffb020','#35ea7a','#b46bff'])})
+`;
+const MPL_CAPTURE = `
+import io, base64
+_png=""
+try:
+    import matplotlib.pyplot as _p
+    if _p.get_fignums():
+        _b=io.BytesIO(); _p.gcf().savefig(_b,format='png',dpi=110,bbox_inches='tight',facecolor='#0e141d')
+        _png=base64.b64encode(_b.getvalue()).decode(); _p.close('all')
+except Exception:
+    _png=""
+_png
+`;
+
+async function runLab(editor, out, plotout, btn){
+  if(!pyReady){ out.textContent = "Python is still loading… hang on."; statusEl.classList.remove("hide"); await bootPromise;
+    if(!pyReady){ out.innerHTML = '<span class="err">Python isn\'t available — check your connection.</span>'; return; } }
+  btn.disabled = true;
+  out.textContent = ""; plotout.innerHTML = "";
+  let buf = "";
+  const write = s => { buf += s; out.textContent = buf; };
+  pyodide.setStdout({ batched: write });
+  pyodide.setStderr({ batched: write });
+  try{
+    // hand the real Chase Log to Python every run
+    let chase = "[]";
+    try{ chase = localStorage.getItem("stormlab.chaselog") || "[]"; }catch(e){}
+    pyodide.globals.set("CHASE_LOG_JSON", chase);
+    const code = editor.value;
+    await pyodide.loadPackagesFromImports(code);
+    if(/matplotlib/.test(code)){ await pyodide.runPythonAsync(MPL_SETUP); }
+    await pyodide.runPythonAsync(code);
+    if(/matplotlib/.test(code)){
+      const png = await pyodide.runPythonAsync(MPL_CAPTURE);
+      if(png){ plotout.innerHTML = '<img alt="your chart" src="data:image/png;base64,'+png+'">'; }
+    }
+    if(buf === "" && !plotout.innerHTML) out.textContent = "(ran fine — add a print() or a plot to see something)";
+  }catch(e){
+    const msg = String((e && e.message) ? e.message : e);
+    out.innerHTML = escapeHtml(buf) + '<span class="err">' + escapeHtml(msg.trim().split("\n").slice(-6).join("\n")) + '</span>';
+  }finally{ btn.disabled = false; }
+}
+
+document.querySelectorAll(".lab").forEach(lab => {
+  const editor = lab.querySelector(".editor");
+  const out = lab.querySelector(".out");
+  const plotout = lab.querySelector(".plotout");
+  const runBtn = lab.querySelector(".run");
+  const resetBtn = lab.querySelector(".reset");
+  const original = editor.value;
+  runBtn.onclick = () => runLab(editor, out, plotout, runBtn);
+  resetBtn.onclick = () => { editor.value = original; out.textContent = ""; plotout.innerHTML = ""; };
+  editor.addEventListener("keydown", e => {
+    if(e.key === "Tab"){ e.preventDefault();
+      const s = editor.selectionStart, en = editor.selectionEnd;
+      editor.value = editor.value.slice(0,s) + "    " + editor.value.slice(en);
+      editor.selectionStart = editor.selectionEnd = s + 4; }
+  });
+});
+
+show((location.hash || "#p0").slice(1));
+paint();
+</script>
+</body>
+</html>

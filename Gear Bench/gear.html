@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Gear Bench — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+section{scroll-margin-top:20px}
+.tier{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.3px;padding:2px 7px;border-radius:9px;text-transform:uppercase;vertical-align:2px;margin-left:7px}
+.t-free{color:var(--green);border:1px solid #17542f;background:rgba(53,234,122,.07)}
+.t-cost{color:var(--amber);border:1px solid #4d3a12;background:rgba(255,176,32,.07)}
+.t-res{color:var(--purple);border:1px solid #3d2a55;background:rgba(180,107,255,.07)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;background:var(--card2);border:1px solid var(--line);border-radius:7px;padding:13px 17px;margin-bottom:24px;font-size:12.5px;color:var(--dim)}
+.price{font-family:var(--mono);color:var(--amber);font-size:12px}
+nav a.sec.cur{border-left-color:var(--accent);color:var(--accent);background:#161f2b}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">GEAR BENCH</div>
+  <a href="#screens" class="sec">1 · The screens you have</a>
+  <a href="#radios"  class="sec">2 · Radios &amp; signals</a>
+  <a href="#air"     class="sec">3 · Measuring the air</a>
+  <a href="#vehicle" class="sec">4 · The chase vehicle</a>
+  <a href="#build"   class="sec">5 · Build your own</a>
+  <a href="#big"     class="sec">6 · The big machines</a>
+  <a href="#kit"     class="sec">7 · Your kit, by age &amp; budget</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← Back to the Lab</a>
+  <a href="../Storm Deck/deck.html">Storm Deck</a>
+  <a href="../Code School/python.html">Code School</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+  <a href="../SKYWARN/skywarn.html">SKYWARN</a>
+  <a href="../Chase Log/log.html">Chase Log</a>
+</nav>
+
+<main>
+
+<h1><span class="num">THE GEAR BENCH</span>Every instrument, honestly — what it measures and what it can't</h1>
+
+<p class="lede">Here is the secret nobody tells you: a storm chaser is not a daredevil. A storm chaser is an <b>instrument operator</b>. Every real chaser is really a person standing next to a set of devices, and each device answers exactly one question about the air — how hot, how wet, how fast, how heavy, how it moved. The whole skill is knowing what each one measures, how it actually works, and — this is the part people skip — where each one lies to you. A tool you trust past its limits is worse than no tool at all. So on this bench we go device by device: what it measures, how it works, what a chaser does with the number, whether it's free or costs money, and where it plugs into code.</p>
+
+<div class="legend">
+  <span><span class="tier t-free">Free</span> you already have it, or it costs nothing to get.</span>
+  <span><span class="tier t-cost">~$30</span> costs money — the tag shows a realistic 2024–2025 price.</span>
+  <span><span class="tier t-res">Research</span> pro / research grade — good to understand, not something you buy.</span>
+</div>
+
+<section id="screens">
+<h2>1 · The screens you already have</h2>
+
+<p>Before you spend a dollar, count what's on the bench already. A phone, a laptop, and the Lab's own <a href="../Storm Deck/deck.html">Storm Deck</a> are not "getting ready to have gear." They <em>are</em> three real instruments, and two of them are more powerful than anything a chaser could carry twenty years ago.</p>
+
+<h3>Live radar — the phone and the Deck <span class="tier t-free">Free</span></h3>
+<p>The single most important instrument in modern chasing is radar, and you can pull the exact same national radar feed the professionals use, for free. It comes from the government network of Doppler radars (NEXRAD — we'll open that machine up in section 6). Free ways to see it:</p>
+<ul>
+<li><b>The Storm Deck</b> in this Lab — built to show you reflectivity and velocity the way the Field Manual teaches to read them.</li>
+<li><b><a href="https://radar.weather.gov">radar.weather.gov</a></b> — the National Weather Service's own site. It's the source. It's a little plain, never lies to you, and costs nothing.</li>
+</ul>
+
+<h3>RadarScope — the paid one <span class="tier t-cost">~$10–100/yr</span></h3>
+<p>Almost every serious chaser runs <b>RadarScope</b>. It's not magic data — it's the same NEXRAD feed — but it's fast, it shows all the dual-pol products cleanly, it loops smoothly, and it overlays spotter reports and warnings. The base app is a one-time ~$10; the "Pro" tiers (~$10 and ~$100 a year) add things like lightning and the highest-resolution radar tilts.</p>
+<div class="box why"><h4>The honest comparison</h4><p>Paid apps don't get you <em>better radar</em>. The radar is the same public data for everyone. What you pay for is speed, polish, and convenience under pressure. When a storm is minutes from a decision, a smooth loop that never fights you is worth real money to a pro. For learning right now, free radar teaches you exactly the same skill.</p></div>
+
+<h3>Weather app vs. actual radar <span class="tier t-free">Free</span></h3>
+<p>This trips up almost everyone, so get it straight now. The weather app on a phone — the one with the little cloud icons and "70% chance of rain" — is showing you a <b>forecast</b>: a computer model's guess about the next few hours, updated slowly. Radar shows you <b>what is physically in the sky right now</b>, as echoes bouncing off actual raindrops and hail. A forecast can say "clear" while radar shows a supercell forty miles away and closing. Chasers live on radar and satellite. The cute app is for deciding whether to bring a jacket.</p>
+
+<h3>Battery bank &amp; car charger <span class="tier t-cost">~$25–50</span></h3>
+<p>Yes, these count as gear. Radar, GPS, and the mapping you'll do drain a phone fast, and a dead phone in the field is a dead instrument. A ~10,000 mAh battery bank is a couple of full recharges in your pocket; a car USB charger keeps the laptop and phone alive on long drives. Boring, cheap, and the reason your other tools keep working.</p>
+
+<h3>Paper maps <span class="tier t-free">~$0–20</span></h3>
+<p>This sounds old-fashioned until the day it saves you. Cell service dies exactly where storms love to be — out in open country, and again when a tornado knocks out towers and everyone floods the network at once. When the map app spins forever, a paper county map (a <b>DeLorme Atlas &amp; Gazetteer</b> for your state is the classic) still shows you the roads, and roads are how you keep a safe distance and an escape route. A tool that needs a signal isn't a tool you can count on. Paper needs nothing.</p>
+</section>
+
+<section id="radios">
+<h2>2 · Radios &amp; signals</h2>
+
+<p>Storms make radio interesting for two reasons: warnings <em>arrive</em> by radio, and chasers <em>talk</em> by radio. And one little radio gadget turns your laptop into a receiver you can program yourself — that's the one to get excited about.</p>
+
+<h3>NOAA Weather Radio <span class="tier t-cost">~$30</span></h3>
+<p>This receives a government broadcast (NWR — "the voice of the National Weather Service") on seven VHF channels around 162 MHz. It runs 24/7 with forecasts, and when a warning is issued it fires a loud alert — even at 3 a.m. with the radio "off." The reason every spotter owns one is that it doesn't depend on cell service, apps, or internet. It's a straight line from the Weather Service to your kitchen.</p>
+<div class="box why"><h4>How SAME lets it stay quiet until it matters</h4><p><b>SAME</b> = Specific Area Message Encoding. Every U.S. county has a six-digit code. You program your county's codes into the radio; then it stays silent for alerts in far-off counties and only screams for the ones you chose. The alert itself carries a code for <em>what</em> it is (tornado warning vs. flood watch), so a good radio can even alert only for the dangerous stuff. That's the same alerting system behind the tones on TV and on phones.</p></div>
+
+<h3>Ham radio (2 m / 70 cm) <span class="tier t-cost">~$30 radio + license</span></h3>
+<p>Amateur ("ham") radio is how real spotters talk to each other and to the Weather Service during severe weather. On the <b>2-meter (144 MHz)</b> and <b>70-centimeter (440 MHz)</b> bands, spotters check into a <b>SKYWARN net</b> — an organized on-air roundtable where a net control operator collects live reports ("hail the size of quarters at Main and 5th") and relays them straight to forecasters. A cheap handheld radio (a Baofeng is ~$30) can receive right now; to legally <em>transmit</em> you need a Technician license, which is a real exam but very passable for a sharp 13-year-old. See the <a href="../SKYWARN/skywarn.html">SKYWARN page</a> for how spotting and nets fit together.</p>
+<div class="box do"><h4>Do this</h4><p>You can start today: listen. A handheld or the RTL-SDR below can <em>receive</em> your local 2 m repeater with no license at all. Find your nearest SKYWARN net time and just listen to how pros report. That's free training in the exact language you'll use.</p></div>
+
+<h3>CB radio <span class="tier t-cost">~$50–90</span></h3>
+<p>Citizens Band (around 27 MHz) is the old truckers' band — no license needed, short range, and mostly used by chasers to hear road and storm chatter from other vehicles nearby. It's a minor tool today; ham is where the real spotter traffic lives. Worth knowing it exists, not worth rushing to buy.</p>
+
+<h3>RTL-SDR dongle — the coder's favorite <span class="tier t-cost">~$30</span></h3>
+<p>Here's the one that should make a programmer grin. An <b>RTL-SDR</b> is a little USB stick, about $30, that turns your laptop into a <b>software-defined radio</b>: instead of knobs and fixed channels, <em>software</em> decides what frequency to tune and how to decode it. One $30 stick can:</p>
+<ul>
+<li><b>Receive NOAA Weather Radio</b> around 162 MHz — the same broadcast as the $30 dedicated radio, but on your screen.</li>
+<li><b>Track aircraft</b> — planes broadcast their position on 1090 MHz (<b>ADS-B</b>). Point free software at your dongle and watch a live map of every plane overhead.</li>
+<li><b>Decode live weather satellite images</b> — the older NOAA polar satellites transmit pictures in a format called <b>APT</b> around 137 MHz as they pass over. With a cheap antenna and free software you can pull a real cloud image straight out of the sky, from space, with no internet at all.</li>
+</ul>
+<div class="box pro"><h4>Why this is the perfect gear-plus-code project</h4><p>The RTL-SDR is where hardware, radio physics, and Python meet. Tools like <code>rtl_433</code> decode signals from wireless weather stations and sensors around your neighborhood, and Python libraries can read the dongle directly. For about $30 you own a receiver that would have cost thousands as separate machines — and <em>you</em> write what it does. When you're ready, the <a href="../Code School/python.html">Code School</a> is where the Python for it lives.</p></div>
+</section>
+
+<section id="air">
+<h2>3 · Measuring the air</h2>
+
+<p>Everything a storm does starts as a difference in the air: warm against cool, wet against dry, calm against fast. Each instrument below pins down exactly one of those. Learn them one at a time and you'll start to <em>feel</em> a forecast, not just read one.</p>
+
+<h3>Thermometer — temperature <span class="tier t-cost">~$10–25</span></h3>
+<p>Measures how hot the air is. Simple, but the base of everything: warm air near the ground is the buoyant fuel a storm rises on. What matters to a chaser isn't one number — it's the <em>difference</em> between the warm surface air and the cold air aloft. A big difference means air wants to rise fast, and fast-rising air is a storm engine. (The Field Manual calls this "instability.")</p>
+
+<h3>Hygrometer &amp; dewpoint — moisture <span class="tier t-cost">~$15–40</span></h3>
+<p>A hygrometer measures how much water vapor is in the air. But the number that actually matters is <b>dewpoint</b> — the temperature the air would have to cool to before water starts condensing out. Here is the thing most people get backwards:</p>
+<div class="box why"><h4>Dewpoint is the fuel gauge, not "humidity %"</h4><p>Relative humidity is a fraction — moisture compared to how much the air <em>could</em> hold at that temperature — so it swings around all day just because the temperature changes. It's a slippery number. <b>Dewpoint is an absolute amount of moisture,</b> so it tells you honestly how much fuel is in the air. Chasers watch dewpoint like a fuel gauge: dewpoints climbing into the 60s and 70s °F mean the atmosphere is loaded and ready. The Field Manual leans on dewpoint for exactly this reason — trust it over the humidity percentage.</p></div>
+
+<h3>Barometer — pressure <span class="tier t-cost">~$20–50</span></h3>
+<p>Measures the weight of the air pressing down (in millibars/hectopascals, or inches of mercury). The <em>trend</em> is what matters. <b>A falling barometer</b> means a low-pressure system — stormy weather — is moving in; a rising one means it's clearing out. Sailors and farmers read barometers for centuries before satellites for this reason. A sudden pressure drop is the atmosphere telling you a change is close.</p>
+
+<h3>Anemometer — wind speed <span class="tier t-cost">~$70–300</span></h3>
+<p>Measures how fast the wind blows. The classic design is three little cups on a spinner — faster wind, faster spin. Handheld models let you clock a gust on the spot. The gold standard for chasers is the <b>Kestrel</b> line (roughly $70 for a basic one up to $300+ for a full weather meter that also reads temp, humidity, dewpoint, and pressure — a whole weather station in your hand). Wind speed tells a spotter about outflow, gust fronts, and — near a storm — how organized the low-level winds are getting.</p>
+
+<h3>Wind vane — wind direction <span class="tier t-cost">~$15–40</span></h3>
+<p>Points into the wind and tells you where it's coming from. Sounds simple; it's quietly one of the most important readings a spotter takes. A <b>wind shift</b> — the surface wind suddenly swinging around, say from south to north — often marks a boundary or a gust front passing, and boundaries are where storms fire and intensify. Chasers watch for wind that <em>backs</em> (turns counterclockwise) ahead of a storm, because turning winds are a sign the air is starting to spin.</p>
+
+<h3>Rain gauge — precipitation <span class="tier t-cost">~$10–35</span></h3>
+<p>Measures how much rain actually fell, in inches or millimeters. Radar <em>estimates</em> rainfall; a rain gauge <em>confirms</em> it, and that ground truth is genuinely useful to forecasters — especially for flooding.</p>
+<div class="box do"><h4>You can be a real data source</h4><p><b>CoCoRaHS</b> (the Community Collaborative Rain, Hail and Snow Network) is a nationwide project where regular people report their daily rain-gauge reading, and that data goes to the Weather Service and researchers. A ~$30 official gauge and five minutes a morning make you a genuine contributor. It's covered on the <a href="../SKYWARN/skywarn.html">SKYWARN page</a> — real science you can do this week.</p></div>
+
+<h3>Disdrometer — drop size <span class="tier t-res">Research</span></h3>
+<p>A rain gauge tells you <em>how much</em> fell; a disdrometer tells you the <em>size and speed of individual drops</em> by sensing each one that passes through a laser beam or strikes a sensor. Researchers use it to check what radar is really seeing, because big drops and small drops bounce radar differently. You won't own one, but it's why scientists trust — and correct — radar rainfall estimates.</p>
+
+<h3>The instrument table</h3>
+<table>
+<tr><th>Instrument</th><th>Measures</th><th>Unit</th><th>Why a chaser cares</th></tr>
+<tr><td>Thermometer</td><td>Air temperature</td><td>°F / °C</td><td>Warm surface air is the fuel; the gap to cold air aloft = instability.</td></tr>
+<tr><td>Hygrometer → dewpoint</td><td>Moisture in the air</td><td>°F / °C dewpoint</td><td>The true fuel gauge. High dewpoint = loaded atmosphere.</td></tr>
+<tr><td>Barometer</td><td>Air pressure</td><td>mb / inHg</td><td>Falling pressure = a storm system moving in.</td></tr>
+<tr><td>Anemometer</td><td>Wind speed</td><td>mph / knots</td><td>Outflow, gusts, and how organized the winds are getting.</td></tr>
+<tr><td>Wind vane</td><td>Wind direction</td><td>compass °</td><td>Wind shifts mark boundaries; turning wind hints at spin.</td></tr>
+<tr><td>Rain gauge</td><td>Rainfall</td><td>inches / mm</td><td>Ground-truths radar; flood reporting (CoCoRaHS).</td></tr>
+<tr><td>Disdrometer</td><td>Raindrop size &amp; speed</td><td>mm per drop</td><td>Research — keeps radar rainfall estimates honest.</td></tr>
+</table>
+
+<h3>Build a sling psychrometer — free dewpoint <span class="tier t-free">Free / DIY</span></h3>
+<p>Want dewpoint without buying a thing? A <b>sling psychrometer</b> is two thermometers, one with a wet cloth ("wick") over its bulb, mounted so you can spin them through the air. The wet one reads colder because evaporation cools it — and <em>how much</em> colder depends on how dry the air is. Dry air, lots of evaporation, big gap. Humid air, little evaporation, small gap. You look the two readings up on a chart (or compute it) to get the dewpoint. Two cheap thermometers, a shoelace, a bit of string — a real instrument you built and understand from the inside out.</p>
+</section>
+
+<section id="vehicle">
+<h2>4 · The chase vehicle</h2>
+
+<div class="box danger"><h4>Read this first — no exceptions</h4><p>Actually driving to chase a storm is <b>years away</b> for you, and it only ever happens with a trained, experienced adult who is doing the driving. This isn't a grown-up being cautious for fun. On <b>May 31, 2013, near El Reno, Oklahoma</b>, a tornado suddenly widened to 2.6 miles across — the widest ever recorded — and shifted direction faster than anyone expected. Experienced chasers were caught, and three of them, Tim Samaras, Paul Samaras, and Carl Young, were killed. These were among the most careful, most respected researchers in the field. The storm didn't care. You do not chase alone, you do not chase to drive fast, and the road is a tool for keeping <em>distance</em> and an <em>escape route</em> — never for getting close. The <a href="../Missions/">Missions</a> safety rules are not softened, and neither is this.</p></div>
+
+<p>With that fixed in place, here's what actually rides in a chase vehicle — because understanding the gear now is how you earn the seat later.</p>
+
+<h3>Dash cam <span class="tier t-cost">~$50–200</span></h3>
+<p>A camera on the windshield that records the whole drive. It documents what a storm did, catches structure and hazards, and — honestly — settles arguments and provides evidence after the fact. Simple, useful, no downside.</p>
+
+<h3>Laptop mount &amp; mobile hotspot <span class="tier t-cost">~$30 mount + data plan</span></h3>
+<p>A sturdy mount keeps the radar laptop readable for the navigator (never the driver — the driver drives, period). A <b>mobile hotspot</b> or a phone's hotspot keeps radar and mapping flowing where there's coverage. Note the built-in limit: this dies exactly where storms roam, which is why paper maps live in the door pocket.</p>
+
+<h3>GPS <span class="tier t-cost">~$100–250 or free on phone</span></h3>
+<p>Knowing precisely where you are — and where the roads go — is a safety instrument, not a convenience, when a storm is nearby. A dedicated GPS keeps working when cell data doesn't. Phone GPS is free and excellent until you lose signal.</p>
+
+<h3>Power inverter &amp; battery <span class="tier t-cost">~$30–120</span></h3>
+<p>An inverter turns the car's 12 V into household power so laptops and radios keep running all day. A second deep-cycle battery or a big power station means the electronics don't drain the battery you need to <em>start the car and leave</em> — which, near a storm, is the whole point.</p>
+
+<h3>Ham radio rig <span class="tier t-cost">~$150–400</span></h3>
+<p>A mobile 2 m / 70 cm radio with a mag-mount antenna on the roof — the vehicle version of the handheld from section 2. This is how the chase team stays on the SKYWARN net and hears other spotters when cell service is gone.</p>
+
+<h3>Hail guards <span class="tier t-cost">~$40–300</span></h3>
+<p>Supercells throw hail the size of golf balls, baseballs, sometimes grapefruit, and it will smash a windshield. Chasers use mesh screens, portable "hail nets," or simply position the car to shield the glass. It's about protecting the vehicle you're depending on to get you out.</p>
+
+<h3>Mobile mesonet <span class="tier t-res">Research</span></h3>
+<p>This is the pro's crown jewel and worth understanding. A <b>mobile mesonet</b> is a rack of research instruments — temperature, dewpoint, pressure, wind — mounted on the roof, feeding a computer that logs a reading every second, <em>tagged with GPS position</em>. Because the vehicle is <em>moving</em>, scientists can drive a transect through and around a storm and sample its structure across space and time — for example, mapping exactly where the cold "rear-flank downdraft" air wraps around a tornado. It turns the car itself into a moving weather station, and it's how a lot of what we know about tornadoes was actually measured.</p>
+</section>
+
+<section id="build">
+<h2>5 · Build your own weather station</h2>
+
+<p>This is where the Gear Bench and the <a href="../Code School/python.html">Code School</a> shake hands. You don't have to <em>buy</em> most of the instruments in section 3 — you can build them, wire them into a little computer, and write the code that reads them. For about $150–250 you can have a real, working weather station of your own design. Here's the map.</p>
+
+<h3>Raspberry Pi vs. Arduino <span class="tier t-cost">~$15–80</span></h3>
+<p>These are the two little brains, and they're good at different jobs:</p>
+<table>
+<tr><th></th><th>Raspberry Pi</th><th>Arduino</th></tr>
+<tr><td>What it is</td><td>A tiny full computer — runs Linux, connects to the internet, runs Python.</td><td>A tiny "microcontroller" — one program, no operating system.</td></tr>
+<tr><td>Best at</td><td>The dashboard: logging data, serving a web page, talking to the network.</td><td>Reading sensors precisely and reliably, all day, forever.</td></tr>
+<tr><td>Language</td><td>Python (and anything else).</td><td>C/C++ (its own simple flavor).</td></tr>
+<tr><td>Price</td><td>~$15–80</td><td>~$15–30</td></tr>
+</table>
+<p>A common setup: an Arduino reads the sensors and hands the numbers to a Raspberry Pi, and the Pi logs them and shows a web dashboard. But a Pi alone can do the whole job for a beginner, and it lets you stay in Python — which is why we'll lean on it.</p>
+
+<h3>The BME280 — three instruments on one chip <span class="tier t-cost">~$5</span></h3>
+<p>The single best five dollars on this whole page. The <b>BME280</b> is a fingernail-sized sensor that measures <b>temperature, pressure, and humidity</b> all at once, and reports them over a two-wire connection called <b>I²C</b>. Four wires to a Raspberry Pi (power, ground, and the two I²C lines) and a few lines of Python, and you're reading the real atmosphere:</p>
+<pre><code><span class="c"># reading a BME280 on a Raspberry Pi</span>
+<span class="k">import</span> board, adafruit_bme280.advanced <span class="k">as</span> bme
+
+sensor = bme.Adafruit_BME280_I2C(board.I2C())
+
+<span class="k">print</span>(<span class="s">f"Temp:     {sensor.temperature:.1f} &#176;C"</span>)
+<span class="k">print</span>(<span class="s">f"Humidity: {sensor.relative_humidity:.0f} %"</span>)
+<span class="k">print</span>(<span class="s">f"Pressure: {sensor.pressure:.1f} hPa"</span>)</code></pre>
+<p>That's it. Three of the instruments from section 3, live, in numbers your code owns. From here it's a short hop to computing dewpoint from temperature and humidity yourself.</p>
+
+<h3>DIY anemometer — counting spins <span class="tier t-cost">~$10 in parts</span></h3>
+<p>Wind speed is beautifully simple to build. Put a small magnet on a spinning cup assembly and a <b>reed switch</b> (a switch that clicks shut when a magnet passes) beside it. Every spin, the magnet passes the switch and makes one electrical pulse. Your code just <b>counts pulses per second</b> — more pulses, faster wind — and multiplies by a number you find by calibration (drive it past a known wind speed, or check it against a real anemometer once). The idea in code:</p>
+<pre><code><span class="c"># count reed-switch pulses for a few seconds -> wind speed</span>
+pulses = <span class="n">0</span>
+<span class="k">def</span> <span class="f">on_spin</span>(pin):          <span class="c"># called each time the magnet passes</span>
+    <span class="k">global</span> pulses
+    pulses += <span class="n">1</span>
+
+<span class="c"># ...run for 5 seconds, then:</span>
+wind_mph = (pulses / <span class="n">5</span>) * CALIBRATION   <span class="c"># CALIBRATION found by testing</span></code></pre>
+
+<h3>Tipping-bucket rain gauge <span class="tier t-cost">~$15–30</span></h3>
+<p>The clever standard design: rain funnels into a tiny two-sided see-saw bucket. When one side fills with a set amount of water (often 0.01 inch), it tips, dumps, and — like the anemometer — trips a switch once. Your code counts tips and multiplies: <code>rain = tips * 0.01</code> inches. Same trick as the anemometer: turn a physical event into a countable pulse and let the code do the math.</p>
+
+<h3>Wire it into a dashboard — the payoff <span class="tier t-cost">~$150–250 total</span></h3>
+<p>Now the fun part. Read all your sensors on a loop, write each reading to a file or a small database with a timestamp, and draw it. Suddenly you have <em>your own</em> weather station logging temperature, pressure, humidity, wind, and rain — plotting the last 24 hours, catching the barometer falling before a storm, and it's yours because you built every piece and wrote every line.</p>
+<div class="box pro"><h4>The grown-up libraries</h4><p>When you're ready to level up, the real meteorology toolkit is Python too. <b>MetPy</b> does actual weather math and draws Skew-T soundings; <b>Siphon</b> downloads real observation and model data from the same servers professionals use. They're the same tools working scientists run. Start with your $5 sensor; grow into the tools the pros use, in the same language. The <a href="../Code School/python.html">Code School</a> is where you'll pick up the Python to drive all of this.</p></div>
+</section>
+
+<section id="big">
+<h2>6 · The big machines</h2>
+
+<p>These are the instruments you'll (almost) never touch, but every free tool you use is built on their data. Knowing how they work is knowing how the pros actually <em>see</em> the atmosphere. This is the research tier — aspirational, and worth understanding cold.</p>
+
+<h3>NEXRAD — the national Doppler radar <span class="tier t-res">Research</span></h3>
+<p>The network of <b>WSR-88D</b> radars (about 160 across the U.S.) is the source of every radar image you've ever looked at. Each one sweeps a beam of microwaves around the sky; the beam bounces off raindrops, hail, and even bugs, and the radar listens for the echo. It reads three different things from that echo:</p>
+<ul>
+<li><b>Reflectivity</b> — how <em>strong</em> the echo is, which tells you how heavy the precipitation is. This is the classic green-to-red rain map.</li>
+<li><b>Velocity</b> — using the <em>Doppler effect</em> (echoes shift frequency if the target is moving toward or away), it measures whether the rain is coming or going. Rain coming <em>and</em> going right next to each other means the air is spinning — the fingerprint of a possible tornado.</li>
+<li><b>Dual-polarization</b> — the radar sends pulses both horizontally and vertically, and comparing them reveals the <em>shape</em> of what's up there: round raindrops vs. jagged hail vs. debris lofted by a tornado (the famous "debris ball").</li>
+</ul>
+<p>The <a href="../Field Manual/manual.html">Field Manual</a> teaches you to read reflectivity and velocity by eye. This is the machine making those pictures.</p>
+
+<h3>Radiosonde / weather balloon <span class="tier t-res">Research</span></h3>
+<p>Twice a day, at the same moment worldwide (00 and 12 UTC), weather offices release balloons carrying a small instrument package called a <b>radiosonde</b>. As the balloon rises to ~100,000 feet and pops, the sonde radios back temperature, humidity, pressure, and wind at every height. That vertical slice is plotted on a chart called a <b>Skew-T</b>.</p>
+<div class="box why"><h4>The single most important chart in forecasting</h4><p>A Skew-T shows temperature and dewpoint from the ground straight up. From it a forecaster reads whether the air will rise (instability), how much fuel is up there, whether a "cap" is holding storms down, and how the winds turn with height (whether storms can spin). More than any radar image, the Skew-T is where a chaser decides whether to even leave the house. It's worth learning to read — and MetPy from section 5 will draw one for you.</p></div>
+
+<h3>Doppler on Wheels (DOW) <span class="tier t-res">Research</span></h3>
+<p>A full NEXRAD-style Doppler radar shrunk down and mounted on a truck. Because it can drive to <em>within a mile or two</em> of a tornado, a DOW scans the storm at far higher resolution than a fixed radar hundreds of miles away — close enough to measure the winds inside a tornado. It's how researchers got the highest tornado wind speeds ever recorded, over 300 mph in a 1999 Oklahoma tornado.</p>
+
+<h3>Lightning detection <span class="tier t-res">Research</span></h3>
+<p>Two systems, working together. On the ground, networks of sensors (like the National Lightning Detection Network) triangulate each strike by the exact timing of the radio "crack" it makes, pinpointing where and when it hit. From above, the <b>GLM</b> (Geostationary Lightning Mapper) rides on the GOES satellites and watches whole storms flash from space, day and night. A sudden burst of lightning ("a lightning jump") often comes just before a storm turns severe.</p>
+
+<h3>Weather satellites — GOES <span class="tier t-res">Research</span></h3>
+<p>The big picture comes from the <b>GOES</b> satellites (the newest is <b>GOES-19</b>). They sit in <b>geostationary</b> orbit — about 22,236 miles up, circling at exactly the speed Earth turns, so each one hovers over the same spot forever and can film the same half of the planet continuously. They watch in several channels:</p>
+<ul>
+<li><b>Visible</b> — sunlight reflecting off clouds; sharp and detailed, but only works in daylight.</li>
+<li><b>Infrared</b> — heat, so it works at night; colder cloud tops glow differently, and colder tops mean taller, more powerful storms.</li>
+<li><b>Water vapor</b> — sees invisible moisture high in the atmosphere, revealing the flow and dry slots that steer and feed storms.</li>
+</ul>
+<p>And remember section 2: with a $30 RTL-SDR and an antenna, you can pull a real satellite image out of the sky yourself. The pros' data and your bench are closer than they look.</p>
+</section>
+
+<section id="kit">
+<h2>7 · Your kit, by age &amp; budget</h2>
+
+<p>No hype, no upsell — here's an honest plan, in the order that actually makes sense. Start free, prove you'll use it, then spend.</p>
+
+<h3>Right now — $0 <span class="tier t-free">Free</span></h3>
+<table>
+<tr><th>Item</th><th>What it gives you</th></tr>
+<tr><td>The screens you own</td><td>Phone + laptop + the Storm Deck = live radar, maps, satellite.</td></tr>
+<tr><td>radar.weather.gov</td><td>The real NEXRAD feed, free, from the source.</td></tr>
+<tr><td>Weather alerts on your phone</td><td>Government warnings, already on, no setup.</td></tr>
+<tr><td>SKYWARN spotter training</td><td>The free class that turns watching into <em>knowing</em>. See the SKYWARN page.</td></tr>
+<tr><td>A sling psychrometer</td><td>Two cheap thermometers → real dewpoint you built yourself.</td></tr>
+</table>
+
+<h3>Under $100 <span class="tier t-cost">~$100</span></h3>
+<table>
+<tr><th>Item</th><th>Price</th><th>Why</th></tr>
+<tr><td>NOAA Weather Radio (SAME)</td><td>~$30</td><td>Alerts that work with no cell or internet.</td></tr>
+<tr><td>RTL-SDR dongle</td><td>~$30</td><td>Weather radio, aircraft, and satellite images — plus it's a coding project.</td></tr>
+<tr><td>Rain gauge (CoCoRaHS)</td><td>~$30</td><td>Real data you contribute to actual science.</td></tr>
+<tr><td>Handheld thermometer/hygrometer</td><td>~$15–40</td><td>Temp, humidity, and dewpoint in your hand.</td></tr>
+</table>
+
+<h3>The build — $150–250 <span class="tier t-cost">~$150–250</span></h3>
+<table>
+<tr><th>Item</th><th>Price</th><th>Why</th></tr>
+<tr><td>Raspberry Pi</td><td>~$50–80</td><td>The brain that reads sensors and shows your dashboard.</td></tr>
+<tr><td>BME280 sensor</td><td>~$5</td><td>Temp + pressure + humidity on one chip, over I²C.</td></tr>
+<tr><td>DIY anemometer + rain gauge parts</td><td>~$30–60</td><td>Wind and rain, built by you, counted by your code.</td></tr>
+<tr><td>Wiring, case, power</td><td>~$30–50</td><td>The unglamorous glue that makes it a real station.</td></tr>
+</table>
+<p>The result: your own weather station, logging real numbers, written in Python you understand top to bottom. That's the best money on this page.</p>
+
+<h3>Years away, with an adult <span class="tier t-res">Later</span></h3>
+<table>
+<tr><th>Item</th><th>Why it waits</th></tr>
+<tr><td>The chase vehicle kit</td><td>Dash cam, laptop mount, GPS, inverter, ham rig, hail guards — none of it matters until you can chase, and chasing means years of learning and an experienced adult driving. Remember El Reno.</td></tr>
+</table>
+
+<div class="box do"><h4>The one instrument that matters most</h4><p>Every device on this bench measures one thing about the air. Not one of them decides whether it's <em>safe</em>, whether a storm is <em>doing what you expected</em>, or whether it's time to leave. That's the trained brain — and its most important habit is writing down what you actually see. A reading you wrote down beats a memory every time, and it's how you get better. That's the whole point of the <a href="../Chase Log/log.html">Chase Log</a>. No device replaces the person reading it. Build the gear. Then build the operator.</p></div>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav a.sec'));
+  var secs  = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function spy(){
+    var y = window.scrollY + 90, cur = 0;
+    for (var i=0;i<secs.length;i++){ if (secs[i] && secs[i].offsetTop <= y) cur = i; }
+    links.forEach(function(a,i){ a.classList.toggle('cur', i===cur); });
+  }
+  window.addEventListener('scroll', spy, {passive:true});
+  window.addEventListener('resize', spy);
+  spy();
+})();
+</script>
+
+</body>
+</html>

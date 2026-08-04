@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>STORM DECK — live severe weather console</title>
+<link rel="stylesheet" href="lib/leaflet.css">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+
+<!-- Shown only if my-settings.js is broken. Normally hidden instantly. -->
+<div id="boot">
+  <div class="bootcard">
+    <h1>⚠ SOMETHING IN MY-SETTINGS.JS IS BROKEN</h1>
+    <div id="bootMsg"><p>Checking your settings…</p></div>
+  </div>
+</div>
+
+<header>
+  <div class="brand">STORM DECK<small>SEVERE WEATHER CONSOLE</small></div>
+  <div class="hdr-item"><b id="hName">—</b><span>Spotter</span></div>
+  <div class="hdr-item"><b id="hID">—</b><span>SKYWARN ID</span></div>
+  <div class="hdr-item"><b id="hTown">—</b><span>Station</span></div>
+  <div class="hdr-item"><b id="wfo">—</b><span>NWS Office</span></div>
+  <div class="spacer"></div>
+  <div class="hdr-item"><b id="clkUTC">----Z</b><span>UTC / Zulu</span></div>
+  <div class="hdr-item"><b id="clkLocal">--:--:--</b><span>Local</span></div>
+  <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">connecting…</span></div>
+</header>
+
+<div id="alertBanner"></div>
+
+<main>
+  <div class="left">
+
+    <div class="panel">
+      <h2>Live NEXRAD Radar + Active Warning Polygons
+          <span class="tag">scroll to zoom · click a shape</span></h2>
+      <div class="body"><div id="map"></div></div>
+    </div>
+
+    <div class="strip">
+      <div class="panel">
+        <h2>GOES-19 Satellite · GeoColor <span class="tag">click to enlarge</span></h2>
+        <div class="body"><img id="imgSat" alt="GOES-19 GeoColor satellite"></div>
+      </div>
+      <div class="panel">
+        <h2>Your Radar Loop <span class="tag" id="radTag">—</span></h2>
+        <div class="body"><img id="imgRad" alt="Local NEXRAD loop"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right">
+
+    <div class="panel">
+      <h2>Threat Level</h2>
+      <div class="body" id="threatBox">
+        <div id="threatWord">…</div>
+        <div class="meter"><i id="threatBar"></i></div>
+        <div id="threatNote">Reading the atmosphere…</div>
+        <div class="counts">
+          <div><b id="cTor" style="color:var(--red)">0</b><span>Tor warn</span></div>
+          <div><b id="cSev" style="color:var(--amber)">0</b><span>Svr warn</span></div>
+          <div><b id="cUS"  style="color:var(--accent)">0</b><span>Tor in US</span></div>
+        </div>
+        <div class="counts">
+          <div><b id="obTemp">—</b><span>Temp</span></div>
+          <div><b id="obDew" style="color:var(--green)">—</b><span>Dewpoint</span></div>
+          <div><b id="obWind">—</b><span>Wind mph</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>SPC Outlook · Your Location <span class="tag">next 3 days</span></h2>
+      <div class="body"><div id="spcRows"><div class="empty">Asking the Storm Prediction Center…</div></div></div>
+    </div>
+
+    <div class="panel">
+      <h2>Active Alerts <span class="tag" id="warnCount">0</span></h2>
+      <div class="body" id="warnList">
+        <div class="empty">Loading from the National Weather Service…</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div id="lightbox"><img id="lbImg" alt=""></div>
+
+<script src="lib/leaflet.js"></script>
+<script src="my-settings.js"></script>
+<script src="deck.js"></script>
+</body>
+</html>

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radar Trainer — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+/* ---- Radar Trainer additions (all diagrams are inline SVG) ---- */
+nav a.done::before{content:"✔ ";}
+
+/* SVG figures */
+figure.svgfig{margin:6px 0 20px;border:1px solid var(--line);border-radius:8px;
+     background:#05070a;padding:14px 14px 10px}
+figure.svgfig svg{width:100%;height:auto;display:block}
+figure.svgfig figcaption{font-family:var(--mono);font-size:11px;letter-spacing:.5px;
+     color:var(--dim);margin-top:9px;line-height:1.5}
+.svgfig text{font-family:var(--mono);fill:var(--text)}
+.svglabel{font-size:11px;fill:var(--dim)}
+.svgkey{font-size:11px;letter-spacing:1px}
+
+/* mini legend row under products */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--mono);font-size:11.5px;
+     color:var(--dim);margin:0 0 8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.swatch{width:13px;height:13px;border-radius:3px;border:1px solid rgba(255,255,255,.15);flex:none}
+
+/* ---- Quiz ---- */
+.qscore{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;
+     font-family:var(--mono);font-size:12.5px;letter-spacing:.5px;
+     padding:9px 14px;border-radius:7px;margin-bottom:20px;
+     border:1px solid var(--line);background:var(--card2);color:var(--accent)}
+.qscore .sp{flex:1}
+.qscore b{color:#fff}
+.qscore button{font-family:var(--mono);font-size:11.5px;padding:5px 12px;border-radius:5px;cursor:pointer;
+     border:1px solid var(--line);background:#111a24;color:var(--dim)}
+.qscore button:hover{background:#18222f;color:var(--text)}
+
+.q{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:16px 18px;margin:0 0 18px}
+.q .qn{font-family:var(--mono);font-size:10.5px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:9px}
+.q .stem{margin-bottom:12px}
+.q .choices{display:grid;gap:8px;margin:0}
+.q button.choice{text-align:left;width:100%;font-family:var(--sans);font-size:14px;color:var(--text);
+     border:1px solid var(--line);background:#0e141d;border-radius:6px;padding:10px 13px;cursor:pointer;line-height:1.5}
+.q button.choice:hover{border-color:var(--accent)}
+.q button.choice:disabled{cursor:default}
+.q button.choice.right{border-color:var(--green);background:rgba(53,234,122,.10);color:var(--green)}
+.q button.choice.wrong{border-color:var(--red);background:rgba(255,47,69,.10);color:#ff8a96}
+.q .fb{margin-top:11px;font-size:13.5px;line-height:1.55;display:none;
+     border-left:3px solid var(--line);padding-left:12px}
+.q .fb.show{display:block}
+.q .fb.ok{border-color:var(--green);color:var(--green)}
+.q .fb.no{border-color:var(--red);color:#ff8a96}
+.q figure.svgfig{margin:2px 0 14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <div class="navtitle">RADAR TRAINER</div>
+  <a href="#top">Start</a>
+  <a href="#products">The Two Products</a>
+  <a href="#signatures">The Signatures</a>
+  <a href="#quiz">Spot-the-Signature Quiz</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← The Station</a>
+  <a href="../Academy/academy.html">Academy</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+  <a href="../Trainers/decode.html">Decode</a>
+  <a href="../Trainers/skewt.html">Skew-T</a>
+  <a href="../Atlas/atlas.html">Storm Atlas</a>
+  <a href="../Code School/python.html">Code School</a>
+  <a href="../Quiz/quiz.html">Flashcards</a>
+  <a href="../Storm Deck/deck.html">Storm Deck</a>
+  <a href="../Chase Log/log.html">Chase Log</a>
+</nav>
+
+<main id="top">
+<h1><span class="num">RADAR TRAINER</span>Reading the Radar</h1>
+<p class="lede">A radar sweep is not a picture of the storm — it's a measurement. Two of them, actually.
+Learn what each color and shape is really telling you, learn the half-dozen signatures a spotter must
+recognize on sight, then prove it in the quiz at the bottom. Every diagram here is drawn by hand — no photos,
+works with the internet off.</p>
+
+<div class="box why">
+  <h4>Why this matters</h4>
+  <p>Radar sees things your eyes can't: rotation buried in rain, a debris cloud at night, hail cores hiding
+  in a green wall. But radar also <b>lies by omission</b> — the beam rises with distance and shoots over
+  low-level features far from the site. You read radar to know <i>where to point your eyes</i>, never as a
+  replacement for them. This trainer pairs with <b>Field Manual §5–§8</b> (supercells, tornadoes, wind, hail).</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="products">1 · The Two Products</h2>
+<p>Every base radar image is one of two things. Learn to say which one you're looking at before anything else,
+because the same blob means totally different things in each.</p>
+
+<h3>Reflectivity — <span style="color:var(--dim)">how much is falling</span></h3>
+<p>The radar sends out a pulse and measures how much energy bounces back. Bigger, denser, more numerous
+targets (raindrops, hailstones) bounce back more. That returned power is scaled in <code>dBZ</code>
+(decibels of reflectivity). Higher dBZ = heavier precipitation. It is the product you'll spend most of your
+time in — it shows you the <b>shape</b> of the storm.</p>
+
+<div class="legend">
+  <span><span class="swatch" style="background:#1fbf4c"></span> 20–35 dBZ · light rain</span>
+  <span><span class="swatch" style="background:#f2e200"></span> 40–45 · moderate</span>
+  <span><span class="swatch" style="background:#ff7a00"></span> 50 · heavy</span>
+  <span><span class="swatch" style="background:#e11020"></span> 55–60 · very heavy / core</span>
+  <span><span class="swatch" style="background:#d030d0"></span> 65+ · likely hail</span>
+</div>
+
+<figure class="svgfig">
+<svg viewBox="0 0 620 118" role="img" aria-label="dBZ reflectivity color scale from light to hail">
+  <!-- gradient bar built from discrete blocks so it reads like a real dBZ ramp -->
+  <rect x="20"  y="24" width="80" height="34" fill="#0a5fbf"/>
+  <rect x="100" y="24" width="80" height="34" fill="#1fbf4c"/>
+  <rect x="180" y="24" width="80" height="34" fill="#8fe000"/>
+  <rect x="260" y="24" width="80" height="34" fill="#f2e200"/>
+  <rect x="340" y="24" width="80" height="34" fill="#ff7a00"/>
+  <rect x="420" y="24" width="80" height="34" fill="#e11020"/>
+  <rect x="500" y="24" width="80" height="34" fill="#a80016"/>
+  <rect x="580" y="24" width="20" height="34" fill="#d030d0"/>
+  <rect x="20" y="24" width="580" height="34" fill="none" stroke="#22303f"/>
+  <text x="20"  y="74" class="svgkey" fill="#8598ad">5</text>
+  <text x="150" y="74" class="svgkey" fill="#8598ad">30</text>
+  <text x="290" y="74" class="svgkey" fill="#8598ad">45</text>
+  <text x="430" y="74" class="svgkey" fill="#8598ad">55</text>
+  <text x="560" y="74" class="svgkey" fill="#8598ad">65+</text>
+  <text x="20"  y="16" class="svglabel">weak echo →</text>
+  <text x="500" y="16" class="svglabel">core / hail</text>
+  <text x="20" y="100" class="svglabel">Numbers are dBZ. The exact colors vary by website; the ORDER is what matters.</text>
+</svg>
+<figcaption>Reflectivity scale (dBZ). Green = rain you'd walk in, red = a downpour and a strong core,
+pink/purple = so much bounce-back it's almost certainly hail.</figcaption>
+</figure>
+
+<div class="box do">
+  <h4>The 60+ dBZ rule</h4>
+  <p>Rain alone rarely tops <b>~55 dBZ</b>. When you see a tight knot of <b>60 dBZ or higher</b> — the deep
+  red into pink/purple — suspect <b>hail</b>. Water reflects strongly, but hailstones are big, so a small area
+  of very high dBZ punches above what any rain shaft can produce. High dBZ + a storm that's severe = hail core.
+  (Confirm with dual-pol; see the hail signature below.)</p>
+</div>
+
+<h3>Velocity — <span style="color:var(--dim)">which way the wind blows</span></h3>
+<p>The same pulse comes back slightly shifted in frequency if the target is moving toward or away from the
+radar — that's the <b>Doppler</b> effect. The radar turns that shift into a wind picture, but only the part of
+the wind pointed <b>along the beam</b> (toward or away from the radar site). The convention is fixed and worth
+burning into memory:</p>
+
+<div class="legend">
+  <span><span class="swatch" style="background:#e11020"></span> RED = wind moving AWAY from the radar</span>
+  <span><span class="swatch" style="background:#1fbf4c"></span> GREEN = wind moving TOWARD the radar</span>
+  <span><span class="swatch" style="background:#4a5a6a"></span> gray = no motion / no data</span>
+</div>
+
+<figure class="svgfig">
+<svg viewBox="0 0 620 118" role="img" aria-label="Doppler velocity color scale, green toward and red away">
+  <rect x="20"  y="24" width="90" height="34" fill="#0a8a3a"/>
+  <rect x="110" y="24" width="90" height="34" fill="#2fd06a"/>
+  <rect x="200" y="24" width="90" height="34" fill="#9ff0b6"/>
+  <rect x="290" y="24" width="40" height="34" fill="#4a5a6a"/>
+  <rect x="330" y="24" width="90" height="34" fill="#ffb0b6"/>
+  <rect x="420" y="24" width="90" height="34" fill="#f0505a"/>
+  <rect x="510" y="24" width="90" height="34" fill="#a80016"/>
+  <rect x="20" y="24" width="580" height="34" fill="none" stroke="#22303f"/>
+  <text x="20"  y="16" class="svglabel">TOWARD radar (green)</text>
+  <text x="490" y="16" class="svglabel">AWAY from radar (red)</text>
+  <text x="292" y="74" class="svgkey" fill="#8598ad">0</text>
+  <text x="20"  y="74" class="svgkey" fill="#8598ad">fast in</text>
+  <text x="540" y="74" class="svgkey" fill="#8598ad">fast out</text>
+  <text x="20" y="100" class="svglabel">Brighter = faster. The radar sits off to one side — velocity is always relative to IT, not to the ground.</text>
+</svg>
+<figcaption>Velocity scale. Brighter green = faster toward the radar; brighter red = faster away. Every
+rotation signature below is just green sitting right next to red.</figcaption>
+</figure>
+
+<div class="box warn">
+  <h4>The catch beginners miss</h4>
+  <p>Velocity is <b>relative to the radar</b>, not to north. A storm can have strong winds and show almost no
+  velocity color if those winds happen to blow <i>across</i> the beam instead of along it. And the beam climbs
+  with range — 100+ miles out you're sampling the mid-levels, not the ground. Read velocity together with
+  reflectivity and with your storm's distance from the site.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="signatures">2 · The Signatures</h2>
+<p>These are the shapes and patterns that make a spotter's radar useful. For each: what it looks like, what
+it means, and — the part that matters — <b>what you do about it</b>.</p>
+
+<h3>Hook echo <span class="pill wx">reflectivity · FM §5</span></h3>
+<p>The classic supercell fingerprint. The storm's rotating updraft (the mesocyclone) wraps precipitation
+around its back edge, curling it into a hook — usually on the storm's <b>rear-right (southwest) flank</b> for
+a storm moving northeast. The notch inside the hook is where the mesocyclone, and any tornado, tends to sit.</p>
+
+<figure class="svgfig">
+<svg viewBox="0 0 620 260" role="img" aria-label="Supercell reflectivity blob with a hook echo curling on the rear right flank">
+  <!-- compass hint -->
+  <text x="590" y="20" class="svglabel">N ↑</text>
+  <!-- main precipitation blob (heavy core), moving toward upper-right -->
+  <path d="M300,40 C400,30 480,80 470,150 C462,205 380,230 300,220
+           C230,212 175,180 178,132 C182,86 220,52 300,40 Z"
+        fill="#1fbf4c" stroke="#0a5fbf" stroke-width="2"/>
+  <!-- inner heavier core -->
+  <path d="M330,80 C400,78 435,120 425,160 C415,196 360,206 320,196
+           C285,188 268,150 280,120 C290,96 305,82 330,80 Z"
+        fill="#f2e200" opacity="0.95"/>
+  <ellipse cx="360" cy="135" rx="42" ry="34" fill="#ff7a00"/>
+  <ellipse cx="368" cy="132" rx="20" ry="16" fill="#e11020"/>
+  <!-- the HOOK curling on the rear-right (lower-left) flank -->
+  <path d="M200,150 C150,150 130,185 150,215 C168,242 210,244 232,222
+           C210,236 176,232 166,210 C158,192 170,172 200,172 Z"
+        fill="#1fbf4c" stroke="#0a5fbf" stroke-width="2"/>
+  <path d="M205,158 C168,158 154,184 168,206 C150,178 172,166 205,166 Z"
+        fill="#f2e200"/>
+  <!-- the notch / meso location -->
+  <circle cx="196" cy="196" r="9" fill="none" stroke="#ff2f45" stroke-width="2.5"/>
+  <text x="196" y="200" text-anchor="middle" style="font-size:11px;fill:#ff2f45">×</text>
+  <!-- motion arrow -->
+  <line x1="240" y1="248" x2="420" y2="70" stroke="#35d6ea" stroke-width="2" stroke-dasharray="5 5"/>
+  <polygon points="420,70 408,80 416,84" fill="#35d6ea"/>
+  <text x="430" y="60" class="svglabel">storm motion →</text>
+  <!-- labels -->
+  <text x="360" y="140" text-anchor="middle" style="font-size:11px;fill:#05070a;font-weight:700">CORE</text>
+  <text x="120" y="120" class="svglabel">rear-right</text>
+  <text x="120" y="134" class="svglabel">flank</text>
+  <text x="70" y="205" style="font-size:12px;fill:#ff2f45">HOOK →</text>
+  <text x="210" y="196" style="font-size:11px;fill:#ff2f45">meso / possible tornado</text>
+</svg>
+<figcaption>A hook echo: the curl of precip on the storm's rear-right flank. The red × in the notch marks
+where the rotation — and any tornado — usually hides.</figcaption>
+</figure>
+
+<div class="box do">
+  <h4>What you do</h4>
+  <p>A hook says "check velocity <i>now</i>." A hook shape alone is suggestive, not proof — you confirm rotation
+  in the velocity product (next signature). If a hook and a velocity couplet line up in the same spot,
+  you treat that as a tornado threat, get positioned safely to the storm's southeast with an escape route,
+  and — if you're a spotter — report it.</p>
+</div>
+
+<h3>Velocity couplet &amp; TVS <span class="pill wx">velocity · FM §6</span></h3>
+<p>This is the real rotation signature. In the velocity product, find a spot where <b>bright green sits right
+next to bright red</b>, tightly packed. Green (toward the radar) touching red (away) over a small area means
+air is spinning: one side racing at you, the other racing away — a <b>couplet</b>. When it's very tight and
+strong it's flagged as a <b>TVS</b> (Tornadic Vortex Signature).</p>
+
+<figure class="svgfig">
+<svg viewBox="0 0 620 230" role="img" aria-label="Velocity couplet: adjacent bright green and bright red blobs meaning rotation">
+  <!-- radar location hint -->
+  <text x="20" y="215" class="svglabel">radar is off to the LEFT (west)</text>
+  <line x1="20" y1="120" x2="120" y2="120" stroke="#4a5a6a" stroke-dasharray="4 4"/>
+  <!-- the two adjacent blobs -->
+  <circle cx="270" cy="110" r="60" fill="#2fd06a"/>
+  <circle cx="270" cy="110" r="34" fill="#0a8a3a"/>
+  <circle cx="390" cy="110" r="60" fill="#f0505a"/>
+  <circle cx="390" cy="110" r="34" fill="#a80016"/>
+  <!-- dividing line -->
+  <line x1="330" y1="40" x2="330" y2="180" stroke="#dde6f0" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.7"/>
+  <!-- spin arrows implied -->
+  <path d="M330,40 A70 70 0 0 1 330,180" fill="none" stroke="#ffb020" stroke-width="2"/>
+  <polygon points="330,180 322,168 338,168" fill="#ffb020"/>
+  <!-- labels -->
+  <text x="270" y="114" text-anchor="middle" style="font-size:12px;fill:#05070a;font-weight:700">TOWARD</text>
+  <text x="390" y="114" text-anchor="middle" style="font-size:12px;fill:#fff;font-weight:700">AWAY</text>
+  <text x="230" y="200" style="font-size:12px;fill:#2fd06a">green = toward radar</text>
+  <text x="360" y="200" style="font-size:12px;fill:#f0505a">red = away</text>
+  <text x="200" y="30" class="svglabel">green beside red, tightly packed = the air is spinning</text>
+</svg>
+<figcaption>A velocity couplet. Two adjacent circles, one bright green (toward) and one bright red (away),
+packed close together, mean rotation. Tight + strong = a TVS.</figcaption>
+</figure>
+
+<div class="box do">
+  <h4>What you do</h4>
+  <p>Line up the couplet with the hook on reflectivity. Same location, tight, and getting stronger sweep to
+  sweep? That's a rotating updraft that can produce or is producing a tornado. Position southeast of it with
+  an escape route, keep it in sight, and report. <b>Tighter and lower</b> (a couplet close to the radar, so
+  the beam is near the ground) is more dangerous than a loose one far away where the beam is high aloft.</p>
+</div>
+
+<h3>Tornado Debris Signature (TDS) &amp; dual-pol <span class="pill wx">3 products · FM §6</span></h3>
+<p>Modern radars are <b>dual-polarization</b>: they send pulses both horizontally and vertically, which lets
+them tell the <b>shape</b> of what they're hitting. Rain is uniform, so it comes back "clean" — a high
+<b>correlation coefficient (CC)</b>, near 1.0. Tornado debris — boards, dirt, roofing, shredded trees — is a
+chaotic mix of shapes and sizes, so CC <b>drops</b>. A "debris ball" is a knot of high reflectivity at the
+tornado's spot, colocated with a couplet in velocity <b>and</b> a CC hole. All three together = a
+tornado is <b>on the ground</b>, lofting debris, right now.</p>
+
+<figure class="svgfig">
+<svg viewBox="0 0 620 210" role="img" aria-label="Three panels showing the debris signature: reflectivity ball, velocity couplet, and correlation coefficient drop">
+  <!-- panel 1: reflectivity debris ball -->
+  <rect x="16" y="30" width="176" height="150" fill="#05070a" stroke="#22303f"/>
+  <text x="104" y="24" text-anchor="middle" class="svglabel">REFLECTIVITY</text>
+  <ellipse cx="104" cy="105" rx="60" ry="48" fill="#1fbf4c"/>
+  <ellipse cx="104" cy="105" rx="34" ry="28" fill="#ff7a00"/>
+  <ellipse cx="104" cy="105" rx="16" ry="14" fill="#d030d0"/>
+  <text x="104" y="170" text-anchor="middle" class="svglabel">"debris ball"</text>
+
+  <!-- panel 2: velocity couplet -->
+  <rect x="222" y="30" width="176" height="150" fill="#05070a" stroke="#22303f"/>
+  <text x="310" y="24" text-anchor="middle" class="svglabel">VELOCITY</text>
+  <circle cx="285" cy="105" r="34" fill="#2fd06a"/>
+  <circle cx="335" cy="105" r="34" fill="#f0505a"/>
+  <text x="310" y="170" text-anchor="middle" class="svglabel">couplet (rotation)</text>
+
+  <!-- panel 3: CC drop -->
+  <rect x="428" y="30" width="176" height="150" fill="#05070a" stroke="#22303f"/>
+  <text x="516" y="24" text-anchor="middle" class="svglabel">CORR. COEFF (CC)</text>
+  <ellipse cx="516" cy="105" rx="60" ry="48" fill="#3a5f8f"/>
+  <ellipse cx="516" cy="105" rx="20" ry="18" fill="#4a3a12" stroke="#ffb020" stroke-width="2"/>
+  <text x="516" y="110" text-anchor="middle" style="font-size:11px;fill:#ffb020">LOW</text>
+  <text x="516" y="170" text-anchor="middle" class="svglabel">CC "hole" = debris</text>
+</svg>
+<figcaption>All three in the same spot: a reflectivity debris ball, a velocity couplet, and a hole of low
+correlation coefficient. That combination is a tornado already on the ground.</figcaption>
+</figure>
+
+<div class="box danger">
+  <h4>What you do</h4>
+  <p>A confirmed TDS means the tornado is real and lofting debris — this is not a "maybe." If it's near you,
+  <b>you should already be in shelter, not watching.</b> As a spotter far enough to be safe, this is the highest-
+  confidence report you can make. It also means people downstream are in danger <i>now</i>. Never drive toward a
+  TDS to "see it." The lab keeps the name <b>El Reno 2013</b> for a reason: an experienced chase team was killed
+  when a violent tornado they were tracking turned and widened faster than they could escape. Radar told the
+  story; the road didn't cooperate.</p>
+</div>
+
+<h3>Bounded Weak Echo Region (BWER) <span class="pill wx">reflectivity · FM §5</span></h3>
+<p>A BWER (or "vault") is a hole of <b>weak</b> reflectivity wrapped by strong echo, seen on a vertical slice or
+implied by the storm's structure. It exists because the updraft is <b>so strong</b> that raindrops and small
+hail get carried upward faster than they can grow and fall — so that column reads weak even though violent
+things are happening in it. A BWER = a powerful, well-organized updraft: the engine of a supercell.</p>
+
+<figure class="svgfig">
+<svg viewBox="0 0 620 210" role="img" aria-label="Vertical cross-section of a storm showing a bounded weak echo region, a weak-echo vault under strong echo aloft">
+  <text x="14" y="24" class="svglabel">side view (a vertical slice through the storm)</text>
+  <!-- ground -->
+  <line x1="20" y1="180" x2="600" y2="180" stroke="#3a4a5a" stroke-width="2"/>
+  <text x="24" y="196" class="svglabel">ground</text>
+  <!-- strong echo body -->
+  <path d="M120,180 C120,120 150,60 260,60 C400,60 470,90 480,150 L480,180 Z"
+        fill="#1fbf4c"/>
+  <path d="M180,180 C180,120 210,80 300,80 C400,80 440,110 445,160 L445,180 Z"
+        fill="#f2e200" opacity="0.9"/>
+  <!-- strong core aloft (overhang) -->
+  <ellipse cx="320" cy="95" rx="70" ry="30" fill="#ff7a00"/>
+  <ellipse cx="330" cy="92" rx="34" ry="16" fill="#e11020"/>
+  <!-- the WEAK ECHO vault: a notch punched up from the ground under the strong core -->
+  <path d="M250,180 C250,150 258,120 300,110 C280,140 285,170 300,180 Z"
+        fill="#05070a"/>
+  <!-- updraft arrow through the vault -->
+  <line x1="288" y1="178" x2="300" y2="78" stroke="#35d6ea" stroke-width="3"/>
+  <polygon points="300,78 290,90 306,90" fill="#35d6ea"/>
+  <text x="150" y="150" class="svglabel">weak-echo VAULT</text>
+  <text x="150" y="164" class="svglabel">(the BWER)</text>
+  <text x="360" y="90" style="font-size:11px;fill:#fff">strong echo aloft</text>
+  <text x="315" y="140" style="font-size:11px;fill:#35d6ea">updraft ↑</text>
+</svg>
+<figcaption>A BWER / vault: a weak-echo hole punched up under a strong overhang. The updraft is lifting
+precip out of that column faster than it can fall — the sign of a very strong storm.</figcaption>
+</figure>
+
+<div class="box do">
+  <h4>What you do</h4>
+  <p>A BWER doesn't tell you a tornado is on the ground — it tells you this storm is <b>strong and organized</b>
+  and deserves your full attention. Treat it as a supercell: expect large hail near/under the vault, and watch
+  the velocity data closely for rotation developing on its flank.</p>
+</div>
+
+<h3>Bow echo <span class="pill wx">reflectivity · FM §7</span></h3>
+<p>A line of storms that <b>bulges outward</b> in the middle like an archer's bow. The bulge is a burst of
+strong straight-line winds shoving the line forward — the storm is producing damaging <b>downburst winds</b>,
+not rotation. A long-lived, widespread windstorm made of bowing lines is a <b>derecho</b>. Look also for a
+small notch behind the apex (a rear-inflow notch) feeding dry, fast air into the push.</p>
+
+<figure class="svgfig">
+<svg viewBox="0 0 620 200" role="img" aria-label="A bow echo: a line of storms bowing outward with strong straight-line winds at the apex">
+  <text x="14" y="22" class="svglabel">a storm LINE seen from above, bowing forward</text>
+  <!-- the bowing line -->
+  <path d="M120,40 C120,40 200,60 300,120 C360,155 420,120 500,60 L500,40
+           C420,90 360,120 300,90 C220,50 150,40 120,40 Z" fill="#1fbf4c"/>
+  <path d="M150,55 C230,70 300,120 300,120 C300,120 380,105 470,55
+           C400,95 350,110 300,88 C230,58 180,52 150,55 Z" fill="#f2e200"/>
+  <!-- heavier apex core -->
+  <ellipse cx="305" cy="108" rx="34" ry="20" fill="#ff7a00"/>
+  <ellipse cx="305" cy="108" rx="15" ry="10" fill="#e11020"/>
+  <!-- rear inflow notch -->
+  <path d="M305,60 L285,88 L325,88 Z" fill="#05070a"/>
+  <text x="330" y="70" class="svglabel">rear-inflow notch</text>
+  <!-- wind arrows at apex -->
+  <line x1="305" y1="128" x2="305" y2="178" stroke="#ff2f45" stroke-width="3"/>
+  <polygon points="305,178 296,166 314,166" fill="#ff2f45"/>
+  <line x1="255" y1="122" x2="235" y2="168" stroke="#ff2f45" stroke-width="2"/>
+  <polygon points="235,168 228,157 244,160" fill="#ff2f45"/>
+  <line x1="355" y1="122" x2="375" y2="168" stroke="#ff2f45" stroke-width="2"/>
+  <polygon points="375,168 366,160 382,157" fill="#ff2f45"/>
+  <text x="230" y="192" style="font-size:12px;fill:#ff2f45">damaging straight-line winds push OUT the apex</text>
+</svg>
+<figcaption>A bow echo. The apex — the point of the bulge — is where the strongest straight-line winds are.
+A chain of these over hundreds of miles is a derecho.</figcaption>
+</figure>
+
+<div class="box do">
+  <h4>What you do</h4>
+  <p>Expect a wall of wind and driving rain at and just ahead of the apex — treat it like a severe wind event,
+  not a tornado hunt. Get indoors or well clear; do not park downwind of the apex. Trees down, power out, and
+  blown-out visibility are the hazards. Report measured or estimated wind gusts and damage.</p>
+</div>
+
+<h3>Three-body scatter spike (TBSS) <span class="pill wx">reflectivity · FM §8</span></h3>
+<p>A give-away for <b>large hail</b>. Very big hailstones scatter the beam so hard that some energy takes a
+detour — hail → ground → hail → radar — and arrives late. The radar plots that late energy as a faint
+<b>spike of echo pointing straight away from the radar</b>, directly behind a strong core. There's nothing
+actually there; it's an artifact. But the artifact only happens with hail big enough to make it, so a TBSS
+(also called a "hail spike" or "flying eagle") is a strong hail flag.</p>
+
+<figure class="svgfig">
+<svg viewBox="0 0 620 170" role="img" aria-label="Three-body scatter spike: a faint echo spike pointing away from the radar behind a hail core">
+  <!-- radar at left -->
+  <circle cx="40" cy="90" r="7" fill="#35d6ea"/>
+  <text x="20" y="118" class="svglabel">radar</text>
+  <line x1="47" y1="90" x2="300" y2="90" stroke="#4a5a6a" stroke-dasharray="4 4"/>
+  <!-- hail core -->
+  <ellipse cx="360" cy="90" rx="46" ry="40" fill="#ff7a00"/>
+  <ellipse cx="360" cy="90" rx="22" ry="19" fill="#d030d0"/>
+  <text x="360" y="150" text-anchor="middle" class="svglabel">large-hail core (very high dBZ)</text>
+  <!-- the spike pointing directly AWAY from radar (to the right, radially) -->
+  <path d="M400,84 L560,88 L560,92 L400,96 Z" fill="#1fbf4c" opacity="0.7"/>
+  <text x="470" y="78" class="svglabel">faint spike →</text>
+  <text x="430" y="112" style="font-size:11px;fill:#8598ad">points straight away from radar (an artifact)</text>
+</svg>
+<figcaption>A three-body scatter spike: a faint tail of echo directly behind the core, pointing away from
+the radar. It's not real precip — but only big hail creates it, so it flags large hail.</figcaption>
+</figure>
+
+<div class="box do">
+  <h4>What you do</h4>
+  <p>Treat a TBSS as confirmation of <b>significant hail</b> in that core. Stay out of the core and its
+  forward path — hail can smash windshields and, driven by wind, injure. If you're spotting, a TBSS plus a
+  60+ dBZ knot is a solid large-hail report.</p>
+</div>
+
+<div class="box pro">
+  <h4>Reading order that pros use</h4>
+  <ol style="margin-bottom:0">
+    <li><b>Reflectivity first</b> — find the storm's shape. Hook? Bow? Tight 60+ core?</li>
+    <li><b>Velocity next</b> — is there a couplet under that hook? Green beside red, tight and low?</li>
+    <li><b>Dual-pol to confirm</b> — CC hole for debris, high dBZ + big drops for hail.</li>
+    <li><b>Then look outside.</b> Radar aims your eyes; your eyes make the call. And you never do any of it
+        alone — see the note below.</li>
+  </ol>
+</div>
+
+<div class="box danger">
+  <h4>Radar is a map, not a shield</h4>
+  <p>Everything on this page helps you understand a storm — it does not make it safe to be near one. Actual
+  chasing is done <b>years from now, never alone, with a trained adult</b>, in a vehicle with a real escape
+  route, and only after a lot of practice reading exactly these signatures. The lab keeps
+  <b>El Reno, 2013</b> — where a violent tornado killed experienced chasers who couldn't outrun it — as the
+  standing reminder that the radar can be perfectly clear and the situation still be deadly. Learn the screen
+  now. Earn the field later.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="quiz">3 · Spot-the-Signature Quiz</h2>
+<p class="lede" style="margin-bottom:16px">Read the scene — a diagram or a description — and pick the best
+answer. You get feedback on every question, and your score is saved on this computer.</p>
+
+<div class="qscore" id="qscore">
+  <span>Score: <b id="scoreNow">0</b> / <b id="scoreOf">0</b> answered · best run: <b id="scoreBest">0</b></span>
+  <span class="sp"></span>
+  <button id="resetQuiz" type="button">Reset score</button>
+</div>
+
+<div id="quizWrap"><!-- questions injected here --></div>
+
+<label class="chk" data-k="radar_done"><input type="checkbox" data-k="radar_done"><span>I can read radar signatures.</span></label>
+
+</main>
+</div>
+
+<!-- ================= progress checkbox (shared store) ================= -->
+<script>
+const KEY="stormlab.progress",load=()=>JSON.parse(localStorage.getItem(KEY)||"{}"),save=o=>localStorage.setItem(KEY,JSON.stringify(o));
+function paint(){const p=load();document.querySelectorAll(".chk").forEach(l=>{const b=l.querySelector("input");b.checked=!!p[b.dataset.k];l.classList.toggle("on",b.checked);});}
+document.querySelectorAll(".chk input").forEach(b=>b.onchange=()=>{const p=load();p[b.dataset.k]=b.checked;save(p);paint();});
+paint();
+</script>
+
+<!-- ================= quiz engine (self-contained, never throws) ================= -->
+<script>
+(function(){
+  "use strict";
+  var QKEY = "stormlab.radarquiz";
+
+  // Small SVG helpers so the quiz can draw its own scenes offline.
+  function fig(inner, cap){
+    return '<figure class="svgfig">' + inner +
+           (cap ? '<figcaption>'+cap+'</figcaption>' : '') + '</figure>';
+  }
+  var svgCouplet =
+    '<svg viewBox="0 0 420 150" role="img" aria-label="two adjacent circles, green and red, packed close">'+
+    '<circle cx="150" cy="75" r="46" fill="#2fd06a"/><circle cx="150" cy="75" r="24" fill="#0a8a3a"/>'+
+    '<circle cx="250" cy="75" r="46" fill="#f0505a"/><circle cx="250" cy="75" r="24" fill="#a80016"/>'+
+    '<text x="150" y="79" text-anchor="middle" style="font-size:11px;fill:#05070a;font-weight:700">TOWARD</text>'+
+    '<text x="250" y="79" text-anchor="middle" style="font-size:11px;fill:#fff;font-weight:700">AWAY</text>'+
+    '<text x="120" y="140" class="svglabel">velocity product · radar is off to the left</text></svg>';
+
+  var svgHook =
+    '<svg viewBox="0 0 420 200" role="img" aria-label="a blob with a hook curling on the lower-left">'+
+    '<path d="M210,30 C290,24 340,64 334,116 C328,160 262,180 210,172 '+
+    'C160,166 120,140 124,102 C128,64 155,38 210,30 Z" fill="#1fbf4c" stroke="#0a5fbf" stroke-width="2"/>'+
+    '<ellipse cx="240" cy="100" rx="30" ry="24" fill="#ff7a00"/>'+
+    '<ellipse cx="246" cy="98" rx="14" ry="11" fill="#e11020"/>'+
+    '<path d="M140,120 C104,120 90,150 106,174 C124,196 158,196 174,178 '+
+    'C156,190 128,186 120,168 C114,154 124,138 148,138 Z" fill="#1fbf4c" stroke="#0a5fbf" stroke-width="2"/>'+
+    '<text x="60" y="165" style="font-size:12px;fill:#ff2f45">HOOK →</text>'+
+    '<text x="120" y="30" class="svglabel">reflectivity product</text></svg>';
+
+  var svgBow =
+    '<svg viewBox="0 0 440 160" role="img" aria-label="a line of storms bowing outward">'+
+    '<path d="M90,34 C90,34 160,52 220,100 C270,138 320,100 380,52 L380,34 '+
+    'C320,74 270,100 220,74 C160,42 120,34 90,34 Z" fill="#1fbf4c"/>'+
+    '<ellipse cx="222" cy="92" rx="26" ry="16" fill="#ff7a00"/>'+
+    '<line x1="222" y1="108" x2="222" y2="146" stroke="#ff2f45" stroke-width="3"/>'+
+    '<polygon points="222,146 214,135 230,135" fill="#ff2f45"/>'+
+    '<text x="120" y="24" class="svglabel">reflectivity · a storm line seen from above</text></svg>';
+
+  var svgSpike =
+    '<svg viewBox="0 0 440 130" role="img" aria-label="a strong core with a faint spike pointing away from the radar">'+
+    '<circle cx="34" cy="65" r="6" fill="#35d6ea"/><text x="16" y="90" class="svglabel">radar</text>'+
+    '<line x1="40" y1="65" x2="230" y2="65" stroke="#4a5a6a" stroke-dasharray="4 4"/>'+
+    '<ellipse cx="270" cy="65" rx="36" ry="30" fill="#ff7a00"/><ellipse cx="270" cy="65" rx="16" ry="13" fill="#d030d0"/>'+
+    '<path d="M302,60 L420,63 L420,67 L302,70 Z" fill="#1fbf4c" opacity="0.7"/>'+
+    '<text x="330" y="55" class="svglabel">faint spike →</text></svg>';
+
+  // Question bank. Each: prompt, optional svg+caption, choices[], answer index, why[] per choice.
+  var BANK = [
+    {
+      qn:"Reflectivity",
+      stem:"You're in the reflectivity product and you see this shape on the storm's rear-right flank. What is it, and what's your next move?",
+      svg: svgHook, cap:"reflectivity product",
+      choices:[
+        "A bow echo — expect straight-line winds.",
+        "A hook echo — switch to velocity and look for a couplet.",
+        "A debris ball — a tornado is confirmed on the ground.",
+        "A three-body scatter spike — large hail."
+      ],
+      answer:1,
+      why:[
+        "No — a bow echo is a whole line bulging forward, not a curl on one storm's flank.",
+        "Right. A hook is the supercell fingerprint. It's suggestive, not proof — you confirm rotation in velocity next.",
+        "Not yet — a hook is a shape in REFLECTIVITY. A debris ball needs a low-CC hole and a couplet to confirm.",
+        "No — a hail spike points straight AWAY from the radar behind a core; this is a curl on the flank."
+      ]
+    },
+    {
+      qn:"Velocity",
+      stem:"In the velocity product, bright green sits right next to bright red, packed tightly together in one spot. What does that mean?",
+      svg: svgCouplet, cap:"velocity product · radar is off to the left",
+      choices:[
+        "The storm is moving very fast to the northeast.",
+        "A hail core — very high returns.",
+        "Rotation — a velocity couplet (one side toward, one side away).",
+        "A radar error; velocity can't show green and red together."
+      ],
+      answer:2,
+      why:[
+        "No — overall storm motion doesn't put toward-and-away right on top of each other like this.",
+        "Hail shows in REFLECTIVITY (dBZ), not as a green/red pair in velocity.",
+        "Correct. Green (toward) beside red (away), tight and packed, is air spinning — a couplet. Tight + strong = a TVS.",
+        "It's not an error — that adjacency is exactly what rotation looks like on Doppler velocity."
+      ]
+    },
+    {
+      qn:"Dual-pol",
+      stem:"At one spot you have all three at once: a knot of very high reflectivity, a tight velocity couplet, AND a hole of low correlation coefficient. What is happening?",
+      choices:[
+        "A strong updraft, but nothing is on the ground yet.",
+        "A tornado is on the ground, lofting debris — a confirmed TDS.",
+        "Large hail only.",
+        "Ground clutter near the radar site."
+      ],
+      answer:1,
+      why:[
+        "A strong updraft alone wouldn't drop CC — only lofted, mixed-up debris does that.",
+        "Right. Debris ball + couplet + low-CC hole together is a Tornado Debris Signature: a tornado on the ground now.",
+        "Hail raises dBZ, but it wouldn't produce a tight velocity couplet AND a CC hole together.",
+        "Clutter is right at the site and steady; this is a colocated debris/rotation/CC-drop signature."
+      ]
+    },
+    {
+      qn:"Reflectivity",
+      stem:"A whole line of storms is bulging outward in the middle, like an archer's bow. The strongest threat is at the apex. What is it?",
+      svg: svgBow, cap:"reflectivity · a storm line seen from above",
+      choices:[
+        "A hook echo — likely tornado.",
+        "A bow echo — damaging straight-line winds at the apex.",
+        "A BWER — very strong updraft.",
+        "A three-body scatter spike — hail."
+      ],
+      answer:1,
+      why:[
+        "A hook is a curl on one supercell's flank, not a whole line bowing forward.",
+        "Correct. The bulge is a surge of straight-line winds. A long chain of these is a derecho.",
+        "A BWER is a weak-echo vault seen in a vertical slice, not a bowing line from above.",
+        "A hail spike points away from the radar behind a single core — not a bowing line."
+      ]
+    },
+    {
+      qn:"Reflectivity",
+      stem:"Behind a very intense core you see a faint tail of echo pointing straight away from the radar. Nothing is really out there. What does the artifact tell you?",
+      svg: svgSpike, cap:"reflectivity · radar is off to the left",
+      choices:[
+        "A tornado is forming behind the core.",
+        "Large hail is in that core (three-body scatter spike).",
+        "The radar is broken.",
+        "Straight-line winds are blowing debris outward."
+      ],
+      answer:1,
+      why:[
+        "No — a spike pointing away isn't rotation; it's an artifact from big hailstones scattering the beam.",
+        "Right. A three-body scatter spike (hail spike) is caused by large hail, so it flags significant hail.",
+        "It's a known artifact, not a fault — only large hail produces it.",
+        "Winds don't create a radial spike behind a core; large hail does."
+      ]
+    },
+    {
+      qn:"Products",
+      stem:"On the RADAR, red means the wind is moving ____ , and green means the wind is moving ____ — always relative to the radar site.",
+      choices:[
+        "toward the radar / away from the radar",
+        "away from the radar / toward the radar",
+        "north / south",
+        "up / down"
+      ],
+      answer:1,
+      why:[
+        "Reversed. Red is AWAY, green is TOWARD.",
+        "Correct. Red = away from the radar, green = toward it. Every couplet is just green beside red.",
+        "No — velocity is measured toward/away from the radar, not by compass direction.",
+        "No — Doppler measures motion along the beam (toward/away), not vertical up/down."
+      ]
+    },
+    {
+      qn:"Reflectivity",
+      stem:"You find a tight knot reading 63 dBZ inside a severe storm. Rain shafts almost never top ~55 dBZ. What should you suspect?",
+      choices:[
+        "It's just very heavy rain.",
+        "Hail — dBZ that high usually means hailstones are in the core.",
+        "A tornado on the ground.",
+        "Rotation."
+      ],
+      answer:1,
+      why:[
+        "Rain rarely gets above ~55 dBZ; 60+ is past what a rain shaft alone can do.",
+        "Right. A tight 60+ dBZ core points to hail. Confirm with dual-pol / a hail spike.",
+        "High dBZ alone isn't a tornado — that needs a couplet and, to confirm, a CC hole.",
+        "Rotation shows in the VELOCITY product, not as a high dBZ value."
+      ]
+    },
+    {
+      qn:"Structure",
+      stem:"In a vertical slice of a storm you see a notch of WEAK echo punched up from the ground, wrapped by strong echo aloft. What does this vault mean?",
+      choices:[
+        "The storm is weakening and falling apart.",
+        "A very strong updraft is lifting precip out faster than it can fall (a BWER).",
+        "A tornado is guaranteed within minutes.",
+        "The radar beam is blocked by terrain."
+      ],
+      answer:1,
+      why:[
+        "Opposite — a weak-echo vault is a sign of strength, not collapse.",
+        "Correct. A Bounded Weak Echo Region means a powerful, organized updraft — the engine of a supercell.",
+        "A BWER means a strong storm, but it does not guarantee a tornado — watch velocity for rotation.",
+        "Beam blockage looks like a missing wedge from the site, not a bounded weak vault inside a storm."
+      ]
+    }
+  ];
+
+  function readStore(){
+    try{
+      var raw = localStorage.getItem(QKEY);
+      var o = raw ? JSON.parse(raw) : null;
+      if(!o || typeof o!=="object") o = {};
+      if(typeof o.correct!=="number") o.correct=0;
+      if(typeof o.answered!=="number") o.answered=0;
+      if(typeof o.best!=="number") o.best=0;
+      if(!o.done || typeof o.done!=="object") o.done={};
+      return o;
+    }catch(e){ return {correct:0,answered:0,best:0,done:{}}; }
+  }
+  function writeStore(o){ try{ localStorage.setItem(QKEY, JSON.stringify(o)); }catch(e){} }
+
+  function refreshScore(){
+    var s = readStore();
+    var run = 0; // current-run correct = correct answers still marked done this load are already counted; show totals
+    var elNow = document.getElementById("scoreNow");
+    var elOf  = document.getElementById("scoreOf");
+    var elBest= document.getElementById("scoreBest");
+    if(elNow) elNow.textContent = s.correct;
+    if(elOf)  elOf.textContent  = s.answered;
+    if(elBest) elBest.textContent = s.best;
+  }
+
+  function buildQuiz(){
+    var wrap = document.getElementById("quizWrap");
+    if(!wrap) return;
+    var store = readStore();
+    var html = "";
+    for(var i=0;i<BANK.length;i++){
+      var q = BANK[i];
+      html += '<div class="q" data-i="'+i+'">';
+      html += '<div class="qn">Question '+(i+1)+' · '+q.qn+'</div>';
+      if(q.svg){ html += fig(q.svg, q.cap||""); }
+      html += '<div class="stem">'+q.stem+'</div>';
+      html += '<div class="choices">';
+      for(var c=0;c<q.choices.length;c++){
+        html += '<button type="button" class="choice" data-c="'+c+'">'+q.choices[c]+'</button>';
+      }
+      html += '</div>';
+      html += '<div class="fb"></div>';
+      html += '</div>';
+    }
+    wrap.innerHTML = html;
+
+    // wire each question
+    var blocks = wrap.querySelectorAll(".q");
+    for(var b=0;b<blocks.length;b++){
+      (function(block){
+        var idx = parseInt(block.getAttribute("data-i"),10);
+        var q = BANK[idx];
+        var fb = block.querySelector(".fb");
+        var btns = block.querySelectorAll("button.choice");
+        for(var k=0;k<btns.length;k++){
+          btns[k].addEventListener("click", function(){
+            var chosen = parseInt(this.getAttribute("data-c"),10);
+            var s = readStore();
+            var already = !!s.done[idx];
+
+            // lock all choices
+            for(var m=0;m<btns.length;m++){ btns[m].disabled = true; }
+            // mark correct + chosen
+            if(btns[q.answer]) btns[q.answer].classList.add("right");
+            var isRight = (chosen === q.answer);
+            if(!isRight && btns[chosen]) btns[chosen].classList.add("wrong");
+
+            // feedback
+            fb.className = "fb show " + (isRight ? "ok" : "no");
+            var lead = isRight ? "Correct. " : "Not quite. ";
+            var why = (q.why && q.why[chosen]) ? q.why[chosen] : "";
+            fb.textContent = lead + why;
+
+            // score once per question
+            if(!already){
+              s.done[idx] = true;
+              s.answered = (s.answered||0) + 1;
+              if(isRight) s.correct = (s.correct||0) + 1;
+              if(s.correct > (s.best||0)) s.best = s.correct;
+              writeStore(s);
+              refreshScore();
+            }
+          });
+        }
+        // if this question was already answered in a prior session, re-lock and reveal the answer
+        if(store.done[idx]){
+          for(var d=0;d<btns.length;d++){ btns[d].disabled = true; }
+          if(btns[q.answer]) btns[q.answer].classList.add("right");
+          fb.className = "fb show ok";
+          fb.textContent = "Already answered — the correct choice is highlighted. Reset the score to try fresh.";
+        }
+      })(blocks[b]);
+    }
+    refreshScore();
+  }
+
+  function wireReset(){
+    var r = document.getElementById("resetQuiz");
+    if(!r) return;
+    r.addEventListener("click", function(){
+      writeStore({correct:0,answered:0,best:0,done:{}});
+      buildQuiz();
+      refreshScore();
+    });
+  }
+
+  function boot(){
+    try{ buildQuiz(); wireReset(); refreshScore(); }
+    catch(e){ /* never throw into the page */ }
+  }
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded", boot);
+  }else{ boot(); }
+})();
+</script>
+</body>
+</html>

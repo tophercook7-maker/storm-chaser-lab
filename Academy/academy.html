@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Academy — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+nav a.sec.cur{border-left-color:var(--accent);color:var(--accent);background:#161f2b}
+section{scroll-margin-top:20px}
+
+/* rank cards */
+.rank{background:var(--card);border:1px solid var(--line);border-radius:9px;
+      padding:0;margin:0 0 30px;overflow:hidden}
+.rank>.head{display:flex;gap:16px;align-items:center;padding:18px 22px;
+      border-bottom:1px solid var(--line);background:var(--card2)}
+.rank .badge{width:52px;height:52px;flex:none;border-radius:50%;display:flex;
+      align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;
+      font-size:19px;color:#0b0f15;border:2px solid rgba(0,0,0,.25)}
+.r1 .badge{background:var(--green)} .r2 .badge{background:var(--accent)}
+.r3 .badge{background:var(--amber)} .r4 .badge{background:var(--purple)}
+.rank .htxt{flex:1}
+.rank .htxt .lvl{font-family:var(--mono);font-size:10.5px;letter-spacing:2px;color:var(--dim);
+      text-transform:uppercase;margin-bottom:2px}
+.rank .htxt h2{font-size:20px;margin:0;padding:0;border:none}
+.rank .body{padding:6px 22px 20px}
+.rank .who{font-size:14px;color:var(--dim);margin:14px 0 4px}
+.rank .who b{color:#fff}
+.rank .goal{font-size:14px;color:var(--dim);margin:0 0 6px}
+.rank .goal b{color:var(--green)}
+.r2 .goal b{color:var(--accent)} .r3 .goal b{color:var(--amber)} .r4 .goal b{color:var(--purple)}
+.rank .chk{margin:12px 0 12px}
+.rank .steplbl{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--dim);
+      text-transform:uppercase;margin:20px 0 8px;border-top:1px solid var(--line);padding-top:14px}
+
+/* progress bar strip */
+.tree{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 30px}
+.tree a{display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);
+      border-radius:8px;padding:14px 14px;color:var(--dim);position:relative;overflow:hidden}
+.tree a:hover{border-color:var(--accent);color:var(--text)}
+.tree .rn{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+.tree .rt{display:block;font-size:15px;color:#fff;margin-top:3px;font-weight:600}
+.tree .rp{display:block;font-family:var(--mono);font-size:11px;margin-top:8px;color:var(--dim)}
+.tree .bar{height:5px;border-radius:3px;background:#05070a;margin-top:6px;overflow:hidden}
+.tree .bar>i{display:block;height:100%;width:0;transition:width .3s}
+.tree a.t1 .bar>i{background:var(--green)} .tree a.t2 .bar>i{background:var(--accent)}
+.tree a.t3 .bar>i{background:var(--amber)}  .tree a.t4 .bar>i{background:var(--purple)}
+
+.badgepill{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.3px;
+      padding:2px 8px;border-radius:9px;text-transform:uppercase;margin-left:8px;vertical-align:2px;
+      color:var(--dim);border:1px solid var(--line)}
+@media (max-width:880px){.tree{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">THE ACADEMY</div>
+  <a href="#top"   class="sec">The path</a>
+  <a href="#rank1" class="sec">Rank 1 · Rookie</a>
+  <a href="#rank2" class="sec">Rank 2 · Spotter</a>
+  <a href="#rank3" class="sec">Rank 3 · Analyst</a>
+  <a href="#rank4" class="sec">Rank 4 · Chaser-in-training</a>
+  <a href="#use"   class="sec">How to use this page</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← The Station</a>
+  <a href="../Code School/projects.html">Code Projects</a>
+  <a href="../Certificates/certificates.html">Certificates</a>
+  <a href="../Code School/python.html">Code School</a>
+  <a href="../Gear Bench/gear.html">Gear Bench</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+  <a href="../Atlas/atlas.html">Storm Atlas</a>
+  <a href="../Trainers/decode.html">Decode</a>
+  <a href="../Trainers/radar.html">Radar Trainer</a>
+  <a href="../Trainers/skewt.html">Skew-T</a>
+  <a href="../Quiz/quiz.html">Flashcards</a>
+  <a href="../SKYWARN/skywarn.html">SKYWARN</a>
+  <a href="../Chase Log/log.html">Chase Log</a>
+  <a href="../Storm Deck/deck.html">Storm Deck</a>
+</nav>
+
+<main id="top">
+
+<h1><span class="num">THE ACADEMY</span>The path — how you level up</h1>
+<p class="lede">Everything else in this lab is a room full of tools. This page is the map that tells
+you which room to walk into next. You start knowing nothing and you finish as a trained spotter
+who can look at a screen and a sky and say what's happening — and what's about to. Follow the four
+ranks in order. Check things off as you go: the boxes are saved on the drive, so the whole lab
+remembers where you are, even after you close it and come back next month.</p>
+
+<div class="box why">
+  <h4>Why ranks instead of a to-do list</h4>
+  <p>A flat list of 40 things is paralyzing — you don't know what matters or what depends on what.
+  Ranks fix that. Each rank is a real level of skill, and each one unlocks the next because it
+  actually gives you what the next one needs. You don't move up because you finished chores. You
+  move up because you can <b>do</b> the thing the rank is named for. That's how real spotters are
+  trained: reading first, radar second, data third, the road last — years last.</p>
+</div>
+
+<div class="tree" id="tree">
+  <a class="t1" href="#rank1"><span class="rn">Rank 1</span><span class="rt">Rookie</span>
+     <span class="bar"><i></i></span><span class="rp" data-prog="r1">0 / 0</span></a>
+  <a class="t2" href="#rank2"><span class="rn">Rank 2</span><span class="rt">Spotter</span>
+     <span class="bar"><i></i></span><span class="rp" data-prog="r2">0 / 0</span></a>
+  <a class="t3" href="#rank3"><span class="rn">Rank 3</span><span class="rt">Analyst</span>
+     <span class="bar"><i></i></span><span class="rp" data-prog="r3">0 / 0</span></a>
+  <a class="t4" href="#rank4"><span class="rn">Rank 4</span><span class="rt">Chaser-in-tr.</span>
+     <span class="bar"><i></i></span><span class="rp" data-prog="r4">0 / 0</span></a>
+</div>
+
+<div class="box do">
+  <h4>One rule before you start</h4>
+  <p>Nothing on this whole page asks you to go stand near a storm. Rank 1 through 3 happen at a
+  desk, at a window, and in your yard. Rank 4 is about understanding what real chasing takes and
+  why it's <b>years</b> away — done with training and an experienced adult, and never alone. Keep
+  that straight the whole way up and this path is completely safe.</p>
+</div>
+
+
+<!-- ══════════════════ RANK 1 ══════════════════ -->
+<section id="rank1">
+<div class="rank r1">
+  <div class="head">
+    <div class="badge">1</div>
+    <div class="htxt"><div class="lvl">Rank One</div><h2>Rookie</h2></div>
+  </div>
+  <div class="body">
+    <p class="who"><b>Who you are here:</b> you watch the sky and you know what you're looking at.
+    You can name the cloud, name the storm, and tell whether it's the boring kind or the kind
+    that's worth watching.</p>
+    <p class="goal"><b>When you finish:</b> you can walk outside, look up, and put a name on what's
+    over your head — and open a live radar without it being a wall of noise.</p>
+
+    <div class="steplbl">Do these in order</div>
+
+    <label class="chk" data-k="r1-deck"><input type="checkbox" data-k="r1-deck"><span>
+      Open the <a href="../Storm Deck/deck.html">Storm Deck</a> and just look around. This is your
+      dashboard — live radar, watches, the current sky. You won't understand all of it yet. That's
+      the point of the next three ranks. Get familiar with where things are.</span></label>
+
+    <label class="chk" data-k="r1-fm1"><input type="checkbox" data-k="r1-fm1"><span>
+      Read <a href="../Field Manual/manual.html#build">Field Manual §1 — How a storm is built</a>.
+      Warm moist air, a lift, instability. If you get why air rises and cools, everything else in the
+      lab has a foundation.</span></label>
+
+    <label class="chk" data-k="r1-fm2"><input type="checkbox" data-k="r1-fm2"><span>
+      Read <a href="../Field Manual/manual.html#types">Field Manual §2 — The four storm types</a>:
+      single-cell, multicell, squall line, supercell. Learn which one makes almost all the strong
+      tornadoes.</span></label>
+
+    <label class="chk" data-k="r1-atlas"><input type="checkbox" data-k="r1-atlas"><span>
+      Learn your clouds in the <a href="../Atlas/atlas.html">Storm Atlas</a>. Find cumulus,
+      towering cumulus, and <b>cumulonimbus</b> — and learn what an anvil top means. The sky is a
+      gauge; you're learning to read it.</span></label>
+
+    <label class="chk" data-k="r1-cs1"><input type="checkbox" data-k="r1-cs1"><span>
+      Do <a href="../Code School/python.html#l1">Code School lesson 01 — print</a>. Your first line
+      of real Python. Small on purpose.</span></label>
+
+    <label class="chk" data-k="r1-cs2"><input type="checkbox" data-k="r1-cs2"><span>
+      Do <a href="../Code School/python.html#l2">lesson 02 — Variables</a>. A variable is a labeled
+      box for a value, like <code>temp = 78</code>. You'll store weather in these all the time.</span></label>
+
+    <label class="chk" data-k="r1-cs3"><input type="checkbox" data-k="r1-cs3"><span>
+      Do <a href="../Code School/python.html#l3">lesson 03 — Numbers &amp; math</a>. Now the computer
+      does the arithmetic. Weather is a lot of arithmetic.</span></label>
+
+    <label class="chk" data-k="r1-radio"><input type="checkbox" data-k="r1-radio"><span>
+      From the <a href="../Gear Bench/gear.html#radios">Gear Bench §2</a>, learn what a <b>NOAA
+      Weather Radio</b> does and how the alerts on your phone actually reach you. Know the tool that
+      wakes you up at 2 a.m. before you need it to.</span></label>
+
+    <label class="chk" data-k="r1-log"><input type="checkbox" data-k="r1-log"><span>
+      Start your first <a href="../Chase Log/log.html">Chase Log</a> entry. Even a plain-sky day.
+      Write the date, the sky, the temperature. This is the habit that turns a kid who watches
+      weather into someone who <b>studies</b> it.</span></label>
+
+    <div class="box do">
+      <h4>Checkpoint · answer before you level up</h4>
+      <p>1) Name the four storm types. &nbsp; 2) You see a tall, hard, cauliflower cloud with a flat
+      anvil spreading off the top — what is it called, and what does seeing one tell you? &nbsp;
+      3) What's the difference between watching the sky and just being outside?</p>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- ══════════════════ RANK 2 ══════════════════ -->
+<section id="rank2">
+<div class="rank r2">
+  <div class="head">
+    <div class="badge">2</div>
+    <div class="htxt"><div class="lvl">Rank Two</div><h2>Spotter</h2></div>
+  </div>
+  <div class="body">
+    <p class="who"><b>Who you are here:</b> you can read radar and you're SKYWARN-trained. You're
+    not guessing from the picture anymore — you know what the colors and the two radar modes are
+    actually telling you.</p>
+    <p class="goal"><b>When you finish:</b> you can open live radar, find the dangerous storm on it,
+    and know the difference between what radar shows and what it's hiding.</p>
+
+    <div class="steplbl">Do these in order</div>
+
+    <label class="chk" data-k="r2-anat"><input type="checkbox" data-k="r2-anat"><span>
+      Read <a href="../Field Manual/manual.html#anat">Field Manual §3 — Supercell anatomy</a> and
+      <a href="../Field Manual/manual.html#eyes">§4 — Wall cloud vs shelf cloud</a>. Learn the
+      updraft, the mesocyclone, and which cloud lowering actually matters.</span></label>
+
+    <label class="chk" data-k="r2-dbz"><input type="checkbox" data-k="r2-dbz"><span>
+      Read <a href="../Field Manual/manual.html#dbz">§5 — Reading reflectivity (dBZ)</a>. This is
+      the rainbow radar image everyone knows. Learn what the numbers mean and why big hail lights it
+      up.</span></label>
+
+    <label class="chk" data-k="r2-vel"><input type="checkbox" data-k="r2-vel"><span>
+      Read <a href="../Field Manual/manual.html#vel">§6 — Reading velocity</a>. This is the radar
+      mode most people never look at, and it's where rotation shows up. Red next to green, tight
+      together, means spin.</span></label>
+
+    <label class="chk" data-k="r2-sig"><input type="checkbox" data-k="r2-sig"><span>
+      Read <a href="../Field Manual/manual.html#sig">§7 — The signatures</a> and
+      <a href="../Field Manual/manual.html#dualpol">§8 — Dual-pol &amp; debris</a>. The hook echo,
+      the couplet, the debris ball — the patterns that make a meteorologist reach for the warning
+      button.</span></label>
+
+    <label class="chk" data-k="r2-blind"><input type="checkbox" data-k="r2-blind"><span>
+      Read <a href="../Field Manual/manual.html#blind">§9 — What radar can't see</a>. The single
+      most humbling and important section for a spotter. Radar beams rise and miss the ground.
+      That gap is <b>why human spotters still exist.</b></span></label>
+
+    <label class="chk" data-k="r2-radar"><input type="checkbox" data-k="r2-radar"><span>
+      Run the <a href="../Trainers/radar.html">Radar Trainer</a> until you can spot a hook and a
+      velocity couplet on your own, fast. Reading it in a book is different from finding it on a
+      live screen.</span></label>
+
+    <label class="chk" data-k="r2-decode"><input type="checkbox" data-k="r2-decode"><span>
+      Run the <a href="../Trainers/decode.html">Decode trainer</a> and learn to read a raw
+      <b>METAR</b> — the coded weather-station report. Once you can read <code>METAR KLIT 221953Z
+      18015G25KT ...</code> out loud, real weather data opens up to you.</span></label>
+
+    <label class="chk" data-k="r2-cs4"><input type="checkbox" data-k="r2-cs4"><span>
+      Do <a href="../Code School/python.html#l4">lesson 04 — Text &amp; f-strings</a> and
+      <a href="../Code School/python.html#l5">lesson 05 — if / elif / else</a>. Now your program can
+      make decisions: <code>if wind &gt; 58: print("severe")</code>.</span></label>
+
+    <label class="chk" data-k="r2-cs67"><input type="checkbox" data-k="r2-cs67"><span>
+      Do <a href="../Code School/python.html#l6">lesson 06 — Lists</a> and
+      <a href="../Code School/python.html#l7">lesson 07 — Loops</a>. A list holds a whole day of
+      readings; a loop walks through every one. This is how you'll process real data.</span></label>
+
+    <label class="chk" data-k="r2-air"><input type="checkbox" data-k="r2-air"><span>
+      From the <a href="../Gear Bench/gear.html#air">Gear Bench §3 — Measuring the air</a>, learn
+      what <b>dewpoint</b> is and why spotters live and die by it instead of relative humidity. High
+      dewpoint = fuel in the tank.</span></label>
+
+    <label class="chk" data-k="r2-skywarn"><input type="checkbox" data-k="r2-skywarn"><span>
+      <b>Get SKYWARN-trained.</b> Go to the <a href="../SKYWARN/skywarn.html">SKYWARN</a> page and
+      take a free NWS spotter class (many are online). This is the real, official first badge in
+      storm spotting — and it's open to you right now.</span></label>
+
+    <div class="box do">
+      <h4>Checkpoint · answer before you level up</h4>
+      <p>1) What is a hook echo, and which radar mode shows rotation directly? &nbsp; 2) What's the
+      difference between a <b>watch</b> and a <b>warning</b>? &nbsp; 3) Why do spotters trust
+      dewpoint over relative humidity? &nbsp; 4) Name one thing radar physically cannot see.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- ══════════════════ RANK 3 ══════════════════ -->
+<section id="rank3">
+<div class="rank r3">
+  <div class="head">
+    <div class="badge">3</div>
+    <div class="htxt"><div class="lvl">Rank Three</div><h2>Analyst</h2></div>
+  </div>
+  <div class="body">
+    <p class="who"><b>Who you are here:</b> you can look at the data <i>before</i> the storm exists
+    and say what the sky is going to do. You've crossed from reading what's happening to forecasting
+    what's coming.</p>
+    <p class="goal"><b>When you finish:</b> you can read the morning's numbers and a sounding, write
+    your own little nowcast, and you're feeding real data into a national science project.</p>
+
+    <div class="steplbl">Do these in order</div>
+
+    <label class="chk" data-k="r3-spc"><input type="checkbox" data-k="r3-spc"><span>
+      Read <a href="../Field Manual/manual.html#spc">Field Manual §10 — SPC risk &amp; warnings</a>.
+      Learn the outlook categories — MRGL, SLGT, ENH, MDT, HIGH — and what the Storm Prediction
+      Center is telling you the day before.</span></label>
+
+    <label class="chk" data-k="r3-nums"><input type="checkbox" data-k="r3-nums"><span>
+      Read <a href="../Field Manual/manual.html#nums">§11 — The numbers</a>: CAPE, shear, helicity,
+      LCL. These are the ingredients. An analyst reads the recipe, not just the finished cake.</span></label>
+
+    <label class="chk" data-k="r3-skewt"><input type="checkbox" data-k="r3-skewt"><span>
+      Run the <a href="../Trainers/skewt.html">Skew-T trainer</a>. A Skew-T is a graph of the whole
+      atmosphere stacked up over your head. It looks alien at first and then it becomes the most
+      powerful single chart you know. Practice until you can point to the CAPE.</span></label>
+
+    <label class="chk" data-k="r3-cs89"><input type="checkbox" data-k="r3-cs89"><span>
+      Do <a href="../Code School/python.html#l8">lesson 08 — Functions</a> and
+      <a href="../Code School/python.html#l9">lesson 09 — Dictionaries</a>. A function is a reusable
+      tool you built yourself; a dictionary holds a whole labeled observation
+      (<code>{"temp":78,"dew":71}</code>).</span></label>
+
+    <label class="chk" data-k="r3-cap"><input type="checkbox" data-k="r3-cap"><span>
+      Do the capstone: <a href="../Code School/python.html#l10">lesson 10 — Build a nowcast</a>.
+      You write a program that takes today's observations and prints a short-range call. Every piece
+      of it is something you built in the last nine lessons. This is the moment coding and weather
+      become one thing.</span></label>
+
+    <label class="chk" data-k="r3-station"><input type="checkbox" data-k="r3-station"><span>
+      Build a weather station from the <a href="../Gear Bench/gear.html#build">Gear Bench §5</a> —
+      a Raspberry Pi plus a <b>BME280</b> sensor reading temperature, humidity, and pressure. Now
+      your own yard produces the numbers your nowcast reads. Software, hardware, and weather, all in
+      your hands.</span></label>
+
+    <label class="chk" data-k="r3-cocorahs"><input type="checkbox" data-k="r3-cocorahs"><span>
+      Join <b>CoCoRaHS</b> (the Community Collaborative Rain, Hail &amp; Snow Network). You put a
+      cheap official rain gauge outside and report what falls. Your readings go to the NWS and
+      real researchers. You are now a data source, not just a data reader.</span></label>
+
+    <div class="box do">
+      <h4>Checkpoint · answer before you level up</h4>
+      <p>1) What do <b>CAPE and shear together</b> tell you — and why is one without the other not
+      enough? &nbsp; 2) On a simple sounding, where is the CAPE and what does a fat CAPE area mean?
+      &nbsp; 3) What does your nowcast program do, in one sentence?</p>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- ══════════════════ RANK 4 ══════════════════ -->
+<section id="rank4">
+<div class="rank r4">
+  <div class="head">
+    <div class="badge">4</div>
+    <div class="htxt"><div class="lvl">Rank Four</div><h2>Chaser-in-training</h2></div>
+  </div>
+  <div class="body">
+    <p class="who"><b>Who you are here:</b> you know what chasing actually takes — the science
+    degree, the years, the danger, the money — and you're building toward it the honest way instead
+    of the movie way.</p>
+    <p class="goal"><b>When you finish:</b> you understand the whole real road, you've started the
+    two things that actually open it (advanced math and the science path), and you know why the car
+    part comes <b>last</b>.</p>
+
+    <div class="box danger">
+      <h4>This rank is about the truth, not the road</h4>
+      <p>Nothing here puts you in a car. Real chasing is done years from now, with training and an
+      experienced adult, and <b>never alone.</b> The lab is blunt about why: on <b>May 31, 2013</b>,
+      near El Reno, Oklahoma, three of the most experienced storm researchers alive — <b>Tim
+      Samaras, his son Paul Samaras, and Carl Young</b> — were killed when the tornado turned. If it
+      can take them, the lesson is permanent: knowledge first, respect always, and you do not do this
+      alone or before you're trained.</p>
+    </div>
+
+    <div class="steplbl">Do these in order</div>
+
+    <label class="chk" data-k="r4-longgame"><input type="checkbox" data-k="r4-longgame"><span>
+      Read <a href="../The Long Game/roadmap.html#truth">The Long Game — the honest version</a> all
+      the way through. It doesn't sell you a dream; it tells you the real one. Read it when you're
+      not in a hurry.</span></label>
+
+    <label class="chk" data-k="r4-math"><input type="checkbox" data-k="r4-math"><span>
+      Read <a href="../The Long Game/roadmap.html#req">what the job actually requires</a> — the
+      <b>math gate.</b> Atmospheric science means calculus and physics. The way you open that door is
+      to take the <b>most advanced math class you can, this year, and keep doing it.</b> That's the
+      single most useful thing a 13-year-old can do for this dream.</span></label>
+
+    <label class="chk" data-k="r4-ham"><input type="checkbox" data-k="r4-ham"><span>
+      Learn the <b>ham radio license</b> path from the <a href="../SKYWARN/skywarn.html">SKYWARN</a>
+      page. A Technician license is a real exam you can pass as a kid, and radio is how spotter
+      networks talk when the cell towers are gone.</span></label>
+
+    <label class="chk" data-k="r4-mesonet"><input type="checkbox" data-k="r4-mesonet"><span>
+      Understand what a <b>mobile mesonet</b> is — the instrumented vehicles real researchers use —
+      and understand plainly <i>why real chasing is years away and never alone.</i> The point of
+      learning this now is to respect it, not to rush it.</span></label>
+
+    <label class="chk" data-k="r4-numbers"><input type="checkbox" data-k="r4-numbers"><span>
+      Read <a href="../The Long Game/roadmap.html#numbers">the actual numbers</a> — how few people
+      get paid to do this, what a meteorologist really earns, and how "storm chaser" is almost never
+      a job by itself. Know the real math of the career, not just the storms.</span></label>
+
+    <div class="box do">
+      <h4>Checkpoint · answer before you call yourself trained-in-progress</h4>
+      <p>1) What are the core <b>math and science requirements</b> to become a meteorologist (the
+      degree, the classes)? &nbsp; 2) What is the one rule about chasing that never bends? &nbsp;
+      3) Why does the car come last?</p>
+    </div>
+
+    <div class="box pro">
+      <h4>Past this rank</h4>
+      <p>There isn't a Rank 5 on this drive, because the next levels don't happen on a flash drive —
+      they happen in a classroom, in a college, and years from now in the field. What you've built
+      here is the thing all of that stands on. Keep the Chase Log going. Keep the math up. Keep
+      looking up.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- ══════════════════ HOW TO USE ══════════════════ -->
+<section id="use">
+<h2>How to use this page</h2>
+<p>Open the Academy first, every time. Find the highest rank where you still have unchecked boxes,
+and do the next one. That's it — you never have to guess what to do next. The checkmarks live on the
+drive, so you can walk away for a week or a month and pick up exactly where you left off. Don't skip
+ahead to Rank 4 because it's the exciting one; every rank is built on the one before it, and skipping
+just means the fun stuff won't make sense yet.</p>
+
+<div class="box why">
+  <h4>The most important instrument</h4>
+  <p>It isn't the radar, the Pi, or any radio. It's a trained brain plus the habit of
+  <b>writing down what you see.</b> A spotter who logs every sky beats a spotter with expensive gear
+  and no memory. So the real graduation from this Academy isn't a certificate — it's the day
+  keeping your <a href="../Chase Log/log.html">Chase Log</a> feels automatic. Start today. Add one
+  line tonight.</p>
+</div>
+</section>
+
+</main>
+</div>
+
+<script>
+const KEY="stormlab.progress",load=()=>JSON.parse(localStorage.getItem(KEY)||"{}"),save=o=>localStorage.setItem(KEY,JSON.stringify(o));
+function paint(){const p=load();document.querySelectorAll(".chk").forEach(l=>{const b=l.querySelector("input");b.checked=!!p[b.dataset.k];l.classList.toggle("on",b.checked);});}
+document.querySelectorAll(".chk input").forEach(b=>b.onchange=()=>{const p=load();p[b.dataset.k]=b.checked;save(p);paint();});
+paint();
+
+/* rank progress meters on the skill-tree strip */
+function rankProgress(){
+  const p=load();
+  ["r1","r2","r3","r4"].forEach(r=>{
+    const boxes=document.querySelectorAll('#'+({r1:'rank1',r2:'rank2',r3:'rank3',r4:'rank4'}[r])+' .chk input');
+    const total=boxes.length;let done=0;boxes.forEach(b=>{if(p[b.dataset.k])done++;});
+    const card=document.querySelector('.tree a.t'+r.slice(1));
+    if(!card)return;
+    card.querySelector('.bar>i').style.width=(total?Math.round(done/total*100):0)+'%';
+    card.querySelector('[data-prog="'+r+'"]').textContent=done+' / '+total+(total&&done===total?'  ✔':'');
+  });
+}
+document.querySelectorAll(".chk input").forEach(b=>b.addEventListener('change',rankProgress));
+rankProgress();
+
+/* highlight the nav section you're viewing */
+const secs=[...document.querySelectorAll('main section, main#top')];
+const links=[...document.querySelectorAll('nav a.sec')];
+function spy(){let cur=null;const y=window.scrollY+120;
+  document.querySelectorAll('section[id]').forEach(s=>{if(s.offsetTop<=y)cur=s.id;});
+  links.forEach(a=>a.classList.toggle('cur',a.getAttribute('href')==='#'+cur));}
+window.addEventListener('scroll',spy);spy();
+</script>
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Missions — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">MISSIONS</div>
+  <a href="#m0"  data-m="m0">Start · Read this first</a>
+  <a href="#m1"  data-m="m1">01 · Put yourself on the map</a>
+  <a href="#m2"  data-m="m2">02 · Make it look like yours</a>
+  <a href="#m3"  data-m="m3">03 · See the raw data</a>
+  <a href="#m4"  data-m="m4">04 · Open the hood (F12)</a>
+  <a href="#m5"  data-m="m5">05 · Teach it a new alert</a>
+  <a href="#m6"  data-m="m6">06 · Your own red list</a>
+  <a href="#m7"  data-m="m7">07 · Build a better score</a>
+  <a href="#m8"  data-m="m8">08 · The chase log</a>
+  <a href="#m9"  data-m="m9">09 · Hunt the hook echo</a>
+  <a href="#m10" data-m="m10">10 · Capstone: your own panel</a>
+  <a href="#after" data-m="after">What comes after</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← Back to the Lab</a>
+  <a href="../Academy/academy.html">The Academy</a>
+  <a href="../Atlas/atlas.html">Storm Atlas</a>
+  <a href="../Trainers/radar.html">Radar Trainer</a>
+  <a href="../Trainers/skewt.html">Skew-T</a>
+  <a href="../Trainers/decode.html">Decode</a>
+  <a href="../Quiz/quiz.html">Flashcards</a>
+  <a href="../Code School/python.html">Code School · Python</a>
+  <a href="../Gear Bench/gear.html">Gear Bench</a>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════ M0 -->
+<section class="mission" id="m0">
+<h1><span class="num">START HERE</span>How this works</h1>
+<p class="lede">Ten missions. Each one changes something real in the Storm Deck —
+the console you just had open. By the end you'll have rewritten most of it,
+and the version on your screen will be yours, not mine.</p>
+
+<h2>Three rules</h2>
+
+<div class="box why"><h4>1 · You cannot break anything permanently</h4>
+<p>Everything on this drive is a copy. If you wreck a file so badly it won't
+run, there's a folder called <code>BACKUP — original files</code> — drag the
+clean copy back out and you're fine. So experiment hard. The kids who learn
+fastest are the ones who break things on purpose to see what happens.</p></div>
+
+<div class="box why"><h4>2 · Read the error, don't fear it</h4>
+<p>When something goes wrong the Deck shows you a red screen that says exactly
+what's wrong, in English. That's not failure — that's the computer helping you.
+Professional programmers see errors dozens of times a day. The difference
+between them and everyone else is that they <b>read</b> them.</p></div>
+
+<div class="box why"><h4>3 · This is real, which means it's sometimes down</h4>
+<p>You're pulling live data off National Weather Service servers. Sometimes
+they're slow. Sometimes a weather station goes offline. Sometimes there's
+nothing happening anywhere and every panel says QUIET. That's not a bug —
+that's weather. Most of chasing is waiting.</p></div>
+
+<h2>What you need</h2>
+<ul>
+  <li><b>Chrome or Edge</b> — already on your computer.</li>
+  <li><b>Notepad</b> — already on your computer. Right-click any file →
+      <i>Open with</i> → <i>Notepad</i>.</li>
+  <li><b>Internet</b> — for live data. The lessons work offline; the Deck doesn't.</li>
+</ul>
+<p>That's it. Nothing to install. Nothing to buy. Nobody's permission needed.</p>
+
+<div class="box warn"><h4>One Notepad trick that will save you</h4>
+<p>When you save, Notepad sometimes tries to add <code>.txt</code> to the end of
+the filename. If <code>my-settings.js</code> becomes <code>my-settings.js.txt</code>,
+the Deck won't find it. In the Save box, set <i>Save as type</i> to
+<b>All Files (*.*)</b>. Do that every time and you'll never hit it.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m0">
+<span>I read the rules and I know where the backup folder is.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M1 -->
+<section class="mission" id="m1">
+<h1><span class="num">MISSION 01</span>Put yourself on the map</h1>
+<p><span class="pill code">code</span><span class="pill">15 min</span></p>
+<p class="lede">Right now the Deck watches Hot Springs, Arkansas — because that's
+where I set it. It should be watching your town. This is the first line of code
+you'll ever change, and when you refresh, the map moves to your house.</p>
+
+<h2>Do this</h2>
+<div class="box do"><h4>Step by step</h4>
+<ol>
+  <li>Go to <a href="https://www.latlong.net" target="_blank">latlong.net</a>.
+      Type in your town. Write down the two numbers it gives you.</li>
+  <li>Open the <b>Storm Deck</b> folder. Right-click <code>my-settings.js</code>
+      → Open with → Notepad.</li>
+  <li>Change <code>lat</code>, <code>lon</code>, <code>townName</code> and
+      <code>state</code> to yours. Put your name in <code>spotterName</code>.</li>
+  <li>Save. Go to the Deck and press <b>F5</b>.</li>
+</ol></div>
+
+<pre><code><span class="c">// before</span>
+  lat: <span class="n">34.5037</span>,
+  lon: <span class="n">-93.0552</span>,
+  townName: <span class="s">"Hot Springs, AR"</span>,
+  state: <span class="s">"AR"</span>,
+
+<span class="c">// after — this is an example. use YOUR numbers.</span>
+  lat: <span class="n">35.4676</span>,
+  lon: <span class="n">-97.5164</span>,
+  townName: <span class="s">"Oklahoma City, OK"</span>,
+  state: <span class="s">"OK"</span>,</code></pre>
+
+<h2>What you just learned</h2>
+<p>Those things with names and colons are <b>variables</b> — labeled boxes that
+hold a value. <code>lat: 34.5037</code> means "the box called lat holds the
+number 34.5037."</p>
+<table>
+<tr><th>Type</th><th>Looks like</th><th>Rule</th></tr>
+<tr><td>Number</td><td><code>34.5037</code></td><td>No quotes. Ever.</td></tr>
+<tr><td>String (text)</td><td><code>"Hot Springs, AR"</code></td><td>Always in quotes.</td></tr>
+<tr><td>True/false</td><td><code>true</code></td><td>No quotes, all lowercase.</td></tr>
+</table>
+<p>Get those three right and you've got maybe a third of what beginners struggle with.</p>
+
+<div class="box warn"><h4>Longitude is negative in America</h4>
+<p>Longitude measures east–west from a line through Greenwich, England.
+Everything in the United States is west of it, so every US longitude is a
+<b>negative</b> number. Type <code>93.0552</code> instead of
+<code>-93.0552</code> and your map lands in China. The Deck actually checks for
+this and will tell you.</p></div>
+
+<h2>Now pick your radar</h2>
+<p>There are 159 NEXRAD radars covering the United States. Each has a four-letter
+callsign starting with K. Go to <a href="https://radar.weather.gov" target="_blank">radar.weather.gov</a>,
+click your area, and read the callsign. Put it in <code>radarStation</code>.</p>
+<div class="box pro"><h4>Why this matters more than it looks</h4>
+<p>Radar beams travel in a straight line while the earth curves away underneath.
+At 60 miles out, the beam is already about 6,000 feet up. So a radar 100 miles
+away literally <b>cannot see</b> the bottom of a storm — where tornadoes live.
+Picking the closest radar isn't a preference. It's the difference between seeing
+low-level rotation and missing it. You'll go deeper on this in Mission 9.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m1">
+<span>The map opens on my town and my name is in the header.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M2 -->
+<section class="mission" id="m2">
+<h1><span class="num">MISSION 02</span>Make it look like yours</h1>
+<p><span class="pill code">code</span><span class="pill">20 min</span></p>
+<p class="lede">Code decides what things <i>do</i>. CSS decides what things
+<i>look like</i>. Open <code>deck.css</code> — the first thing in the file is a
+list of every color the Deck uses, in one place.</p>
+
+<pre><code><span class="c">/* deck.css — the top of the file */</span>
+:root{
+  --bg:      <span class="s">#080b10</span>;   <span class="c">/* page background */</span>
+  --panel:   <span class="s">#111721</span>;   <span class="c">/* the boxes */</span>
+  --text:    <span class="s">#dbe4ef</span>;   <span class="c">/* normal writing */</span>
+  --accent:  <span class="s">#35d6ea</span>;   <span class="c">/* the cyan. change me. */</span>
+  --red:     <span class="s">#ff2f45</span>;   <span class="c">/* tornado warning */</span>
+}</code></pre>
+
+<h2>How a hex color works</h2>
+<p><code>#35d6ea</code> is three pairs: <b>35</b> red, <b>d6</b> green,
+<b>ea</b> blue. Each pair runs <code>00</code> (none) to <code>ff</code> (max).
+So that's a little red, a lot of green, more blue — cyan.</p>
+<table>
+<tr><th>Color</th><th>Hex</th><th>Read it as</th></tr>
+<tr><td>Pure red</td><td><code>#ff0000</code></td><td>all red, no green, no blue</td></tr>
+<tr><td>White</td><td><code>#ffffff</code></td><td>all three maxed</td></tr>
+<tr><td>Black</td><td><code>#000000</code></td><td>all three off</td></tr>
+<tr><td>Orange</td><td><code>#ffa500</code></td><td>full red, some green, no blue</td></tr>
+</table>
+
+<div class="box do"><h4>Do this</h4>
+<p>Change <code>--accent</code> to something you like. Save, press F5. Notice how
+<b>many</b> things changed from that one line — the header, the buttons, the map
+controls, your location dot. That's the whole point of a variable: define it
+once, use it everywhere.</p>
+<p>Then push it. Make a version so ugly it's funny. Take a screenshot. Then set
+it back to something you can actually stare at during a warning.</p></div>
+
+<div class="box pro"><h4>The real lesson</h4>
+<p>Notice you didn't have to hunt down twelve places where cyan appears. If I'd
+written <code>#35d6ea</code> in twelve places, you'd have missed some, and the
+Deck would look half-changed. That's why professionals pull values into one
+place at the top. It has a name — <b>DRY</b>, Don't Repeat Yourself — and it's
+one of the few pieces of programming advice that's true everywhere.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m2">
+<span>The Deck is my colors now.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M3 -->
+<section class="mission" id="m3">
+<h1><span class="num">MISSION 03</span>See the raw data</h1>
+<p><span class="pill code">code</span><span class="pill wx">weather</span><span class="pill">20 min</span></p>
+<p class="lede">The Deck is a pretty face on top of plain text that the government
+publishes for free. Time to look at the actual text. This is the mission that
+makes the whole thing stop feeling like magic.</p>
+
+<div class="box do"><h4>Do this</h4>
+<p>Paste each of these into your browser's address bar. Change <code>AR</code>
+to your state.</p>
+<ol>
+<li><code>https://api.weather.gov/alerts/active?area=AR</code><br>
+    <small>Every active warning in your state, right now.</small></li>
+<li><code>https://api.weather.gov/alerts/active?event=Tornado%20Warning</code><br>
+    <small>Every tornado warning in the United States, right now.</small></li>
+<li><code>https://api.weather.gov/points/34.5037,-93.0552</code><br>
+    <small>Put your own numbers in. Tells you which NWS office covers you.</small></li>
+</ol></div>
+
+<h2>What you're looking at</h2>
+<p>That's <b>JSON</b> — the format almost all data on the internet travels in.
+It's only two ideas, and once you see them you'll see them forever:</p>
+<pre><code><span class="c">// An OBJECT: labeled boxes inside curly braces</span>
+{
+  <span class="s">"event"</span>: <span class="s">"Tornado Warning"</span>,
+  <span class="s">"severity"</span>: <span class="s">"Extreme"</span>,
+  <span class="s">"areaDesc"</span>: <span class="s">"Pima, AZ"</span>
+}
+
+<span class="c">// An ARRAY: an ordered list inside square brackets</span>
+[ <span class="s">"Tornado Warning"</span>, <span class="s">"Severe Thunderstorm Warning"</span>, <span class="s">"Flood Warning"</span> ]
+
+<span class="c">// Real NWS data is arrays of objects, nested. That's all it ever is.</span>
+{ <span class="s">"features"</span>: [ { <span class="s">"properties"</span>: { <span class="s">"event"</span>: <span class="s">"Tornado Warning"</span> } } ] }</code></pre>
+
+<p>Now go look at line 7 of <code>deck.js</code>. You'll see
+<code>const NWS = "https://api.weather.gov"</code> — the exact same address you
+just typed. The Deck isn't doing anything you can't do by hand. It just does it
+every 60 seconds and draws the result.</p>
+
+<div class="box pro"><h4>Find the polygon</h4>
+<p>In a tornado warning, scroll to <code>"geometry"</code>. That's a list of
+latitude/longitude pairs — the actual corners of the warned area on the ground.
+Before 2007 the NWS warned entire counties, so a storm hitting one corner of a
+county sent everyone in it to the basement. People stopped listening. Now they
+draw a polygon around the actual threat. Those numbers on your screen <b>are</b>
+that fix.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m3">
+<span>I looked at raw NWS JSON and found a "geometry" section.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M4 -->
+<section class="mission" id="m4">
+<h1><span class="num">MISSION 04</span>Open the hood</h1>
+<p><span class="pill code">code</span><span class="pill">25 min</span></p>
+<p class="lede">Every browser has a full set of developer tools built into it,
+free, that most people never open. Press <b>F12</b> on the Storm Deck.</p>
+
+<p>Click the <b>Console</b> tab. This is a place you can type JavaScript and it
+runs instantly. Try these one at a time, pressing Enter after each:</p>
+
+<pre><code><span class="n">2</span> + <span class="n">2</span>
+
+MY.townName
+
+MY.lat
+
+<span class="f">alert</span>(<span class="s">"I am inside the Storm Deck"</span>)
+
+document.<span class="f">getElementById</span>(<span class="s">"threatWord"</span>).textContent</code></pre>
+
+<p>That last one reaches into the live page and reads the threat word off the
+screen. You're not looking at the program from outside anymore. You're standing
+in it.</p>
+
+<h2>Now write a function</h2>
+<p>Open <code>deck.js</code> in Notepad. Scroll to the very bottom. Add this:</p>
+
+<pre><code><span class="c">// ── MY CODE ────────────────────────────────────</span>
+<span class="k">function</span> <span class="f">stormReport</span>(){
+  <span class="k">const</span> dew = document.<span class="f">getElementById</span>(<span class="s">"obDew"</span>).textContent;
+  console.<span class="f">log</span>(<span class="s">"Spotter: "</span> + MY.spotterName);
+  console.<span class="f">log</span>(<span class="s">"Watching: "</span> + MY.townName);
+  console.<span class="f">log</span>(<span class="s">"Dewpoint: "</span> + dew);
+
+  <span class="k">if</span> (<span class="f">parseInt</span>(dew) &gt;= <span class="n">65</span>){
+    console.<span class="f">log</span>(<span class="s">"&gt;&gt; Juicy. There's fuel in the air today."</span>);
+  } <span class="k">else</span> {
+    console.<span class="f">log</span>(<span class="s">"&gt;&gt; Dry. Storms will struggle."</span>);
+  }
+}</code></pre>
+
+<p>Save, press F5 on the Deck, then type <code>stormReport()</code> in the
+console and hit Enter.</p>
+
+<div class="box why"><h4>You just used the three things everything is built from</h4>
+<ul>
+<li><b>A function</b> — a named bundle of steps you can run whenever you want.</li>
+<li><b>A variable</b> — <code>const dew</code>, a box holding a value.</li>
+<li><b>A conditional</b> — <code>if / else</code>, the program making a decision.</li>
+</ul>
+<p>Functions, variables, and if/else. Every program ever written — games,
+phones, the software that runs the actual NEXRAD radar — is those three ideas
+stacked up a very large number of times. You have all three now.</p></div>
+
+<div class="box pro"><h4>Why 65°F</h4>
+<p>That number isn't decoration. Dewpoint is how much water vapor the air is
+actually holding, and water vapor is the fuel a thunderstorm burns. Below about
+55°F, severe storms struggle. At 65°F and up in spring, the atmosphere is
+loaded. Forecasters watch the dewpoint line on a surface map the way you'd watch
+a gas gauge.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m4">
+<span>I wrote stormReport() and ran it in the console.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M5 -->
+<section class="mission" id="m5">
+<h1><span class="num">MISSION 05</span>Teach it a new alert</h1>
+<p><span class="pill code">code</span><span class="pill wx">weather</span><span class="pill">25 min</span></p>
+<p class="lede">The NWS issues over 120 different kinds of alerts. The Deck only
+sorts a handful. Time to teach it more.</p>
+
+<p>Find this in <code>deck.js</code> (section 6):</p>
+<pre><code><span class="k">function</span> <span class="f">classify</span>(eventName){
+  <span class="k">const</span> e = eventName.<span class="f">toLowerCase</span>();
+  <span class="k">if</span> (e.<span class="f">includes</span>(<span class="s">"tornado"</span>) &amp;&amp; e.<span class="f">includes</span>(<span class="s">"warning"</span>))  <span class="k">return</span> <span class="s">"tornado"</span>;
+  <span class="k">if</span> (e.<span class="f">includes</span>(<span class="s">"extreme wind"</span>))                       <span class="k">return</span> <span class="s">"tornado"</span>;
+  <span class="k">if</span> (e.<span class="f">includes</span>(<span class="s">"severe thunderstorm"</span>) &amp;&amp; e.<span class="f">includes</span>(<span class="s">"warning"</span>)) <span class="k">return</span> <span class="s">"severe"</span>;
+  <span class="k">if</span> (e.<span class="f">includes</span>(<span class="s">"flash flood"</span>) || e.<span class="f">includes</span>(<span class="s">"flood"</span>)) <span class="k">return</span> <span class="s">"flood"</span>;
+  <span class="k">if</span> (e.<span class="f">includes</span>(<span class="s">"watch"</span>))                              <span class="k">return</span> <span class="s">"watch"</span>;
+  <span class="k">return</span> <span class="s">"other"</span>;
+}</code></pre>
+
+<h2>Read it out loud</h2>
+<p><code>toLowerCase()</code> makes everything lowercase first, so
+"Tornado Warning" and "TORNADO WARNING" both match. <code>includes()</code> asks
+"is this word anywhere in there?" <code>&amp;&amp;</code> means AND — both must
+be true. <code>||</code> means OR — either will do.</p>
+
+<div class="box warn"><h4>Order matters, and here's the trap</h4>
+<p>JavaScript checks these top to bottom and stops at the first match. The
+<code>"watch"</code> line is near the bottom on purpose. If you moved it to the
+top, a <b>Tornado Watch</b> would match "watch" first and get filed as a routine
+watch — and so would a Tornado <b>Warning</b>... no wait. Read it again. Would
+it? Check the actual words. This is the kind of thing you have to slow down and
+trace by hand, and it's exactly where real bugs live.</p></div>
+
+<div class="box do"><h4>Add winter weather</h4>
+<p>Add a line — <b>above</b> the <code>"watch"</code> line — that catches
+blizzards and ice storms:</p>
+<pre><code>  <span class="k">if</span> (e.<span class="f">includes</span>(<span class="s">"blizzard"</span>) || e.<span class="f">includes</span>(<span class="s">"ice storm"</span>) ||
+      e.<span class="f">includes</span>(<span class="s">"winter storm"</span>)) <span class="k">return</span> <span class="s">"winter"</span>;</code></pre>
+<p>Then you need to tell the rest of the program what "winter" is worth and what
+color it is. Find <code>POINTS</code> and <code>COLORS</code> just below and add
+your new kind to both:</p>
+<pre><code><span class="k">const</span> POINTS = { tornado:<span class="n">100</span>, severe:<span class="n">65</span>, flood:<span class="n">45</span>, winter:<span class="n">50</span>, watch:<span class="n">35</span>, other:<span class="n">15</span> };
+
+<span class="k">const</span> COLORS = {
+  tornado:<span class="s">"#ff2f45"</span>, severe:<span class="s">"#ffb020"</span>, flood:<span class="s">"#35ea7a"</span>,
+  winter:<span class="s">"#a8d8ff"</span>, watch:<span class="s">"#b46bff"</span>, other:<span class="s">"#7b8ba0"</span>
+};</code></pre>
+<p>And one more spot — <code>deck.css</code> needs to know how to style it.
+Copy the <code>.warn.flood</code> block, rename it <code>.warn.winter</code>,
+and change the color.</p></div>
+
+<div class="box pro"><h4>Notice what just happened</h4>
+<p>One new feature, <b>four</b> files-worth of places to touch. That's normal,
+and it's why programmers care so much about keeping related things together.
+When you find yourself thinking "ugh, I have to change it in four places" —
+that feeling is real, it's called <b>coupling</b>, and learning to reduce it is
+most of what separates a beginner from a professional.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m5">
+<span>The Deck now sorts winter alerts with their own color.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M6 -->
+<section class="mission" id="m6">
+<h1><span class="num">MISSION 06</span>Your own red list</h1>
+<p><span class="pill code">code</span><span class="pill">25 min</span></p>
+<p class="lede">In <code>my-settings.js</code> there's a list called
+<code>redAlerts</code> that nothing currently reads. It's a loaded gun with no
+trigger. Let's wire it up.</p>
+
+<pre><code>  redAlerts: [
+    <span class="s">"Tornado Warning"</span>,
+    <span class="s">"Particularly Dangerous Situation"</span>,
+    <span class="s">"Extreme Wind Warning"</span>,
+    <span class="s">"Flash Flood Emergency"</span>,
+  ],</code></pre>
+
+<p>That's an <b>array</b> — an ordered list. You get at items by number, and
+<b>counting starts at zero</b>, which trips up everyone at first:</p>
+<pre><code>MY.redAlerts[<span class="n">0</span>]      <span class="c">// "Tornado Warning"</span>
+MY.redAlerts[<span class="n">1</span>]      <span class="c">// "Particularly Dangerous Situation"</span>
+MY.redAlerts.length  <span class="c">// 4</span>
+MY.redAlerts[<span class="n">4</span>]      <span class="c">// undefined — there is no 5th item</span></code></pre>
+<p>Try those in the console (F12) right now.</p>
+
+<div class="box do"><h4>Wire it in</h4>
+<p>In <code>deck.js</code>, inside <code>classify()</code>, add this as the
+<b>very first</b> check inside the function — before all the other ifs:</p>
+<pre><code>  <span class="c">// My own list from my-settings.js wins over everything else.</span>
+  <span class="k">const</span> isMine = MY.redAlerts.<span class="f">some</span>(<span class="k">function</span>(name){
+    <span class="k">return</span> e.<span class="f">includes</span>(name.<span class="f">toLowerCase</span>());
+  });
+  <span class="k">if</span> (isMine) <span class="k">return</span> <span class="s">"tornado"</span>;</code></pre>
+<p>Now add something to <code>redAlerts</code> that actually happens where you
+live — <code>"Severe Thunderstorm Warning"</code> if you want every one of those
+screaming at you, or <code>"Tornado Watch"</code> if you want to know the moment
+the day turns. Save, F5.</p></div>
+
+<div class="box why"><h4>What .some() does</h4>
+<p><code>.some()</code> walks the whole list and asks your question about each
+item. If the answer is yes for <b>any</b> of them, it hands back
+<code>true</code>. There's a matching <code>.every()</code> that only says true
+if <b>all</b> of them pass. You'll use both for the rest of your life.</p>
+<p>The alternative is writing a loop yourself, which works fine and which you
+should try once so you know what <code>.some()</code> is doing for you.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m6">
+<span>My redAlerts list actually controls what turns the Deck red.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M7 -->
+<section class="mission" id="m7">
+<h1><span class="num">MISSION 07</span>Build a better score</h1>
+<p><span class="pill code">code</span><span class="pill wx">weather</span><span class="pill">40 min</span></p>
+<p class="lede">The threat meter runs on a rule I made up: whatever the worst
+active alert is, that's the score. It's crude. It ignores the atmosphere
+entirely. You can do better, and this is where you stop copying code and start
+designing it.</p>
+
+<h2>What my version misses</h2>
+<ul>
+<li>Five severe warnings at once is worse than one. Mine scores them the same.</li>
+<li>A warning 200 miles away counts as much as one over your roof.</li>
+<li>A 78°F dewpoint day and a 45°F dewpoint day score identically.</li>
+<li>A Day-1 <b>Enhanced</b> SPC risk doesn't move the needle at all.</li>
+</ul>
+
+<div class="box do"><h4>Your job</h4>
+<p>Rewrite <code>scoreThreat()</code> so it uses more than one input. A starting
+shape — the numbers are yours to argue with:</p>
+<pre><code>  <span class="k">let</span> score = <span class="n">5</span>;
+
+  <span class="c">// 1. worst active alert (what mine already does)</span>
+  alerts.<span class="f">forEach</span>(<span class="k">function</span>(a){
+    <span class="k">const</span> kind = <span class="f">classify</span>(a.properties.event);
+    <span class="k">if</span> (POINTS[kind] &gt; score) score = POINTS[kind];
+  });
+
+  <span class="c">// 2. NEW: a crowded sky is a worse sky</span>
+  score = score + (alerts.length * <span class="n">3</span>);
+
+  <span class="c">// 3. NEW: moisture. Fuel in the air.</span>
+  <span class="k">const</span> dew = <span class="f">parseInt</span>(document.<span class="f">getElementById</span>(<span class="s">"obDew"</span>).textContent);
+  <span class="k">if</span> (dew &gt;= <span class="n">70</span>)      score = score + <span class="n">15</span>;
+  <span class="k">else</span> <span class="k">if</span> (dew &gt;= <span class="n">65</span>) score = score + <span class="n">10</span>;
+  <span class="k">else</span> <span class="k">if</span> (dew &lt; <span class="n">55</span>)  score = score - <span class="n">10</span>;
+
+  <span class="c">// 4. never let it run off the ends</span>
+  <span class="k">if</span> (score &gt; <span class="n">100</span>) score = <span class="n">100</span>;
+  <span class="k">if</span> (score &lt; <span class="n">0</span>)   score = <span class="n">0</span>;</code></pre></div>
+
+<div class="box warn"><h4>Careful — a real bug lives here</h4>
+<p>If the weather station is offline, <code>obDew</code> reads <code>—</code>,
+and <code>parseInt("—")</code> gives you <code>NaN</code> — "Not a Number".
+Then <code>score + NaN</code> is <code>NaN</code>, and your meter shows nothing
+at all, with no error message. This is a genuinely nasty class of bug: it fails
+silently and looks like the program just stopped caring.</p>
+<p>Guard it:</p>
+<pre><code>  <span class="k">if</span> (!<span class="f">isNaN</span>(dew)){
+    <span class="c">// ... only do the dewpoint math when we really got a number</span>
+  }</code></pre>
+<p>Get in the habit now: whenever you convert text into a number, ask what
+happens if the text wasn't a number.</p></div>
+
+<div class="box pro"><h4>This is the actual job</h4>
+<p>What you're doing right now — deciding which ingredients matter and how much
+to weight each one — is a simplified version of what severe weather forecasting
+<b>is</b>. Real forecasters combine instability, moisture, lift and wind shear
+into composite indices with names like the Significant Tornado Parameter. Same
+idea: several measurements, weighted, into one number that helps you decide.</p>
+<p>Yours will be worse than theirs. Theirs was worse than this once too.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m7">
+<span>My threat score uses at least three different inputs and guards against NaN.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M8 -->
+<section class="mission" id="m8">
+<h1><span class="num">MISSION 08</span>The chase log</h1>
+<p><span class="pill code">code</span><span class="pill field">field</span><span class="pill">40 min</span></p>
+<p class="lede">Every serious spotter keeps a log. What you saw, when, where,
+and what the radar looked like at that moment. Yours is going to save itself in
+the browser so it's still there tomorrow.</p>
+
+<h2>The tool that remembers</h2>
+<p><code>localStorage</code> is a small box the browser keeps on your computer.
+Whatever you put in it is still there after you close the window, restart, or
+shut down for a week. Try it in the console:</p>
+<pre><code>localStorage.<span class="f">setItem</span>(<span class="s">"test"</span>, <span class="s">"hello"</span>);
+localStorage.<span class="f">getItem</span>(<span class="s">"test"</span>);   <span class="c">// "hello"</span></code></pre>
+<p>Now close the whole browser. Open it again. Run <code>getItem</code> again.
+Still there.</p>
+
+<div class="box warn"><h4>It only stores text</h4>
+<p>localStorage can't hold an object — only a string. So you turn your object
+into text going in, and back into an object coming out:</p>
+<pre><code>JSON.<span class="f">stringify</span>(obj)   <span class="c">// object  →  text, for saving</span>
+JSON.<span class="f">parse</span>(text)      <span class="c">// text  →  object, for reading</span></code></pre>
+<p>Forgetting one of those two is one of the most common beginner bugs there is.
+You'll do it. Then you'll remember this box.</p></div>
+
+<div class="box do"><h4>Build it</h4>
+<p>Add to the bottom of <code>deck.js</code>:</p>
+<pre><code><span class="k">function</span> <span class="f">logIt</span>(what){
+  <span class="k">const</span> entries = JSON.<span class="f">parse</span>(localStorage.<span class="f">getItem</span>(<span class="s">"chaseLog"</span>) || <span class="s">"[]"</span>);
+
+  entries.<span class="f">push</span>({
+    when:  <span class="k">new</span> <span class="f">Date</span>().<span class="f">toISOString</span>(),
+    where: MY.townName,
+    what:  what,
+    temp:  document.<span class="f">getElementById</span>(<span class="s">"obTemp"</span>).textContent,
+    dew:   document.<span class="f">getElementById</span>(<span class="s">"obDew"</span>).textContent,
+    threat:document.<span class="f">getElementById</span>(<span class="s">"threatWord"</span>).textContent
+  });
+
+  localStorage.<span class="f">setItem</span>(<span class="s">"chaseLog"</span>, JSON.<span class="f">stringify</span>(entries));
+  console.<span class="f">log</span>(<span class="s">"Logged. You now have "</span> + entries.length + <span class="s">" entries."</span>);
+}
+
+<span class="k">function</span> <span class="f">showLog</span>(){
+  console.<span class="f">table</span>(JSON.<span class="f">parse</span>(localStorage.<span class="f">getItem</span>(<span class="s">"chaseLog"</span>) || <span class="s">"[]"</span>));
+}</code></pre>
+<p>Save, F5, then in the console:</p>
+<pre><code><span class="f">logIt</span>(<span class="s">"First entry. Clear sky, learning the system."</span>);
+<span class="f">showLog</span>();</code></pre>
+<p><code>console.table()</code> prints it as a real table. Nice touch nobody
+tells beginners about.</p></div>
+
+<div class="box why"><h4>Why <code>|| "[]"</code> matters</h4>
+<p>The very first time this runs, there's no <code>chaseLog</code> yet, so
+<code>getItem</code> returns <code>null</code> — and <code>JSON.parse(null)</code>
+would crash. The <code>|| "[]"</code> means "or, if that's empty, use an empty
+list instead." Handling the <b>first run</b>, when nothing exists yet, is a case
+beginners forget constantly and it crashes on the one person who matters: the
+first user.</p></div>
+
+<h3>Then make it real</h3>
+<p>Log every storm you watch this season, even boring ones. Especially boring
+ones — that's how you learn what normal looks like, which is the only way to
+recognize abnormal. In Mission 10 you'll put it on the screen properly.</p>
+
+<label class="chk"><input type="checkbox" data-k="m8">
+<span>My chase log survives closing the browser.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M9 -->
+<section class="mission" id="m9">
+<h1><span class="num">MISSION 09</span>Hunt the hook echo</h1>
+<p><span class="pill wx">weather</span><span class="pill field">field</span><span class="pill">ongoing</span></p>
+<p class="lede">No code in this one. This is the skill the code exists to serve.
+You're going to learn to look at a radar image and know what's about to happen.</p>
+
+<h2>The thing you're looking for</h2>
+<p>A supercell's mesocyclone — its rotating updraft — drags precipitation around
+itself in a curl. On radar that curl shows up as a <b>hook</b> on the back-right
+side of the storm. Underneath the notch of that hook is where tornadoes form.</p>
+<p>When you hear that a warning is "radar-indicated," this is usually what
+somebody saw.</p>
+
+<div class="box do"><h4>Practice without waiting for a storm</h4>
+<p>The National Weather Service archives every radar scan ever taken. You can
+replay the worst days in American history, frame by frame, tonight:</p>
+<p><a href="https://mesonet.agron.iastate.edu/GIS/apps/rview/warnings.phtml" target="_blank">
+mesonet.agron.iastate.edu — RADAR + warnings archive</a></p>
+<p>Days worth studying — look them up and step through the loop:</p>
+<ul>
+  <li><b>May 3, 1999</b> — Oklahoma City. The Bridge Creek–Moore F5.</li>
+  <li><b>April 27, 2011</b> — the Super Outbreak. 360 tornadoes in 24 hours.</li>
+  <li><b>May 22, 2011</b> — Joplin, Missouri.</li>
+  <li><b>May 20, 2013</b> — Moore, Oklahoma.</li>
+</ul>
+<p>Watch what the storm looked like <b>30 minutes before</b> anything happened.
+That's the part that matters. Anyone can spot a tornado on radar once it's on
+the ground.</p></div>
+
+<div class="box warn"><h4>Wall cloud or shelf cloud?</h4>
+<p>This is the single most common mistake new spotters make, and it's the one
+that puts a wrong report on the air.</p>
+<table>
+<tr><th></th><th>Wall cloud</th><th>Shelf cloud</th></tr>
+<tr><td>Where</td><td>Under the rain-free base, back of the storm</td><td>Leading edge, front of the storm</td></tr>
+<tr><td>Air</td><td>Flowing <b>into</b> it</td><td>Flowing <b>out</b> of it</td></tr>
+<tr><td>Motion</td><td>May rotate</td><td>Rolls, doesn't rotate</td></tr>
+<tr><td>Then what</td><td>Can produce a tornado</td><td>Gust front. Wind, then rain.</td></tr>
+</table>
+<p>The tell is the wind on your face. If wind is rushing <b>toward</b> the
+cloud, it's inflow — that's a wall cloud, pay attention. If wind is blasting
+<b>out</b> at you and the temperature just dropped, that's outflow — shelf
+cloud. The storm is exhaling, not inhaling.</p></div>
+
+<div class="box pro"><h4>The part radar can't do</h4>
+<p>Radar sees rain and wind. It cannot see a tornado. Even a textbook hook echo
+with tight rotation only tells you a tornado is <b>likely</b> — which is why
+NWS warnings say "radar-indicated."</p>
+<p>The exception is the <b>tornado debris signature</b>: modern dual-polarization
+radar can detect that the stuff in the air is no longer raindrops — it's
+splinters, insulation, dirt. When forecasters see a TDS, they know something is
+on the ground tearing up houses. That's when warning language escalates.</p>
+<p>And that is exactly why trained human spotters still exist in the age of
+radar. The Field Manual in this lab goes deeper.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m9">
+<span>I stepped through an archived outbreak and found a hook echo myself.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ M10 -->
+<section class="mission" id="m10">
+<h1><span class="num">MISSION 10</span>Capstone — your own panel</h1>
+<p><span class="pill code">code</span><span class="pill">as long as it takes</span></p>
+<p class="lede">No instructions this time. You know enough now. Add something to
+the Storm Deck that isn't there, that you want, that nobody told you to build.</p>
+
+<h2>How to add a panel</h2>
+<p>Three files, in this order — this is the pattern for every feature you'll
+ever add:</p>
+<ol>
+<li><b>deck.html</b> — make the empty box exist. Copy an existing
+    <code>&lt;div class="panel"&gt;</code>, give its inner div a new
+    <code>id</code>.</li>
+<li><b>deck.js</b> — write a function that goes and gets the data, then puts it
+    into that id with <code>.innerHTML</code>.</li>
+<li><b>deck.js again</b> — call your function from inside <code>refresh()</code>
+    so it updates on the timer with everything else.</li>
+</ol>
+
+<h3>Ideas, roughly easiest first</h3>
+<table>
+<tr><th>Idea</th><th>What you'd learn</th></tr>
+<tr><td>Your chase log, on screen instead of in the console</td><td>Building HTML from an array</td></tr>
+<tr><td>A countdown to when the nearest warning expires</td><td>Working with dates and time</td></tr>
+<tr><td>Distance from you to each warning, in miles</td><td>Real math on a sphere</td></tr>
+<tr><td>The 7-day forecast from <code>/gridpoints</code></td><td>Reading unfamiliar API docs</td></tr>
+<tr><td>A "chase day rating" from 0–10 with your reasoning shown</td><td>Design, not just code</td></tr>
+<tr><td>A dark/light toggle that remembers your choice</td><td>CSS classes + localStorage</td></tr>
+<tr><td>Sound a different tone per alert type</td><td>The Web Audio API</td></tr>
+</table>
+
+<div class="box pro"><h4>The distance one is worth doing</h4>
+<p>Getting distance between two lat/lon points takes the <b>haversine formula</b>
+— real spherical trigonometry, because the earth is round and flat math lies at
+long distances. You'll find it in thirty seconds online. Using math you haven't
+formally learned yet, to solve a problem you actually have, is the single
+fastest way to get good at math. Your teachers would say the same thing; this
+time you'll believe it because you needed it.</p></div>
+
+<div class="box do"><h4>When it works, do this</h4>
+<p>Screenshot it. Write down what it does and what fought you. Keep that.</p>
+<p>In four years, a college application or a job interview is going to ask what
+you've built. "I built a live severe-weather console with NEXRAD radar overlay
+and NWS warning polygons, and here's the part I designed myself" — at thirteen —
+is not a normal answer.</p></div>
+
+<label class="chk"><input type="checkbox" data-k="m10">
+<span>I built something nobody told me to build, and it works.</span></label>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════ AFTER -->
+<section class="mission" id="after">
+<h1><span class="num">AFTER THE MISSIONS</span>Where this actually goes</h1>
+<p class="lede">You've written JavaScript, read live government data feeds, and
+learned to read a radar. Here's the honest map of what's next.</p>
+
+<h2>Get certified — this year</h2>
+<p>The <b>SKYWARN</b> folder on this drive is the real path. NWS spotter
+training is free, and it makes you a trained spotter whose reports go to actual
+National Weather Service forecasters. Most people who say they're into storms
+never do this. Do it, and you're not a kid with a weather app anymore.</p>
+
+<h2>Learn Python next</h2>
+<p>JavaScript is what the web runs on. <b>Python</b> is what meteorology runs
+on. The real tools — <code>MetPy</code> for calculations, <code>Py-ART</code>
+for raw radar — are Python, and they read the same NEXRAD Level II files the NWS
+works from. Everything you learned here transfers; the ideas are identical and
+only the punctuation changes.</p>
+
+<h2>The school part, said plainly</h2>
+<p>Nearly every professional storm chaser is a meteorologist, a researcher, or
+a broadcaster who chases as part of the job. That path runs through a
+<b>math and physics</b> degree. Atmospheric science is calculus and fluid
+dynamics wearing a raincoat.</p>
+<p>So the most useful thing you can do at thirteen isn't more radar. It's taking
+the hardest math your school offers, every single year, without skipping one.
+Everything else here is easier than that and matters less.</p>
+
+<div class="box do"><h4>The whole roadmap is written out for you</h4>
+<p style="margin-bottom:0">There's a page on this drive called
+<b><a href="../The Long Game/roadmap.html">The Long Game</a></b>. It has the real
+numbers &mdash; how many of these jobs exist, what they pay, the exact college
+coursework the federal government requires, which summer camps and competitions
+will take someone your age <em>this year</em>, and which famous ones won't. It's
+blunt. Read it once, then get back to the storms.</p></div>
+
+<h2>The rule that doesn't bend</h2>
+<div class="box danger"><h4>You don't chase</h4>
+<p>Not yet. Not alone. Not with friends. Not "just to the edge of town."</p>
+<p>Storm chasing kills experienced adults with degrees and decades of
+experience. On May 31, 2013 in El Reno, Oklahoma, it killed Tim Samaras — one of
+the most careful, respected researchers in the field — along with his son Paul
+and his partner Carl Young. That storm did something no one predicted.</p>
+<p>You spot from home. You watch radar, you watch the sky from your own yard,
+you report what you see. That's real spotting, it's what the NWS actually wants,
+and it's how every good chaser started. The driving comes later, with training,
+with an experienced adult, in a vehicle with a real escape route.</p>
+<p>The best chasers are old. That's not an accident — it's the whole point.</p></div>
+</section>
+
+
+<script>
+/* ── navigation + progress ──────────────────────────────────────── */
+const KEY = "stormlab.progress";
+const load = () => JSON.parse(localStorage.getItem(KEY) || "{}");
+const save = o  => localStorage.setItem(KEY, JSON.stringify(o));
+
+function show(id){
+  document.querySelectorAll(".mission").forEach(s => s.classList.toggle("show", s.id === id));
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("cur", a.dataset.m === id));
+  window.scrollTo(0,0);
+}
+
+function paint(){
+  const p = load();
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("done", !!p[a.dataset.m]));
+  document.querySelectorAll(".chk").forEach(l => {
+    const box = l.querySelector("input");
+    box.checked = !!p[box.dataset.k];
+    l.classList.toggle("on", box.checked);
+  });
+}
+
+document.querySelectorAll("nav a").forEach(a => {
+  a.onclick = e => { e.preventDefault(); show(a.dataset.m); history.replaceState(null,"","#"+a.dataset.m); };
+});
+
+document.querySelectorAll(".chk input").forEach(box => {
+  box.onchange = () => { const p = load(); p[box.dataset.k] = box.checked; save(p); paint(); };
+});
+
+show((location.hash || "#m0").slice(1));
+paint();
+</script>
+
+</div>
+</body>
+</html>

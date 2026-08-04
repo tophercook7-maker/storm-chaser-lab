@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Decode — METAR Trainer — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+/* --- decoder widgets only; everything else comes from lab.css --- */
+section{scroll-margin-top:20px}
+
+.metar{font-family:var(--mono);color:var(--amber);background:#05070a;border:1px solid var(--line);
+       border-left:3px solid var(--accent);border-radius:5px;padding:13px 16px;margin:0 0 16px;
+       font-size:14px;letter-spacing:.4px;word-break:break-word}
+
+.tok{display:inline-block;font-family:var(--mono);background:#0e141d;border:1px solid var(--line);
+     color:var(--accent);border-radius:4px;padding:2px 8px;font-size:12.5px;margin:0 4px 4px 0}
+
+/* input row */
+.dbox{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:17px 18px;margin:0 0 20px}
+.dbox textarea{width:100%;min-height:64px;resize:vertical;background:#05070a;color:#cfe0f0;
+     font-family:var(--mono);font-size:14px;line-height:1.6;border:1px solid var(--line);
+     border-radius:6px;padding:11px 13px;letter-spacing:.4px}
+.dbox textarea:focus{outline:none;border-color:var(--accent)}
+.btnrow{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+button{font-family:var(--sans);font-size:13.5px;cursor:pointer;border-radius:6px;
+     padding:8px 15px;border:1px solid var(--line);background:#18222f;color:var(--text)}
+button:hover{border-color:var(--accent);color:#fff}
+button.go{background:var(--accent);color:#04222a;border-color:var(--accent);font-weight:700}
+button.go:hover{filter:brightness(1.08);color:#04222a}
+.presets{display:flex;flex-wrap:wrap;gap:9px;margin:4px 0 0}
+button.pre{font-size:12.5px;font-family:var(--mono);color:var(--dim)}
+button.pre:hover{color:var(--accent)}
+
+/* output */
+.out{margin-top:4px}
+.row{display:grid;grid-template-columns:132px 1fr;gap:14px;border:1px solid var(--line);
+     border-radius:6px;padding:10px 14px;margin:0 0 8px;background:var(--card2);align-items:start}
+.row .k{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.5px;word-break:break-word}
+.row .v{font-size:14px;color:var(--text)}
+.row .v .hi{color:#fff;font-weight:600}
+.row.unk{border-color:#4d3a12;background:rgba(255,176,32,.05)}
+.row.unk .k{color:var(--amber)}
+.summ{background:rgba(53,214,234,.07);border:1px solid #1d4a55;border-radius:7px;
+      padding:13px 16px;margin:0 0 14px;font-size:14.5px;line-height:1.6}
+.summ b{color:#fff}
+.warnrow{color:var(--amber)}
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:1px;
+     text-transform:uppercase;padding:2px 7px;border-radius:9px;margin-left:6px;vertical-align:1px;
+     border:1px solid var(--amber);color:var(--amber)}
+.badge.calm{border-color:#154a2c;color:var(--green)}
+
+/* quiz */
+.q{background:var(--card);border:1px solid var(--line);border-radius:7px;padding:15px 18px;margin:0 0 14px}
+.q p.ask{margin-bottom:10px}
+.q .ans{display:none;margin-top:10px;padding:11px 14px;border-left:3px solid var(--green);
+     background:rgba(53,234,122,.06);border-radius:5px;font-size:14px}
+.q .ans.show{display:block}
+.q button{font-size:12.5px;padding:6px 13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">DECODE</div>
+  <a href="#what"    class="sec">1 · What a METAR is</a>
+  <a href="#anatomy" class="sec">2 · Anatomy, token by token</a>
+  <a href="#clouds"  class="sec">3 · Cloud &amp; weather codes</a>
+  <a href="#decoder" class="sec">4 · Live decoder</a>
+  <a href="#quiz"    class="sec">5 · Decode-it-yourself</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← The Station</a>
+  <a href="../Academy/academy.html">Academy</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+  <a href="../Code School/python.html">Code School</a>
+  <a href="../Trainers/radar.html">Radar Trainer</a>
+  <a href="../Trainers/skewt.html">Skew-T</a>
+  <a href="../Atlas/atlas.html">Storm Atlas</a>
+  <a href="../Quiz/quiz.html">Flashcards</a>
+  <a href="../Gear Bench/gear.html">Gear Bench</a>
+  <a href="../Chase Log/log.html">Chase Log</a>
+</nav>
+
+<main>
+
+<h1><span class="num">DECODE</span>Reading a METAR</h1>
+<p class="lede">A METAR is the standard weather report every airport on Earth puts out, usually once an hour. It looks like a license plate that fell in a blender. Once you can read it, you can pull the current conditions for almost any spot on the planet from one short line of text — no app, no login. This page teaches the code, then lets you decode real ones right here.</p>
+
+<!-- ===================== 1. WHAT ===================== -->
+<section id="what">
+<h2>1 · What a METAR is (and why chasers read it)</h2>
+
+<p>METAR stands for <b>MET</b>eorological <b>A</b>erodrome <b>R</b>eport (it's a French acronym — the format is international). It's a surface observation taken <b>at an airport</b>, mostly by an automated station (called an ASOS or AWOS) with a human sometimes editing it. Airports report because pilots need to know the wind, visibility, and clouds before they land. That same data is gold for storm chasers.</p>
+
+<div class="box why">
+<h4>Why you care</h4>
+<p>A METAR gives you the <b>real, measured air right now</b> at a point on the ground: wind direction and speed, gusts, how far you can see, cloud bases and cover, temperature, and — the big one — <b>dewpoint</b>. Dewpoint is your fuel gauge for storms. Radar shows you the storm; the METAR network shows you the <em>environment</em> the next storm has to grow in.</p>
+</div>
+
+<p>A typical METAR looks like this:</p>
+<div class="metar">KHOT 041853Z 18012G22KT 10SM FEW055 SCT250 34/23 A2996 RMK AO2</div>
+
+<p>That one line means: <em>Hot Springs, Arkansas airport, reported on the 4th at 18:53 UTC. Wind from the south at 12 knots gusting 22. Visibility 10 miles. A few clouds at 5,500 ft, scattered at 25,000 ft. Temperature 34 °C, dewpoint 23 °C. Altimeter 29.96 inches. Automated station with a precipitation sensor.</em> Every one of those pieces has a fixed spot and a fixed code, which is exactly why a computer — or you — can parse it.</p>
+
+<div class="box pro">
+<h4>Where it comes from</h4>
+<p>Stations are named with an <b>ICAO code</b>: 4 letters. In the mainland U.S. they start with <code>K</code> (KHOT, KOUN, KDFW). Alaska uses <code>PA</code>, Hawaii <code>PH</code>, Canada <code>C</code>, most of Europe <code>E</code> or <code>L</code>. The <code>K</code> is just a region prefix — <code>KHOT</code> is really airport "HOT."</p>
+</div>
+</section>
+
+<!-- ===================== 2. ANATOMY ===================== -->
+<section id="anatomy">
+<h2>2 · Anatomy, token by token</h2>
+<p>A METAR is just <b>tokens separated by spaces</b>, and they almost always come in the same order. Here's our example again, with each token labeled. Read it left to right:</p>
+
+<div class="metar">KHOT · 041853Z · 18012G22KT · 10SM · FEW055 · SCT250 · 34/23 · A2996 · RMK AO2</div>
+
+<h3>Station &amp; time</h3>
+<p><span class="tok">KHOT</span> Station id — Hot Springs, AR.</p>
+<p><span class="tok">041853Z</span> Day-of-month <b>04</b>, then time <b>1853</b>, then <b>Z</b>. The Z means <b>Zulu</b> = <b>UTC</b>, the world's single shared clock. Weather ignores time zones on purpose so a report from Oklahoma and one from Germany can be compared directly. To get Central Time in summer, subtract 5 hours: 18:53 Z = 1:53 PM CDT. That <code>Z</code> / "Zulu" habit is worth burning in — every sounding, radar frame, and warning is stamped in UTC.</p>
+
+<h3>Wind</h3>
+<p><span class="tok">18012G22KT</span> Three chunks glued together: direction <b>180</b>° (where the wind comes <em>from</em> — 180 is due south), speed <b>012</b> = 12, and <b>G22</b> = gusting to 22. <b>KT</b> = knots (1 knot ≈ 1.15 mph). No <code>G</code>? No gust reported. <code>VRB05KT</code> means the direction is <b>variable</b> (light and shifting). <code>00000KT</code> is dead calm.</p>
+
+<div class="box do">
+<h4>Direction is compass, not math</h4>
+<p>Wind direction is degrees on a compass: 360/0 = N, 090 = E, 180 = S, 270 = W. And it's always the direction the wind blows <em>from</em>. "180 at 12" is a south wind pushing north.</p>
+</div>
+
+<h3>Visibility</h3>
+<p><span class="tok">10SM</span> Visibility in <b>S</b>tatute <b>M</b>iles. <code>10SM</code> is the top value most U.S. stations report — basically "clear and far." <code>1/2SM</code> is half a mile (fog or heavy rain). Lower = worse.</p>
+
+<h3>Sky &amp; clouds</h3>
+<p>Cloud layers are a 3-letter cover code plus a 3-digit height in <b>hundreds of feet</b>. <span class="tok">FEW055</span> = a few clouds at 5,500 ft. <span class="tok">SCT250</span> = scattered at 25,000 ft. Add a zero-hundred: 055 → 5,500, 250 → 25,000. There can be several layers stacked lowest-to-highest. (Full code table in section 3.)</p>
+
+<h3>Temperature / dewpoint</h3>
+<p><span class="tok">34/23</span> Temperature <b>34 °C</b>, dewpoint <b>23 °C</b>, split by a slash, always in Celsius. A leading <code>M</code> means minus: <code>M04/M08</code> is −4 °C over −8 °C. The gap between them is the <b>dewpoint depression</b> — small gap = humid, air near saturation; big gap = dry.</p>
+
+<div class="box warn">
+<h4>Dewpoint is the fuel gauge</h4>
+<p>A dewpoint in the <b>low-to-mid 20s °C (70s °F)</b> is juicy, unstable air — storm fuel. In the teens it's marginal; single digits or negative, storms starve. See the <a href="../Field Manual/manual.html">Field Manual</a> for how dewpoint feeds instability. The decoder below flags juicy air for you.</p>
+</div>
+
+<h3>Altimeter</h3>
+<p><span class="tok">A2996</span> <b>A</b> then four digits = the pressure setting in <b>inches of mercury</b>, decimal implied before the last two: <code>A2996</code> = 29.96 inHg. Falling pressure often means weather moving in. (Outside the U.S. you'll see <code>Q1013</code> instead — that's <b>hectopascals</b>, e.g. 1013 hPa.)</p>
+
+<h3>Remarks &amp; present weather</h3>
+<p>Anything after <span class="tok">RMK</span> is remarks. <code>AO2</code> just means an automated station that can tell rain from snow. Before RMK you may see <b>present-weather</b> codes — <code>TS</code> (thunderstorm), <code>RA</code> (rain), <code>+RA</code> (heavy rain), <code>SN</code> (snow), <code>GR</code> (hail). Those are the ones that make a chaser sit up. Full list next.</p>
+</section>
+
+<!-- ===================== 3. TABLES ===================== -->
+<section id="clouds">
+<h2>3 · The two code tables</h2>
+
+<h3>Cloud cover</h3>
+<p>Reported by how many eighths ("oktas") of the sky a layer covers, with a height in hundreds of feet.</p>
+<table>
+<thead><tr><th>Code</th><th>Means</th><th>Sky covered</th></tr></thead>
+<tbody>
+<tr><td>SKC / CLR</td><td>Sky clear</td><td>0/8 — nothing</td></tr>
+<tr><td>FEW</td><td>Few</td><td>1/8 to 2/8</td></tr>
+<tr><td>SCT</td><td>Scattered</td><td>3/8 to 4/8</td></tr>
+<tr><td>BKN</td><td>Broken</td><td>5/8 to 7/8</td></tr>
+<tr><td>OVC</td><td>Overcast</td><td>8/8 — full lid</td></tr>
+<tr><td>VV</td><td>Vertical visibility</td><td>sky hidden (fog); can't see up past this height</td></tr>
+</tbody>
+</table>
+<p>A <code>CB</code> or <code>TCU</code> tag after the height means that layer is a <b>cumulonimbus</b> (thunderstorm cloud) or <b>towering cumulus</b> (a storm trying to be born). <code>BKN020CB</code> = broken storm cloud with a base at 2,000 ft. That's a chaser's flag.</p>
+
+<div class="box pro">
+<h4>CAVOK</h4>
+<p>Sometimes a whole METAR just says <code>CAVOK</code> ("cav-oh-kay") for visibility and sky. It means <b>Ceiling And Visibility OK</b>: no clouds below 5,000 ft, no cumulonimbus, visibility 10 km or better, no significant weather. One word for "sky's great."</p>
+</div>
+
+<h3>Present-weather codes</h3>
+<p>These stack: an intensity, then a descriptor, then the phenomenon. <code>+</code> = heavy, <code>−</code> = light, no sign = moderate.</p>
+<table>
+<thead><tr><th>Code</th><th>Means</th><th>Chaser note</th></tr></thead>
+<tbody>
+<tr><td>+ &nbsp;/&nbsp; −</td><td>heavy / light intensity</td><td>prefix on the code, e.g. <code>+RA</code></td></tr>
+<tr><td>TS</td><td>Thunderstorm</td><td>the whole point — lightning present</td></tr>
+<tr><td>RA</td><td>Rain</td><td><code>+RA</code> = heavy rain, core</td></tr>
+<tr><td>SH</td><td>Showers</td><td><code>SHRA</code> = rain showers, <code>TSRA</code> = thunder + rain</td></tr>
+<tr><td>GR</td><td>Hail (≥ 5 mm)</td><td>big deal — <code>TSGR</code> = hail in a storm</td></tr>
+<tr><td>GS</td><td>Small hail / graupel</td><td>softer, &lt; 5 mm</td></tr>
+<tr><td>FC</td><td>Funnel cloud</td><td><code>+FC</code> = tornado or waterspout on the ground</td></tr>
+<tr><td>SN</td><td>Snow</td><td><code>+SN</code> heavy snow, low vis</td></tr>
+<tr><td>FG / BR</td><td>Fog / Mist</td><td>vis-killer; BR = mist (5/8 mi or more), FG = thicker</td></tr>
+<tr><td>DZ</td><td>Drizzle</td><td>tiny drops</td></tr>
+<tr><td>FZ</td><td>Freezing</td><td>descriptor, e.g. <code>FZRA</code> = freezing rain (ice)</td></tr>
+<tr><td>DS / SS</td><td>Dust storm / Sandstorm</td><td>haboob country</td></tr>
+<tr><td>VC</td><td>In the vicinity</td><td><code>VCTS</code> = thunderstorm nearby, not overhead</td></tr>
+</tbody>
+</table>
+<p>Don't memorize every one. The decoder below knows these and will spell them out, and it politely admits when it hits a rare code it doesn't know.</p>
+</section>
+
+<!-- ===================== 4. DECODER ===================== -->
+<section id="decoder">
+<h2>4 · Live decoder</h2>
+<p>Paste any real METAR (or use a preset), hit <b>Decode</b>, and read the plain-English breakdown. It runs entirely in your browser — offline, no internet. Try changing a token and re-decoding to see what moves.</p>
+
+<div class="dbox">
+  <textarea id="in" spellcheck="false" aria-label="METAR input">KHOT 041853Z 18012G22KT 10SM FEW055 SCT250 34/23 A2996 RMK AO2</textarea>
+  <div class="btnrow">
+    <button class="go" id="decodeBtn">Decode ▸</button>
+    <button id="clearBtn">Clear</button>
+  </div>
+  <div class="presets" style="margin-top:12px">
+    <button class="pre" data-m="KGGG 041953Z 00000KT 10SM SKC 28/12 A3005 RMK AO2 SLP170">Calm clear day</button>
+    <button class="pre" data-m="KOUN 042156Z 15023G38KT 6SM TSRA BKN018CB OVC035 27/24 A2984 RMK AO2 TSB32 FRQ LTG">Storm brewing</button>
+    <button class="pre" data-m="KFAY 041152Z VRB02KT 1/4SM FG VV002 14/14 A3011 RMK AO2">Low-visibility fog</button>
+    <button class="pre" data-m="KMSP 041353Z 33015G25KT 3/4SM +SN BKN008 OVC015 M07/M09 A2978 RMK AO2 P0002">Winter</button>
+  </div>
+</div>
+
+<div class="out" id="out" aria-live="polite"></div>
+</section>
+
+<!-- ===================== 5. QUIZ ===================== -->
+<section id="quiz">
+<h2>5 · Decode-it-yourself</h2>
+<p>No decoder for these — read them in your head first, then reveal the answer. This is the muscle you're building.</p>
+
+<div class="q">
+  <p class="ask">1. In <code>34/23</code>, what's the dewpoint in °C? Is that juicy air?</p>
+  <button data-q="1">Reveal</button>
+  <div class="ans" id="a1"><b>Dewpoint = 23 °C</b> (about 73 °F). The number after the slash is always the dewpoint. 23 °C is very juicy — that's storm fuel. Temp 34 / dew 23 is a hot, humid, primed afternoon.</div>
+</div>
+
+<div class="q">
+  <p class="ask">2. Wind token <code>27032G45KT</code>. Where's the wind from, and should you respect it?</p>
+  <button data-q="2">Reveal</button>
+  <div class="ans" id="a2">From <b>270° = due west</b>, sustained <b>32 knots</b> (~37 mph), <b>gusting 45</b> (~52 mph). Yes — respect it. That's strong enough to be a gust front or the back side of a squall line. Blowing dust, hard driving.</div>
+</div>
+
+<div class="q">
+  <p class="ask">3. A METAR reads <code>… 1/2SM TSRA BKN015CB …</code>. What's happening at that airport?</p>
+  <button data-q="3">Reveal</button>
+  <div class="ans" id="a3">Visibility down to <b>half a mile</b> in a <b>thunderstorm with rain</b> (<code>TSRA</code>), and a <b>broken cumulonimbus base at 1,500 ft</b> (<code>BKN015CB</code>). You're reading the core of an active storm — heavy rain cutting the visibility, storm cloud low overhead.</div>
+</div>
+
+<div class="q">
+  <p class="ask">4. What does <code>M04/M08</code> mean, and what's the dewpoint depression?</p>
+  <button data-q="4">Reveal</button>
+  <div class="ans" id="a4">The <code>M</code> means minus: temperature <b>−4 °C</b>, dewpoint <b>−8 °C</b>. The dewpoint depression (temp minus dew) is <b>4 °C</b> — a smallish gap, so the air is fairly moist and cold. Prime setup for snow or ice if precip falls.</div>
+</div>
+
+<div class="q">
+  <p class="ask">5. You see <code>041853Z</code>. It's summer and you're in Central Time. What's the local clock time?</p>
+  <button data-q="5">Reveal</button>
+  <div class="ans" id="a5">The time is <b>18:53 UTC</b> ("Zulu") on the 4th. Central <em>Daylight</em> Time is UTC−5, so <b>1:53 PM CDT</b>. (In winter, CST is UTC−6, so it'd be 12:53 PM.) Always convert from Z — never assume the report is in your zone.</div>
+</div>
+</section>
+
+</main>
+</div>
+
+<script>
+"use strict";
+(function(){
+  /* ---------- helpers ---------- */
+  function c2f(c){ return Math.round(c * 9/5 + 32); }
+  function dirName(deg){
+    var names = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+    var i = Math.round(((deg % 360) / 22.5)) % 16;
+    return names[(i+16)%16];
+  }
+  function num(str){ // parse an integer, tolerate leading zeros; NaN-safe
+    var n = parseInt(str, 10);
+    return isNaN(n) ? null : n;
+  }
+  // temp token like "34" or "M07" -> integer °C, or null
+  function parseC(t){
+    if(t==null) return null;
+    var neg = false, s = t;
+    if(s.charAt(0)==="M"){ neg = true; s = s.slice(1); }
+    var n = num(s);
+    if(n==null) return null;
+    return neg ? -n : n;
+  }
+
+  var COVER = {
+    SKC:"sky clear", CLR:"sky clear (automated)", NSC:"no significant cloud", NCD:"no cloud detected",
+    FEW:"few clouds", SCT:"scattered clouds", BKN:"broken clouds", OVC:"overcast"
+  };
+  // present-weather dictionaries
+  var INTENS = { "+":"heavy ", "-":"light ", "VC":"in the vicinity: " };
+  var DESC = { MI:"shallow ", PR:"partial ", BC:"patchy ", DR:"low-drifting ", BL:"blowing ",
+               SH:"showers of ", TS:"thunderstorm", FZ:"freezing " };
+  var PHEN = { DZ:"drizzle", RA:"rain", SN:"snow", SG:"snow grains", IC:"ice crystals",
+               PL:"ice pellets", GR:"hail", GS:"small hail/graupel", UP:"unknown precip",
+               BR:"mist", FG:"fog", FU:"smoke", VA:"volcanic ash", DU:"dust", SA:"sand",
+               HZ:"haze", PY:"spray", PO:"dust whirls", SQ:"squalls", FC:"funnel cloud",
+               DS:"dust storm", SS:"sandstorm" };
+
+  var out = document.getElementById("out");
+
+  function row(k, v, cls){
+    return '<div class="row'+(cls?" "+cls:"")+'"><div class="k">'+esc(k)+'</div><div class="v">'+v+'</div></div>';
+  }
+  function esc(s){ return String(s).replace(/[&<>]/g, function(m){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[m]; }); }
+
+  /* ---------- token decoders ---------- */
+  function decWind(tok){
+    // forms: dddffKT, dddffGggKT, VRBffKT, 00000KT, with optional MPS
+    var m = tok.match(/^(VRB|\d{3})(\d{2,3})(?:G(\d{2,3}))?(KT|MPS)$/);
+    if(!m) return null;
+    var unit = m[4]==="MPS" ? "m/s" : "knots";
+    var spd = num(m[2]);
+    if(m[1]==="00000".slice(0,3) && spd===0){ /* handled below */ }
+    if(m[1]!=="VRB" && num(m[1])===0 && spd===0){
+      return "Calm — no wind. <span class='hi'>Dead still.</span>";
+    }
+    var dirTxt;
+    if(m[1]==="VRB") dirTxt = "variable direction (light, shifting)";
+    else { var d = num(m[1]); dirTxt = "from <span class='hi'>"+d+"° ("+dirName(d)+")</span>"; }
+    var s = "Wind "+dirTxt+" at <span class='hi'>"+spd+" "+unit+"</span>";
+    if(m[3]) s += ", gusting to <span class='hi'>"+num(m[3])+"</span>";
+    return s;
+  }
+
+  function decVis(tok){
+    // 10SM, 3/4SM, 1 1/2SM won't occur as single token; also plain metric like 9999/0800
+    var m = tok.match(/^(\d{1,2}|\d\/\d|\d\s?\d\/\d)SM$/);
+    if(m){
+      var v = m[1];
+      var note = "";
+      if(v==="10") note = " — clear and far (max reported)";
+      else if(v.indexOf("/")>-1) note = " — low, likely fog or heavy precip";
+      return "Visibility <span class='hi'>"+v+" statute mile"+(v==="1"?"":"s")+"</span>"+note;
+    }
+    // metric meters, e.g. 9999 or 0800
+    if(/^\d{4}$/.test(tok)){
+      var mm = num(tok);
+      if(mm===9999) return "Visibility <span class='hi'>10 km or more</span> (metric report)";
+      return "Visibility <span class='hi'>"+mm+" m</span> (metric report)"+(mm<1000?" — very low":"");
+    }
+    return null;
+  }
+
+  function decCloud(tok){
+    // COVER + 3 digits + optional CB/TCU  ; or VV002 ; or bare SKC/CLR/NSC/CAVOK
+    if(tok==="CAVOK") return "<span class='hi'>CAVOK</span> — ceiling &amp; visibility OK: no cloud below 5,000 ft, no storm cloud, visibility 10 km+, no significant weather. Sky's great.";
+    if(COVER[tok] && tok!=="FEW") return COVER[tok].charAt(0).toUpperCase()+COVER[tok].slice(1)+".";
+    var vv = tok.match(/^VV(\d{3})$/);
+    if(vv){ return "Vertical visibility <span class='hi'>"+(num(vv[1])*100).toLocaleString()+" ft</span> — sky obscured (you can't see up past this; usually fog)."; }
+    var m = tok.match(/^(FEW|SCT|BKN|OVC)(\d{3})(CB|TCU)?$/);
+    if(!m) return null;
+    var ft = num(m[2]) * 100;
+    var s = (COVER[m[1]].charAt(0).toUpperCase()+COVER[m[1]].slice(1))+" at <span class='hi'>"+ft.toLocaleString()+" ft</span>";
+    if(m[3]==="CB") s += " — <span class='hi'>cumulonimbus (thunderstorm cloud)</span>. Chaser flag.";
+    else if(m[3]==="TCU") s += " — towering cumulus (a storm building).";
+    return s;
+  }
+
+  function decTemp(tok, store){
+    var m = tok.match(/^(M?\d{1,2})\/(M?\d{1,2})$/);
+    if(!m) return null;
+    var t = parseC(m[1]), d = parseC(m[2]);
+    if(t==null || d==null) return null;
+    store.temp = t; store.dew = d;
+    var dep = t - d;
+    var juicy;
+    if(d >= 20) juicy = " <span class='badge'>juicy fuel</span>";
+    else if(d >= 15) juicy = " <span class='badge'>marginal fuel</span>";
+    else juicy = " <span class='badge calm'>low fuel</span>";
+    var s = "Temp <span class='hi'>"+t+" °C ("+c2f(t)+" °F)</span>, dewpoint <span class='hi'>"+d+" °C ("+c2f(d)+" °F)</span>."+juicy+
+            "<br>The badge rates the dewpoint itself — how much moisture fuel is in the air overall. " +
+            "The gap between them (dewpoint depression) = <span class='hi'>"+dep+" °C</span> tells you how humid it feels <em>right now</em>: "+
+            (dep<=3 ? "tiny gap, air is near saturation — muggy, could fog or rain easily." :
+             dep<=8 ? "moderate gap — comfortably moist." : "big gap — feels dry at the surface right now.");
+    if(d>=20) s += " High dewpoint = storm fuel.";
+    return s;
+  }
+
+  function decAlt(tok){
+    var m = tok.match(/^A(\d{4})$/);
+    if(m){ var v = (num(m[1])/100).toFixed(2); return "Altimeter <span class='hi'>"+v+" inHg</span> — surface pressure setting."; }
+    var q = tok.match(/^Q(\d{4})$/);
+    if(q){ return "Altimeter <span class='hi'>"+num(q[1])+" hPa</span> — metric pressure setting."; }
+    return null;
+  }
+
+  function decWx(tok){
+    // present weather e.g. +RA, TSRA, -SHSN, VCTS, FZRA, BR, FG, +FC
+    if(!/^(\+|-|VC)?[A-Z]{2,6}$/.test(tok)) return null;
+    var rest = tok, prefix = "";
+    if(rest.charAt(0)==="+"){ prefix = INTENS["+"]; rest = rest.slice(1); }
+    else if(rest.charAt(0)==="-"){ prefix = INTENS["-"]; rest = rest.slice(1); }
+    else if(rest.slice(0,2)==="VC"){ prefix = INTENS.VC; rest = rest.slice(2); }
+    var parts = [], ok = false, guard = 0;
+    while(rest.length >= 2 && guard++ < 6){
+      var two = rest.slice(0,2);
+      if(DESC[two]){ parts.push(DESC[two]); rest = rest.slice(2); ok = true; continue; }
+      if(PHEN[two]){ parts.push(PHEN[two]); rest = rest.slice(2); ok = true; continue; }
+      break;
+    }
+    if(!ok || rest.length>0) return null; // leftover chars -> not a clean wx group
+    var txt = prefix + parts.join("").trim();
+    // storm-flavored highlight
+    var hot = /thunderstorm|hail|funnel|tornado/.test(txt);
+    var special = tok==="+FC" ? "<span class='hi'>Tornado or waterspout on the ground.</span> " : "";
+    return special + "Present weather: <span class='hi'>"+txt+"</span>." + (hot?" Active, chaser-relevant.":"");
+  }
+
+  /* ---------- master parse ---------- */
+  function decodeMETAR(raw){
+    var text = (raw||"").toUpperCase().replace(/=+\s*$/,"").trim().replace(/\s+/g," ");
+    if(!text) return "<div class='row unk'><div class='k'>empty</div><div class='v'>Nothing to decode — type or pick a METAR above.</div></div>";
+    var tokens = text.split(" ");
+    var html = "", store = {}, inRmk = false, i = 0;
+    var stationName = null, cloudLayers = 0;
+
+    // strip a leading report type if present
+    if(tokens[0]==="METAR" || tokens[0]==="SPECI"){
+      html += row(tokens[0], tokens[0]==="SPECI" ? "Special report — issued off-schedule because conditions changed fast." : "Routine hourly report.");
+      tokens.shift();
+    }
+
+    for(i=0; i<tokens.length; i++){
+      var t = tokens[i];
+      if(t==="") continue;
+
+      // remarks: everything after RMK is raw
+      if(t==="RMK"){
+        var rmk = tokens.slice(i+1).join(" ");
+        html += row("RMK", "<span class='hi'>Remarks</span> — extra automated notes, e.g. AO2 (station senses precip type), SLPnnn (sea-level pressure), Pnnnn (hourly precip). Raw: <code>"+esc(rmk||"(none)")+"</code>");
+        break;
+      }
+
+      // station id: first token, 4 letters
+      if(i===0 && /^[A-Z]{4}$/.test(t)){
+        html += row(t, "Station id (airport). ICAO code — the leading letter is a region prefix ("+
+          (t.charAt(0)==="K"?"K = mainland USA":"see ICAO region")+").");
+        continue;
+      }
+
+      // day/time Zulu
+      if(/^\d{6}Z$/.test(t)){
+        var dd = t.slice(0,2), hh = t.slice(2,4), mn = t.slice(4,6);
+        html += row(t, "Reported on the <span class='hi'>"+dd+"th</span> at <span class='hi'>"+hh+":"+mn+" UTC (Zulu)</span> — the world's shared clock. Subtract 5 h for CDT / 6 h for CST.");
+        continue;
+      }
+
+      // AUTO / COR / NOSIG flags
+      if(t==="AUTO"){ html += row(t, "Fully automated station, no human editing this report."); continue; }
+      if(t==="COR"){ html += row(t, "Corrected report — replaces an earlier one."); continue; }
+      if(t==="NOSIG"){ html += row(t, "No significant change expected in the next 2 hours."); continue; }
+
+      // try each decoder
+      var v;
+      if((v = decWind(t))){ html += row(t, v); continue; }
+      if((v = decVis(t))){ html += row(t, v); continue; }
+      if((v = decCloud(t))){
+        if(/^(FEW|SCT|BKN|OVC|VV)/.test(t)) cloudLayers++;
+        html += row(t, v); continue;
+      }
+      if((v = decTemp(t, store))){ html += row(t, v); continue; }
+      if((v = decAlt(t))){ html += row(t, v); continue; }
+      if((v = decWx(t))){ html += row(t, v, "warnrow"); continue; }
+
+      // unrecognized — never throw, just say so
+      html += row(t, "<span class='warnrow'>Unrecognized token — that's okay, real METARs carry rare codes (odd remarks, trend groups, runway data). Everything else above still decoded.</span>", "unk");
+    }
+
+    // build a friendly summary up top
+    var summ = "<div class='summ'><b>Plain-English summary:</b> ";
+    var bits = [];
+    if(store.temp!=null) bits.push("It's <b>"+store.temp+" °C ("+c2f(store.temp)+" °F)</b>");
+    if(store.dew!=null){
+      var d = store.dew;
+      var tag = d>=20 ? "juicy, storm-fuel air" : d>=15 ? "moderately humid" : "fairly dry air";
+      bits.push("dewpoint <b>"+d+" °C ("+c2f(d)+" °F)</b> — "+tag);
+    }
+    if(bits.length){ summ += bits.join(", ") + "."; }
+    else { summ += "Read the token-by-token breakdown below."; }
+    summ += "</div>";
+
+    return summ + html;
+  }
+
+  /* ---------- wire up ---------- */
+  var inEl = document.getElementById("in");
+  function run(){
+    var html;
+    try { html = decodeMETAR(inEl.value); }
+    catch(err){ html = "<div class='row unk'><div class='k'>oops</div><div class='v'>Couldn't parse that, but nothing broke. Check the format and try again.</div></div>"; }
+    out.innerHTML = html;
+  }
+
+  document.getElementById("decodeBtn").addEventListener("click", run);
+  document.getElementById("clearBtn").addEventListener("click", function(){ inEl.value=""; out.innerHTML=""; inEl.focus(); });
+  inEl.addEventListener("keydown", function(e){
+    // Ctrl/Cmd+Enter to decode
+    if((e.ctrlKey||e.metaKey) && e.key==="Enter"){ e.preventDefault(); run(); }
+  });
+
+  var presets = document.querySelectorAll("button.pre");
+  for(var p=0; p<presets.length; p++){
+    presets[p].addEventListener("click", function(){
+      inEl.value = this.getAttribute("data-m");
+      run();
+      document.getElementById("decoder").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  }
+
+  // quiz reveals
+  var qbtns = document.querySelectorAll(".q button");
+  for(var q=0; q<qbtns.length; q++){
+    qbtns[q].addEventListener("click", function(){
+      var n = this.getAttribute("data-q");
+      var ans = document.getElementById("a"+n);
+      if(ans){
+        var open = ans.classList.toggle("show");
+        this.textContent = open ? "Hide" : "Reveal";
+      }
+    });
+  }
+
+  // decode the prefilled example on load
+  run();
+})();
+</script>
+
+</body>
+</html>

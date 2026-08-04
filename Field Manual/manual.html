@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Field Manual — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+nav a.sec.cur{border-left-color:var(--accent);color:var(--accent);background:#161f2b}
+section{scroll-margin-top:20px}
+.tier{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.3px;
+      padding:2px 7px;border-radius:9px;text-transform:uppercase;vertical-align:2px;margin-left:7px}
+.t-off{color:var(--green);border:1px solid #17542f;background:rgba(53,234,122,.07)}
+.t-rot{color:var(--amber);border:1px solid #4d3a12;background:rgba(255,176,32,.07)}
+.t-res{color:var(--purple);border:1px solid #3d2a55;background:rgba(180,107,255,.07)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;background:var(--card2);border:1px solid var(--line);
+        border-radius:7px;padding:13px 17px;margin-bottom:24px;font-size:12.5px;color:var(--dim)}
+.risk{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:0 0 8px}
+.risk .sw{width:74px;flex:none;display:flex;align-items:center;justify-content:center;
+          font-family:var(--mono);font-size:11px;font-weight:700;color:#111}
+.risk .tx{padding:9px 14px;font-size:13.5px}
+.risk .tx b{display:block}
+.vel{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);
+     border-radius:7px;overflow:hidden;margin:0 0 18px;text-align:center;font-family:var(--mono)}
+.vel div{padding:16px 12px;font-size:13px}
+.vel .g{background:rgba(53,234,122,.11);color:#7cf0a8}
+.vel .r{background:rgba(255,47,69,.11);color:#ff8a96}
+.vel b{display:block;font-size:19px;margin-bottom:5px}
+.num2{font-family:var(--mono);color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">FIELD MANUAL</div>
+  <a href="#build"  class="sec">1 · How a storm is built</a>
+  <a href="#types"  class="sec">2 · The four storm types</a>
+  <a href="#anat"   class="sec">3 · Supercell anatomy</a>
+  <a href="#eyes"   class="sec">4 · Wall cloud vs shelf cloud</a>
+  <a href="#dbz"    class="sec">5 · Reading reflectivity</a>
+  <a href="#vel"    class="sec">6 · Reading velocity</a>
+  <a href="#sig"    class="sec">7 · The signatures</a>
+  <a href="#dualpol"class="sec">8 · Dual-pol &amp; debris</a>
+  <a href="#blind"  class="sec">9 · What radar can't see</a>
+  <a href="#spc"    class="sec">10 · SPC risk &amp; warnings</a>
+  <a href="#nums"   class="sec">11 · The numbers</a>
+  <a href="#safe"   class="sec">12 · Safety</a>
+  <a href="#tools"  class="sec">13 · Free tools for your PC</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← Back to the Lab</a>
+  <a href="../Academy/academy.html">The Academy</a>
+  <a href="../Atlas/atlas.html">Storm Atlas</a>
+  <a href="../Trainers/radar.html">Radar Trainer</a>
+  <a href="../Trainers/skewt.html">Skew-T</a>
+  <a href="../Trainers/decode.html">Decode</a>
+  <a href="../Quiz/quiz.html">Flashcards</a>
+  <a href="../Code School/python.html">Code School</a>
+  <a href="../Gear Bench/gear.html">Gear Bench</a>
+  <a href="../Storm Deck/deck.html">Storm Deck</a>
+  <a href="../SKYWARN/skywarn.html">SKYWARN</a>
+  <a href="../Chase Log/log.html">Chase Log</a>
+  <a href="../The Long Game/roadmap.html">The Long Game</a>
+</nav>
+
+<main>
+
+<h1><span class="num">THE FIELD MANUAL</span>
+How storms work, and how to read them.</h1>
+
+<p class="lede">This is the reference. You don't read it front to back in one sitting — you come
+back to it when the Deck shows you something you don't recognize. Every fact in here was checked
+against a National Weather Service, Storm Prediction Center, or NSSL source. Where the science is
+uncertain, it says so. That's not a weakness of this manual. That's the actual state of the field.</p>
+
+<div class="legend">
+  <span><span class="tier t-off">Official</span> published NWS/SPC/NSSL definition</span>
+  <span><span class="tier t-rot">Rule of thumb</span> forecaster convention, no official source</span>
+  <span><span class="tier t-res">Research</span> from a specific study — describes a sample, not a law</span>
+</div>
+
+<div class="box why"><h4>Why the labels matter</h4>
+<p style="margin-bottom:0">Half of what gets repeated about severe weather online is a rule of
+thumb wearing a lab coat. Somebody says "60 dBZ means large hail" like it's a law of physics.
+It isn't — NWS Norman's own spotter glossary says <b>"there are no reliable threshold values to
+confirm the presence of hail or severe weather in a given situation."</b> Learning to tell an
+official definition from a useful habit is most of what separates someone who <em>sounds</em> like
+they know storms from someone who does.</p></div>
+
+<!-- ═══════════════ 1 ═══════════════ -->
+<section id="build">
+<h2>1 · How a thunderstorm is built</h2>
+
+<p>Every thunderstorm on Earth needs the same three things. Severe storms need a fourth.</p>
+
+<table>
+<tr><th>Ingredient</th><th>What it does</th><th>Where you see it</th></tr>
+<tr><td><b>Moisture</b></td>
+    <td>Fuel. Water vapor releases heat when it condenses, and that heat is what drives the updraft.</td>
+    <td>Dewpoint. Not humidity — <b>dewpoint.</b></td></tr>
+<tr><td><b>Instability</b></td>
+    <td>Air near the ground is warmer/lighter than the air above it, so once it starts rising it keeps going.</td>
+    <td>CAPE.</td></tr>
+<tr><td><b>Lift</b></td>
+    <td>Something to give it the first shove — a cold front, a dryline, a sea breeze, a mountain, an outflow boundary from an earlier storm.</td>
+    <td>Fronts and boundaries on the map.</td></tr>
+<tr><td><b>Wind shear</b><br><span style="color:var(--dim);font-size:12px">(severe only)</span></td>
+    <td>Wind changing speed and/or direction with height. This is what turns a storm from a blob into an organized machine that can last for hours and rotate.</td>
+    <td>0–6 km bulk shear. SRH.</td></tr>
+</table>
+
+<h3>Dewpoint is the number to watch</h3>
+<p>Relative humidity tells you how close the air is to saturated <em>at its current temperature</em> —
+which means it moves every time the temperature moves, and it tells you almost nothing about how
+much water is actually in the air. Dewpoint tells you the actual moisture content. It's the number
+in the Storm Deck's conditions panel, and it's why Mission 4 has you write a function that keys on
+it.</p>
+
+<div class="box warn"><h4>Careful here — this is where people confidently state a fake number</h4>
+<p style="margin-bottom:0">You will hear "you need a 65° dewpoint for tornadoes." <b>The SPC
+publishes no dewpoint threshold at all.</b> Neither does any NWS severe criteria document — SPC's
+outlook definitions contain no moisture criterion whatsoever. Higher dewpoints generally mean more
+fuel, and that's real. But the specific number is <span class="tier t-rot">Rule of thumb</span>,
+and a 60° dewpoint in a cool airmass with steep lapse rates can absolutely produce a tornado.</p></div>
+
+<h3>The cap</h3>
+<p>Sometimes there's a layer of warm air aloft acting like a lid. Rising parcels hit it and stop.
+The formal names are <b>lid</b> and <b>cap</b>. The energy it takes to punch through is
+<b>CIN — convective inhibition</b>, the "negative area" a parcel has to overcome before it can
+free-fall upward. <span class="tier t-off">Official</span></p>
+
+<p>A cap isn't purely bad. A weak cap lets everything go up at once and you get a mess of
+competing junk storms. A strong cap holds the energy back until something forces one storm through
+— and that one storm gets all of it. That's how you end up with a single monster in an otherwise
+clear sky.</p>
+
+<div class="box warn"><h4>"Loaded gun" — say it right</h4>
+<p style="margin-bottom:0">You'll hear that phrase for a capped, high-CAPE atmosphere. The NWS
+glossary <em>does</em> carry it — <b>tagged as slang.</b> The formal terms are <b>lid</b> and
+<b>cap</b>. Use those when you're writing a report. Save the slang for talking to your friends.</p></div>
+</section>
+
+<!-- ═══════════════ 2 ═══════════════ -->
+<section id="types">
+<h2>2 · The four storm types</h2>
+
+<p>Shear is the thing that decides which of these you get. Little shear → the first one. Lots of
+shear → the last one.</p>
+
+<h3>Single cell ("pulse")</h3>
+<p>One updraft, one downdraft. Life span 20–30 minutes. It kills itself: the rain-cooled downdraft
+falls right back through its own updraft and cuts off the inflow. Can still drop marginally severe
+hail or a wet microburst on the way down. Mostly a summer-afternoon storm.</p>
+
+<h3>Multicell cluster</h3>
+<p>A group of cells in different stages of life, feeding each other. As one dies, its cold outflow
+lifts warm air along the leading edge and builds the next one. Lasts for hours because it's
+constantly replacing itself. Most severe hail and wind in the country comes from these.</p>
+
+<h3>Squall line / bow echo</h3>
+<p>Cells organized into a line, often hundreds of miles long. The whole line has a shared cold pool
+of outflow air out front. When a segment of the line surges forward because of an intense rear
+inflow jet, it bends into a <b>bow echo</b> — and that's your damaging straight-line wind signature.
+Bow echoes can also spin up brief tornadoes at the ends and along the leading edge.</p>
+
+<p>Straight-line wind from a bow echo can hit tornado-strength speeds. Wind damage is not
+proof of a tornado. <b>Damage direction is:</b> a tornado throws debris in converging directions;
+straight-line wind lays everything down the same way.</p>
+
+<h3>Supercell</h3>
+<p>A thunderstorm with a <b>persistently rotating updraft</b>. That's the entire definition —
+rotation is what makes it a supercell, not size or violence. That rotating updraft is called a
+<b>mesocyclone</b>, and it's the reason a supercell can last for many hours and produce the biggest
+hail and nearly all strong tornadoes.</p>
+
+<p>Supercells are commonly associated with <b>0–6 km vertical shear of 35–40 knots and greater.</b>
+<span class="tier t-off">Official</span> (SPC)</p>
+</section>
+
+<!-- ═══════════════ 3 ═══════════════ -->
+<section id="anat">
+<h2>3 · Supercell anatomy</h2>
+
+<p>Learn these parts by name. When you give a report, the name <em>is</em> the report.</p>
+
+<table>
+<tr><th>Part</th><th>What it is</th></tr>
+<tr><td><b>Updraft</b></td><td>The rising column. In a supercell it's rotating. Visually it's the hard, crisp, cauliflower tower — not the mushy stuff.</td></tr>
+<tr><td><b>Mesocyclone</b></td><td><span class="tier t-off">Official</span> "A storm-scale region of rotation, typically around 2–6 miles in diameter." <b>It is a radar term.</b> See the warning below.</td></tr>
+<tr><td><b>FFD</b><br>forward flank downdraft</td><td>The main precipitation core — the heavy rain and hail, ahead of and to the left of the updraft.</td></tr>
+<tr><td><b>RFD</b><br>rear flank downdraft</td><td><span class="tier t-off">Official</span> "A region of dry air subsiding on the back side of, and wrapping around, a mesocyclone. It often is visible as a clear slot wrapping around the wall cloud." The RFD is what carves the hook you see on radar — and it's deeply involved in tornado formation.</td></tr>
+<tr><td><b>Wall cloud</b></td><td>A lowering of the cloud base beneath the rain-free updraft base. If it's persistent and rotating, this is the business end.</td></tr>
+<tr><td><b>Clear slot</b></td><td>A visible notch of clearing wrapping around the wall cloud — the RFD arriving. Often appears shortly before tornadogenesis. If you see a clear slot cutting in, pay complete attention.</td></tr>
+<tr><td><b>Inflow bands</b></td><td>Bands of low cloud streaming into the storm. Curved inflow bands are visual evidence a mesocyclone is likely present.</td></tr>
+<tr><td><b>Anvil</b></td><td>The flat top where the updraft hits the stratosphere and spreads out. A hard, sharply-defined anvil edge with an <b>overshooting top</b> punching above it means a violently strong updraft.</td></tr>
+</table>
+
+<div class="box danger"><h4>The mistake almost everybody makes</h4>
+<p>From the NWS Glossary, verbatim: <b>"Properly used, mesocyclone is a radar term… Therefore, a
+mesocyclone should not be considered a visually-observable phenomenon."</b></p>
+<p style="margin-bottom:0">You cannot see a mesocyclone. You can see a rotating <em>wall cloud</em>,
+you can see curved inflow bands that <em>imply</em> one — but if you report "I see a mesocyclone,"
+a trained meteorologist knows immediately that you don't know the vocabulary. Report the wall
+cloud. Report the rotation. Let the radar name the mesocyclone.</p></div>
+
+<h3>The three supercell flavors</h3>
+<ul>
+  <li><b>Classic</b> — the textbook one. You can see the updraft base and the wall cloud, with the
+  precipitation core off to the side. This is the one in every photo.</li>
+  <li><b>HP (high precipitation)</b> — rain wraps all the way around the mesocyclone. The tornado
+  can be completely hidden inside the rain. <b>These are the ones that kill spotters and chasers</b>,
+  and they're the common flavor in the South and the Mid-South, including Arkansas.</li>
+  <li><b>LP (low precipitation)</b> — very little rain, gorgeous corkscrew structure, you can see
+  everything. Mostly a High Plains storm. Big hail, tornadoes rare.</li>
+</ul>
+</section>
+
+<!-- ═══════════════ 4 ═══════════════ -->
+<section id="eyes">
+<h2>4 · Wall cloud vs shelf cloud</h2>
+
+<p>This is the single most important thing your eyes will ever do, and it is the identification
+new spotters get wrong most often. Both are a dark, dramatic lowering of the cloud. They mean
+completely opposite things.</p>
+
+<table>
+<tr><th></th><th>Wall cloud</th><th>Shelf cloud</th></tr>
+<tr><td><b>Where on the storm</b></td>
+    <td>Under the rain-free base, on the <b>back/inflow</b> side</td>
+    <td>On the <b>leading edge</b>, out front</td></tr>
+<tr><td><b>Attached to</b></td>
+    <td>The updraft</td>
+    <td>The outflow — cold air pushing out</td></tr>
+<tr><td><b>The wind on your face</b></td>
+    <td>Blowing <b>toward</b> the storm (you're in the inflow)</td>
+    <td>Blowing <b>from</b> the storm, and it hits you hard and cold</td></tr>
+<tr><td><b>Motion</b></td>
+    <td>Air rising into it. May rotate.</td>
+    <td>Air rising along the front edge, sinking behind. Looks like a wedge or plow.</td></tr>
+<tr><td><b>Means</b></td>
+    <td>Possible tornado. Report it.</td>
+    <td>Gust front. Strong straight-line wind coming. Not a tornado.</td></tr>
+</table>
+
+<div class="box do"><h4>The test that actually works</h4>
+<p style="margin-bottom:0"><b>Feel the wind.</b> If wind is blowing <em>into</em> the storm behind
+that lowering — toward it, feeding it — you are looking at a wall cloud. If cold wind is blasting
+<em>out</em> at you from under it, that's a shelf cloud and the gust front is about to arrive.
+Photographs lie about this constantly. Standing there with wind on your skin does not.</p></div>
+
+<h3>Scud, and why you should not report it</h3>
+<p>Ragged, fast-moving fragments of cloud below the base. Scud forms and dissipates in seconds,
+often moves in a completely different direction from the storm, and is <b>not attached to the
+cloud base</b> in a solid way. It looks alarming in photographs. It has fooled a lot of people
+into calling in funnel clouds.</p>
+
+<p><b>A funnel is smooth, persistent, and rotating.</b> Watch it for thirty seconds before you
+call. If it's shredding, reforming, or drifting sideways with no rotation, it's scud.</p>
+</section>
+
+<!-- ═══════════════ 5 ═══════════════ -->
+<section id="dbz">
+<h2>5 · Reading reflectivity</h2>
+
+<p>Reflectivity is the "how much stuff is up there" picture. It's the colorful one everybody knows.
+The unit is <b>dBZ</b>, and the scale <b>runs from about −35 dBZ to +85 dBZ.</b>
+<span class="tier t-off">Official</span></p>
+
+<h3>Why it's a weird logarithmic unit — and the trap inside it</h3>
+<p>Raw reflectivity varies insanely: a tiny drizzle droplet returns about 0.001 mm⁶/m³ while hail
+in a severe storm returns around <b>36,000,000</b>. Nobody can plot that. So the radar takes the
+logarithm and you get decibels.</p>
+
+<p>Here's the part that will change how you read radar. Power returned to the radar goes as the
+target's diameter <b>to the sixth power.</b> NOAA's own worked example:</p>
+
+<div class="box why"><h4>Two boxes, same color, very different weather</h4>
+<p>Box A: 729 raindrops, each 1 mm across. Box B: <b>one</b> raindrop, 3 mm across.</p>
+<p style="margin-bottom:0">Both boxes read <b>29 dBZ</b>. Identical color on the map. But the
+rainfall rate in Box A is <b>22 times heavier.</b> A few big drops can look exactly like a lot of
+small ones. This is why reflectivity alone can never tell you what's actually falling — and it's
+the whole reason dual-pol exists.</p></div>
+
+<h3>General reflectivity guidelines <span class="tier t-off">Official</span></h3>
+<p>NOAA publishes this table and frames it explicitly as a <em>guideline</em>: "Generally speaking,
+the higher the reflectivity, the heavier the precipitation. However, this is not always the case."</p>
+
+<table>
+<tr><th>dBZ</th><th>Expected intensity</th></tr>
+<tr><td class="num2">&gt; 65</td><td>Extremely heavy precipitation including water-coated hail</td></tr>
+<tr><td class="num2">50 – 65</td><td>Heavy precipitation or some hail</td></tr>
+<tr><td class="num2">40 – 50</td><td>Moderate precipitation</td></tr>
+<tr><td class="num2">20 – 40</td><td>Light precipitation</td></tr>
+<tr><td class="num2">0 – 20</td><td>Very light precipitation, or general clutter</td></tr>
+<tr><td class="num2">−35 – 0</td><td>Extremely light — drizzle, snow</td></tr>
+</table>
+
+<div class="box warn"><h4>What you may not say</h4>
+<p>"50 dBZ or more normally are associated with heavy thunderstorms, perhaps with hail" is real —
+that's NWS Norman. <b>But the same sentence continues:</b> "as with most other quantities, there
+are no reliable threshold values to confirm the presence of hail or severe weather in a given
+situation."</p>
+<p style="margin-bottom:0">The widely-repeated "60 dBZ = large hail" is <b>not current NWS
+guidance</b> and does not appear on any current NOAA page. Don't repeat it. Modern hail
+identification on NWS products is done by the <b>dual-pol classifier</b>, not by raw dBZ.</p></div>
+</section>
+
+<!-- ═══════════════ 6 ═══════════════ -->
+<section id="vel">
+<h2>6 · Reading velocity</h2>
+
+<p>Reflectivity shows you where the stuff is. <b>Velocity shows you where it's going</b> — and
+velocity is where tornadoes live. This is the harder product and it's the one that separates
+people who look at radar from people who read it.</p>
+
+<div class="vel">
+  <div class="g"><b>GREEN</b>moving TOWARD the radar<br>(negative values)</div>
+  <div class="r"><b>RED</b>moving AWAY from the radar<br>(positive values)</div>
+</div>
+<p style="margin-top:-8px;color:var(--dim);font-size:13px">
+<span class="tier t-off">Official</span> — and it comes from the earliest days of Doppler radar,
+when the radars pointed straight up. Note that on many displays the very strongest inbound winds
+render <b>blue</b>, not green.</p>
+
+<div class="box danger"><h4>The limitation that governs everything</h4>
+<p style="margin-bottom:0">Doppler radar measures <b>only the component of motion along the beam</b>
+— toward it or away from it. A wind blowing perfectly sideways across the beam shows up as
+<b>zero</b>. Not "weak." Zero. That's why the radar you choose matters, why a feature can look
+strong from one radar and invisible from another, and why the same storm reads differently from
+two sites. Everything in the velocity product is <em>radial</em> velocity.</p></div>
+
+<h3>The velocity couplet — the pattern that matters</h3>
+<p>Rotation shows up as <b>bright green right next to bright red.</b> Air on one side of the vortex
+is coming at the radar; air on the other side is going away. Two intense, adjacent, opposite colors
+in a small area is a <b>couplet</b>, and a tight one at low levels is what a warning meteorologist
+is looking for.</p>
+
+<p>The key word is <b>tight</b>. A big, loose green/red gradient across half the storm is just the
+storm-scale wind field. What you want is strong, opposite, and <em>close together</em> — the tighter
+the couplet, the more concentrated the rotation.</p>
+
+<h3>Aliasing — when the radar reports the wrong sign</h3>
+<p>Radar figures out speed from the phase shift of the returned pulse. If the phase shift goes past
+180°, the radar can't tell which way it went. The maximum speed it can measure unambiguously is the
+<b>Nyquist velocity</b>. Past that, the value <b>folds</b> — and it folds to the opposite end of the
+scale.</p>
+
+<p>NSSL's numeric example: with a Nyquist velocity of ±30 m/s, a true <span class="num2">+36 m/s</span>
+is displayed as <span class="num2">−24 m/s</span>. <b>Strong outbound is shown as strong inbound.</b>
+And in an extreme case, a true ±60 m/s can fold all the way to <b>zero</b>.
+<span class="tier t-off">Official</span></p>
+
+<div class="box why"><h4>How you spot it</h4>
+<p style="margin-bottom:0">Aliasing produces "an abrupt change in color from one end of the velocity
+cointerval to the other" — a hard, unnatural jump with no gradient between. Real rotation has
+structure around it; an alias just slams from one extreme to the other. NSSL is blunt that a single
+aliased pixel is <b>undetectable</b> on its own — only the surrounding pattern gives it away.</p></div>
+
+<h3>Range folding — the purple that isn't what you think</h3>
+<p>When the radar can't determine whether a return is inbound or outbound, it flags it
+<b>RF (range folded)</b> and — on most displays — paints it <b>purple</b>. NWS calls it
+"purple haze." Within those areas the velocity could not be resolved and none is displayed.
+<span class="tier t-off">Official</span></p>
+
+<div class="box danger"><h4>The trap that will get you exactly once</h4>
+<p><b>Purple on the VELOCITY product = range folding, no data.</b><br>
+<b>Purple on the REFLECTIVITY product = very high dBZ.</b> The opposite of "no data" — it's the
+most intense return on the map.</p>
+<p style="margin-bottom:0">Same color, two products, opposite meanings. NWS training says it
+outright: "the color purple on Reflectivity products indicates very high dBZ values, not range
+folding." Also know that purple isn't universal — NOAA's own JetStream shows range folding in
+<b>white</b>. It's a color-table convention, not a standard. The letters <b>RF</b> are the reliable
+tell.</p></div>
+
+<h3>The Doppler Dilemma</h3>
+<p>Here's a genuinely elegant piece of physics. The radar's maximum range and its maximum
+measurable velocity are <b>inversely related</b> — you cannot have both. NSSL writes it as
+<span class="num2">V<sub>max</sub> · r<sub>max</sub> = ±cλ/8</span>: a constant. Push one up, the
+other goes down.</p>
+
+<table>
+<tr><th>Product</th><th>Pulse rate (PRF)</th><th>Max range</th><th>Max velocity</th></tr>
+<tr><td>Reflectivity</td><td>Low, ~320/sec</td><td class="num2">290 miles</td><td class="num2">18 mph</td></tr>
+<tr><td>Velocity</td><td>High, ~1300/sec</td><td class="num2">72 miles</td><td class="num2">71 mph</td></tr>
+</table>
+
+<p><span class="tier t-off">Official</span> This is why the WSR-88D scans the lowest elevation
+angles <b>twice</b> — once slow for range, once fast for velocity. It's also why velocity data
+gets unreliable far from the radar while reflectivity keeps going. <b>The radar you pick in
+<code>my-settings.js</code> is not a cosmetic choice.</b></p>
+</section>
+
+<!-- ═══════════════ 7 ═══════════════ -->
+<section id="sig">
+<h2>7 · The signatures</h2>
+
+<h3>Hook echo</h3>
+<p><span class="tier t-off">Official</span> NWS Glossary: <b>"A radar reflectivity pattern
+characterized by a hook-shaped extension of a thunderstorm echo, usually in the right-rear part of
+the storm (relative to its direction of motion). A hook often is associated with a mesocyclone, and
+indicates favorable conditions for tornado development."</b></p>
+
+<p>NSSL on the mechanism: <b>"The hook is caused by the rear flank downdraft and is the result of
+precipitation wrapping around the back side of the updraft."</b> So a hook is really a picture of
+the RFD doing its work. It's a fairly shallow feature — typically only 3–4 km deep.</p>
+
+<div class="box warn"><h4>Not "the southwest side." Right-rear relative to storm motion.</h4>
+<p style="margin-bottom:0">You'll read "southwest flank" a lot, and for a typical storm moving
+southwest-to-northeast it happens to be true. But it's <span class="tier t-rot">Rule of thumb</span>
+that quietly assumes a storm direction. A storm moving northwest-to-southeast will put its hook
+somewhere else entirely, and a spotter who memorized "southwest" will be staring at the wrong
+quadrant. Learn it as <b>right-rear relative to motion</b> and you're never wrong.</p></div>
+
+<p>A weaker, less-defined version has its own official name: <b>pendant echo</b>. Operational NWS
+training also describes the classic hook as <b>"shaped like a figure six."</b></p>
+
+<p>Historical note worth knowing: the first time a hook echo was directly identified with a tornado
+was <b>April 9, 1953</b>, on a research radar at Willard Airport in Savoy, Illinois, watching a
+tornado near Champaign. That's confirmed by NWS Lincoln, IL. The entire signature you're learning
+is barely seventy years old.</p>
+
+<h3>Mesocyclone</h3>
+<p>A rotation signature on Doppler velocity meeting specific criteria for magnitude, vertical
+depth, and duration. Typically <b>2–6 miles in diameter.</b> Appears as a solid circle on NWS
+velocity products.</p>
+
+<h3>TVS — Tornadic Vortex Signature</h3>
+<p><span class="tier t-off">Official</span> NWS Glossary: <b>"Doppler radar signature in the radial
+velocity field indicating intense, concentrated rotation — more so than a mesocyclone."</b> Like a
+mesocyclone it has to meet criteria for strength, depth, and time continuity. A TVS substantially
+raises the likelihood of a tornado. It does not guarantee one, and — like a mesocyclone —
+<b>it cannot be seen with your eyes.</b></p>
+
+<p>NSSL researchers discovered the TVS, and one of the useful things about it is that it often
+appears on radar <b>several kilometers above the ground before a tornado reaches the ground.</b>
+That's lead time.</p>
+
+<h3>Bow echo</h3>
+<p>A line segment that bulges forward, driven by a rear inflow jet. Your damaging straight-line
+wind signature. The ends of the bow (the "book end vortices") and the leading edge can also produce
+brief spin-up tornadoes.</p>
+</section>
+
+<!-- ═══════════════ 8 ═══════════════ -->
+<section id="dualpol">
+<h2>8 · Dual-pol, and seeing debris in the air</h2>
+
+<p>In <b>2012</b> the entire WSR-88D network was upgraded to <b>dual polarization.</b> Before that
+the radar sent out a purely horizontal pulse. Now it sends horizontal and vertical, and by comparing
+the two returns it can tell you about the <b>size and shape</b> of what it's hitting. This is the
+biggest single leap in severe weather detection in your lifetime.</p>
+
+<table>
+<tr><th>Product</th><th>What it measures</th><th>How to read it</th></tr>
+<tr><td><b>ZDR</b><br>differential reflectivity</td>
+    <td>Horizontal power minus vertical power. Effectively: is the target wide or tall?</td>
+    <td><b>&gt;0</b> = flattened → big raindrops (they flatten as they fall).<br>
+        <b>~0</b> = round or tumbling → hail, sleet, small drops.<br>
+        <b>&lt;0</b> = tall/thin → ice crystals, elongated snowflakes.</td></tr>
+<tr><td><b>CC</b><br>correlation coefficient</td>
+    <td>How similarly the horizontal and vertical pulses behaved. Unitless, 0 to 1.</td>
+    <td><b>&gt;0.97</b> = uniform met targets — all rain, all snow.<br>
+        <b>0.80–0.97</b> = mixed — hail, rain/snow mix, sleet.<br>
+        <b>&lt;0.80</b> = <b>not weather</b> — birds, bugs, buildings, smoke… or debris.</td></tr>
+<tr><td><b>KDP</b><br>specific differential phase</td>
+    <td>Phase shift, not power — how much the beam is slowed by what it passes through.</td>
+    <td>Excellent for heavy rainfall rate. Mostly immune to partial beam blockage, because it
+        doesn't depend on returned power at all.</td></tr>
+</table>
+
+<div class="box why"><h4>The Wylie, Texas case — why ZDR is beautiful</h4>
+<p style="margin-bottom:0">A supercell showed reflectivity <b>over 65 dBZ</b> with <b>ZDR near
+0 dB.</b> Enormous return, but perfectly round-looking targets. Round means <em>tumbling</em>, and
+what tumbles is hail. That storm produced <b>5-inch hail.</b> Reflectivity alone said "something
+huge." ZDR said "and it's ice."</p></div>
+
+<h3>TDS — the Tornado Debris Signature</h3>
+<p>This is the one that will stop you cold the first time you see it. A tornado on the ground lofts
+insulation, lumber, dirt, roofing. That debris is <b>not weather</b> — it's random junk, tumbling
+in every orientation. So the radar's correlation coefficient <b>collapses</b> in exactly the spot
+where the couplet is.</p>
+
+<p>The original research definition (Ryzhkov et al., 2005) lists five criteria:</p>
+<ol>
+  <li>a hook echo</li>
+  <li>CC &lt; 0.8</li>
+  <li>a pronounced vortex signature in the velocity field</li>
+  <li>ZDR &lt; 0.5 dB</li>
+  <li>Z &gt; 45 dBZ</li>
+</ol>
+<p><span class="tier t-res">Research</span> The authors add that criterion 2 — the CC drop —
+<b>"probably has the best discriminating power."</b></p>
+
+<div class="box warn"><h4>Two numbers, both correct</h4>
+<p style="margin-bottom:0">You'll see <b>CC &lt; 0.8</b> and you'll also see <b>up to 0.95</b>.
+Both are real. 0.8 is the original research threshold; NWS operational training uses the looser
+value <b>provided it's a local CC minimum collocated with a strong vortex</b>. The reason is
+physical: rain gets entrained into the debris cloud and pulls CC back up. When two sources disagree
+like this, the right move isn't to pick one — it's to understand <em>why</em> they differ.</p></div>
+
+<p><b>A TDS means a tornado is on the ground right now and it is doing damage.</b> It is not a
+forecast. It's a confirmation. If you ever see one over a town, that is one of the most sobering
+images in this entire field.</p>
+</section>
+
+<!-- ═══════════════ 9 ═══════════════ -->
+<section id="blind">
+<h2>9 · What radar can't see</h2>
+
+<p>This section is the one that makes you actually good. Anyone can learn what a hook echo looks
+like. Knowing when the radar is <b>lying to you by omission</b> is the skill.</p>
+
+<h3>The beam goes up, and it gets fat</h3>
+<p>The radar beam leaves the dish at a slight upward angle, and the Earth curves away underneath it.
+So the farther out you look, the higher above the ground you're looking. It also spreads:
+<b>about 1,000 feet wider for every 10 miles of travel.</b> At 120 miles out, the beam is
+<b>over 2 miles wide.</b> <span class="tier t-off">Official</span></p>
+
+<div class="box danger"><h4>Jarrell, Texas — the same tornado from two radars</h4>
+<table style="margin-bottom:0">
+<tr><th></th><th>Central TX radar, 20 miles away</th><th>Fort Worth radar, 98 miles away</th></tr>
+<tr><td>Beam height above ground</td><td class="num2">~1,300 ft</td><td class="num2">~11,600 ft</td></tr>
+<tr><td>Beam width</td><td class="num2">~2,000 ft</td><td class="num2">~2 miles</td></tr>
+<tr><td>What you can see</td><td>Low-level structure</td><td>NWS: "the radar is no longer scanning the important low level features"</td></tr>
+</table></div>
+
+<p>Same storm. Same moment. One radar sees the tornado's structure; the other is looking two miles
+over the top of it and smearing everything into a blob. <b>This is why the radar station you set in
+<code>my-settings.js</code> matters more than any other setting in the lab.</b> A distant radar
+cannot see low-level rotation. Not "sees it poorly." Cannot see it.</p>
+
+<h3>The algorithms are worse than you think — and you should know the numbers</h3>
+<p>The radar has automated detection algorithms. People assume they're near-perfect. They are not,
+and NOAA has published exactly how imperfect. From Mitchell et al. (1998),
+<em>Weather and Forecasting</em>, tested on an independent dataset of 31 tornadoes:</p>
+
+<table>
+<tr><th>Algorithm</th><th>POD<br><span style="font-weight:400;text-transform:none;letter-spacing:0">how often it catches a real tornado</span></th><th>FAR<br><span style="font-weight:400;text-transform:none;letter-spacing:0">how often it cries wolf</span></th></tr>
+<tr><td>NSSL Tornado Detection Algorithm</td><td class="num2">43%</td><td class="num2">48%</td></tr>
+<tr><td>88D TVS, optimized settings</td><td class="num2">37%</td><td class="num2">78%</td></tr>
+<tr><td>88D TVS, default settings</td><td class="num2">3%</td><td class="num2">0%</td></tr>
+</table>
+<p><span class="tier t-res">Research</span></p>
+
+<div class="box why"><h4>Read that bottom row again — it's a lesson in how statistics lie</h4>
+<p style="margin-bottom:0">A <b>0% false alarm rate</b> looks perfect. It's the opposite. That
+algorithm scored 0% FAR because it <b>almost never fires at all</b> — 5 hits against 165 misses.
+The paper says so plainly: it "produces very few false alarms but is compromised by an extremely
+low probability of detection." Any time someone shows you a metric that looks flawless, ask what
+the <em>other</em> metric was doing.</p></div>
+
+<p>And for the mesocyclone detection algorithms, the false alarm ratio for tornadoes runs
+<b>67% to 97%</b>. Which means:</p>
+
+<div class="box warn"><h4>A mesocyclone detection is a weak tornado predictor on its own</h4>
+<p style="margin-bottom:0">Most rotating storms never produce a tornado. This is exactly why the
+National Weather Service still needs <em>you</em>. The radar can tell them a storm is rotating.
+Only a person on the ground can tell them what actually happened.</p></div>
+
+<h3>It's worse where you live</h3>
+<p>The same 1998 study broke performance out by region:</p>
+<table>
+<tr><th>Where</th><th>Tornado detection POD</th></tr>
+<tr><td>Plains-type events</td><td class="num2">68%</td></tr>
+<tr><td><b>Non-plains events</b></td><td class="num2">25%</td></tr>
+</table>
+
+<p>Arkansas is not the Plains. Storms here are more often rain-wrapped HP supercells and
+squall-line spin-ups, at night, in hilly, tree-covered terrain, where the tornado is invisible and
+the radar algorithms perform at roughly <b>a third</b> of their Plains skill.</p>
+
+<p>The authors note it's a small sample and more data is needed — that caveat is theirs and it's
+fair. But the direction of the effect is real and it means something specific for you:
+<b>the place where radar is weakest is the place where a trained spotter is worth the most.</b>
+That's not a consolation prize. That's the job description.</p>
+</section>
+
+<!-- ═══════════════ 10 ═══════════════ -->
+<section id="spc">
+<h2>10 · SPC risk levels, watches, and warnings</h2>
+
+<p>The Storm Prediction Center in Norman, Oklahoma issues the national convective outlooks — the
+risk categories your Deck pulls for your exact coordinates. Five risk levels above general
+thunderstorms:</p>
+
+<div class="risk"><div class="sw" style="background:#c1e9c1">TSTM</div><div class="tx"><b>General thunderstorms</b>Storms expected, severe not.</div></div>
+<div class="risk"><div class="sw" style="background:#66a366">MRGL</div><div class="tx"><b>Marginal — 1 of 5</b>Isolated severe possible, limited in duration and intensity.</div></div>
+<div class="risk"><div class="sw" style="background:#ffe066">SLGT</div><div class="tx"><b>Slight — 2 of 5</b>Scattered severe possible. "Slight" is not "small" — most severe weather days are SLGT.</div></div>
+<div class="risk"><div class="sw" style="background:#ffa366">ENH</div><div class="tx"><b>Enhanced — 3 of 5</b>Numerous severe storms. Pay attention all day.</div></div>
+<div class="risk"><div class="sw" style="background:#e06666">MDT</div><div class="tx"><b>Moderate — 4 of 5</b>Widespread severe, likely intense. Rare. Clear your schedule.</div></div>
+<div class="risk"><div class="sw" style="background:#ee99ee">HIGH</div><div class="tx"><b>High — 5 of 5</b>A regional outbreak. Issued only a handful of times a year, sometimes not at all. If your county is in a HIGH risk, that is one of the most serious forecasts the US government issues.</div></div>
+
+<h3>Watch vs Warning — get this right forever</h3>
+<table>
+<tr><th></th><th>WATCH</th><th>WARNING</th></tr>
+<tr><td>Means</td><td>Conditions are favorable. It <em>could</em> happen.</td><td>It is happening, or is imminent.</td></tr>
+<tr><td>Issued by</td><td>Storm Prediction Center</td><td>Your local NWS forecast office</td></tr>
+<tr><td>Covers</td><td>A big area, many counties, several hours</td><td>A specific polygon, minutes to an hour</td></tr>
+<tr><td>You should</td><td>Get ready. Know where you'd go.</td><td><b>Go there now.</b></td></tr>
+</table>
+
+<p>The memory device everybody uses: a <b>watch</b> means the ingredients are on the counter.
+A <b>warning</b> means it's in the oven.</p>
+
+<h3>The severe criteria — memorize these three</h3>
+<p>A thunderstorm is officially <b>severe</b> if it produces any one of:</p>
+<ul>
+  <li>Hail <b>1.00 inch (quarter size) or larger</b></li>
+  <li>Wind <b>58 mph or greater</b></li>
+  <li><b>A tornado</b></li>
+</ul>
+<p>Note what's <em>not</em> on that list: lightning, heavy rain, and how scary it looks. A storm can
+be terrifying and not be severe. A storm can be severe and look ordinary. The criteria are the
+criteria.</p>
+</section>
+
+<!-- ═══════════════ 11 ═══════════════ -->
+<section id="nums">
+<h2>11 · The numbers a forecaster actually looks at</h2>
+
+<p>You will grow into this section. Don't try to memorize it today — come back when you start
+reading SPC mesoscale discussions and want to know what the letters mean.</p>
+
+<h3>CAPE — Convective Available Potential Energy</h3>
+<p><span class="tier t-off">Official</span> "The integrated 'positive area' in J/kg (from the LFC to
+EL) for the lifted parcel." In plain terms: how much fuel is loaded, and therefore how strong the
+updraft can be.</p>
+
+<table>
+<tr><th>CAPE (J/kg)</th><th>SPC forecasters call it</th></tr>
+<tr><td class="num2">&lt; 1000</td><td>weak instability</td></tr>
+<tr><td class="num2">1000 – 2500</td><td>moderate instability</td></tr>
+<tr><td class="num2">2500 – 4000</td><td>strong instability</td></tr>
+<tr><td class="num2">&gt; 4000</td><td>extreme instability</td></tr>
+</table>
+
+<div class="box warn"><h4>An honest note about that table</h4>
+<p style="margin-bottom:0">SPC publishes it — but the exact framing is <b>"SPC forecasters often
+refer to."</b> That's describing in-house vocabulary on an explanatory help page, not a defined
+operational criterion. It appears in no NWS directive. The AMS Glossary defines CAPE mathematically
+and endorses <b>no</b> qualitative categories at all. Different NWS offices publish slightly
+different breakpoints with different words. Use it, cite it as an SPC convention, and don't treat
+it as a law.</p></div>
+
+<p>You'll also see three flavors depending on which parcel of air you lift:
+<b>SBCAPE</b> (from the surface), <b>MLCAPE</b> (mean of the lowest 100 mb), and <b>MUCAPE</b>
+(the most unstable parcel in the lowest 300 mb). They can differ enormously — one study found
+median SBCAPE of 1492 J/kg against median MLCAPE of 685 for the same soundings. <b>Which one
+somebody quotes changes the story.</b> Always ask which parcel.</p>
+
+<h3>Shear and helicity</h3>
+<table>
+<tr><th>Parameter</th><th>Threshold</th><th>Meaning</th></tr>
+<tr><td>0–6 km bulk shear</td><td class="num2">35–40 kt +</td><td>Supercells are commonly associated with values this high or greater.</td></tr>
+<tr><td>0–1 km SRH</td><td class="num2">&gt; 100 m²/s²</td><td>Suggests increased tornado threat with supercells.</td></tr>
+<tr><td>0–3 km SRH</td><td class="num2">&gt; 250 m²/s²</td><td>Same.</td></tr>
+<tr><td>LFC height</td><td class="num2">&lt; 2000 m</td><td>Tornadoes become more likely. Below 3000 m, storms initiate more easily.</td></tr>
+<tr><td>STP</td><td class="num2">&gt; 1</td><td>Most significant (F2+) tornadoes occur with STP above 1; most non-tornadic supercells below it.</td></tr>
+</table>
+<p><span class="tier t-off">Official</span> — these are SPC's published values. But SPC states
+directly that <b>there is no clear threshold value for SRH when forecasting supercells</b>, and
+that no definitive boundary cleanly separates tornadic from non-tornadic storms. These are
+tendencies, not switches.</p>
+
+<h3>LCL height — the most underrated number here</h3>
+<p>The <b>lifting condensation level</b> is where a rising parcel saturates. It's essentially cloud
+base height. Low cloud base means a moist, humid boundary layer — and it turns out to matter a lot
+for tornadoes.</p>
+
+<p>From Thompson et al. (2003), 413 proximity soundings <span class="tier t-res">Research</span>:</p>
+<table>
+<tr><th>Storm type</th><th>Median mixed-layer LCL height</th></tr>
+<tr><td>Significantly tornadic (F2+)</td><td class="num2">1004 m</td></tr>
+<tr><td>Weakly tornadic (F0–F1)</td><td class="num2">1180 m</td></tr>
+<tr><td>Non-tornadic supercell</td><td class="num2">1339 m</td></tr>
+<tr><td>Non-supercell</td><td class="num2">1768 m</td></tr>
+</table>
+
+<p>And the single cleanest sentence in that whole paper: <b>"MLLCL heights did not exceed 1750 m
+for any of our 54 significantly tornadic supercell soundings."</b></p>
+
+<p>Not one. In fifty-four cases. That's the kind of statement worth remembering — not because it's
+a rule (it's a sample, and samples have edges), but because it tells you which direction to look.</p>
+
+<div class="box pro"><h4>A habit that will make you unusually good at this</h4>
+<p style="margin-bottom:0">When you read a number about the atmosphere, ask two questions:
+<b>who published it</b>, and <b>is it a definition, a study, or a habit?</b> Most people never ask
+either one. You now have a manual that labels every number in it. Keep doing that on your own and
+in five years you'll be able to tell, in about ten seconds, whether someone talking about weather
+actually knows anything.</p></div>
+</section>
+
+<!-- ═══════════════ 12 ═══════════════ -->
+<section id="safe">
+<h2>12 · Safety</h2>
+
+<div class="box danger"><h4>The rules, in order</h4>
+<ol style="margin-bottom:0">
+  <li><b>You spot from a safe, fixed location.</b> Home. Not the car, not "just up the road."</li>
+  <li><b>You never go outside to look at a tornado-warned storm.</b> If a warning is out for your
+  location, you are in your safe place — lowest floor, interior room, away from windows.</li>
+  <li><b>You do not chase.</b> Not alone, not with friends, not to the edge of town.</li>
+  <li><b>Not in a car.</b> See below — the Storm Prediction Center is unusually blunt about this.</li>
+  <li><b>Not under an overpass.</b> This one has its own section, because it has killed people and
+  the reason usually given for it is wrong.</li>
+  <li><b>At night, you see nothing.</b> Southern tornadoes are disproportionately nocturnal and
+  rain-wrapped. Your eyes are useless. That's what NOAA Weather Radio is for — a tone-alert radio
+  with battery backup is the single best piece of severe weather equipment a family can own.
+  In the Little Rock area it's <b>162.550 MHz.</b></li>
+</ol></div>
+
+<div class="box why"><h4>Whose rule is rule 3?</h4>
+<p style="margin-bottom:0">Honesty about sourcing, since this manual keeps insisting on it: <b>the
+National Weather Service has no national minimum age for spotters</b>, and no national policy
+saying minors can't chase. Individual offices set their own — NWS Green Bay requires 15 or older;
+most publish nothing. So rule 3 is <b>this manual's rule</b>, not a federal one, and it is:
+<em>you don't chase until you can drive yourself out of trouble.</em> That's the actual line. It
+isn't about age, it's about whether you control the escape route.</p></div>
+
+<h3>The overpass — the myth that keeps killing people</h3>
+
+<p>In 1991 a news crew in Kansas sheltered under a highway overpass, filmed a tornado passing, and
+survived. That video has been on television ever since, and it taught a generation of Americans
+something false.</p>
+
+<p>On <b>May 3, 1999</b>, during the Oklahoma tornado outbreak, tornadoes crossed interstate
+highways at seven locations. At three of them, an overpass was directly in the damage path.
+<b>All three produced a fatality.</b> <span class="tier t-res">Research</span></p>
+
+<table>
+<tr><th>Where</th><th>Strength</th><th>What happened</th></tr>
+<tr><td>16th St. over I-44<br>Newcastle, OK</td><td class="num2">F4/F5</td>
+    <td>A woman sheltering beneath the bridge was pulled out from under it and killed.</td></tr>
+<tr><td>Shields Blvd. over I-35<br>Moore, OK</td><td class="num2">F4/F5</td>
+    <td>About 12 people were underneath. One woman was killed — her body wasn't recovered for a
+    week, under 6–8 feet of debris. Survivors had compound fractures and impalement injuries.</td></tr>
+<tr><td>I-35 mile marker 176.5<br>Payne County, OK</td><td class="num2">F2</td>
+    <td>A plain rural overpass — smooth concrete, no girders, nowhere to climb. A driver parked
+    beneath it and stayed in his vehicle. The vehicle was lifted, went airborne, and landed upside
+    down. He was killed.</td></tr>
+</table>
+
+<div class="box danger"><h4>The third one is the one to remember</h4>
+<p style="margin-bottom:0">That was an <b>F2</b>. Not a monster. The kind of tornado people
+casually assume is survivable. The researchers' own conclusion: a tornado <b>need not be large or
+violent</b> to kill you at an overpass.</p></div>
+
+<h4 style="color:var(--amber);font-family:var(--mono);font-size:11px;letter-spacing:2px;margin:22px 0 9px">WHY — AND WHY THE USUAL EXPLANATION IS WRONG</h4>
+
+<p>You will hear that an overpass acts like a <b>Venturi tube</b> and speeds the wind up. Skip
+that one. It's <em>not</em> the National Weather Service's explanation, and a 2021 wind-tunnel and
+computational study found no meaningful flow acceleration under realistic overpass shapes. It's a
+contested mechanism dressed up as a fact — exactly the thing the labels at the top of this manual
+exist to catch.</p>
+
+<p>Here are the reasons that actually hold up, and you can reason your way to the first two
+yourself:</p>
+
+<ol>
+  <li><b>Wind gets faster the higher you go.</b> Friction with the ground slows the air nearest
+  it. So when you climb up into the girders to get away from the tornado, you are climbing into
+  <em>faster</em> wind. In the NWS's words: <b>"By climbing up underneath the overpass, people are
+  moving into a place where the wind speeds typically will be higher."</b> You're not hiding from
+  it. You're climbing toward it.</li>
+  <li><b>It isn't the wind that kills you — it's what's in the wind.</b> An overpass is a
+  wide-open horizontal tube pointed straight into the debris stream. Every board, every sheet of
+  roofing, every fistful of gravel in that tornado gets funneled through the exact space you're
+  standing in, with nothing in between.</li>
+  <li><b>There's usually nothing to hold onto.</b> The famous 1991 bridge had an unusual crawl
+  space and an exposed beam. Most don't — the Payne County overpass was smooth concrete. You
+  cannot count on finding a bridge shaped like the one on TV.</li>
+  <li><b>The wind reverses 180°.</b> As the tornado passes, the flow flips direction. Whatever you
+  braced against becomes the wrong side, in the middle of it.</li>
+  <li><b>Bridges aren't rated for it.</b> They're engineered to hold weight pressing down, not
+  wind pushing sideways for a sustained period. An overpass is not a shelter; it's a road.</li>
+  <li><b>You trap everyone behind you.</b> Cars stopping under a bridge dam the interstate,
+  stranding drivers who could otherwise have driven clear. The NWS puts this one in capitals:
+  <b>"WE MUST AVOID FORCING OTHERS INTO THE SAME DESPERATE SITUATION BY BLOCKING THE ROAD!"</b></li>
+</ol>
+
+<div class="box why"><h4>Reason 6 is the grown-up one</h4>
+<p style="margin-bottom:0">The first five are about what happens to you. The sixth is about what
+your decision does to strangers. Most safety rules are personal-risk arguments; this one isn't. If
+you ever have to explain to an adult why you won't stop under a bridge, that's the argument that
+tends to land.</p></div>
+
+<h3>If you're in a vehicle — the honest version</h3>
+
+<p>The Storm Prediction Center does not soften this, so neither will this manual:
+<span class="tier t-off">Official</span></p>
+
+<div class="box danger"><h4>SPC, verbatim</h4>
+<p style="margin-bottom:0">"Vehicles are extremely risky in a tornado. <b>There is no safe option
+when caught in a tornado in a car, just slightly less-dangerous ones.</b>"</p></div>
+
+<p>Their options, in their priority order. Note where the ditch actually sits:</p>
+
+<ol>
+  <li><b>Drive out of the path at right angles</b> to the tornado's motion — if you have room,
+  visibility, and open road. Not away from it. <em>Across</em> it.</li>
+  <li><b>Get into a sturdy building or an underground shelter.</b></li>
+  <li><b>Stay in the vehicle</b>, seat belt fastened, head below the windows, covered with a
+  blanket or coat.</li>
+  <li><b>A ditch or culvert</b> — and only if you can get <em>noticeably lower than the roadway.</em>
+  Not a shallow shoulder.</li>
+</ol>
+
+<div class="box warn"><h4>The ditch is last, not first</h4>
+<p style="margin-bottom:0">Folk wisdom has "get in a ditch" as the default answer. SPC has it
+fourth, and there's a catch nobody mentions: <b>ditches flood.</b> The same storm producing the
+tornado is usually producing flash flooding at that exact moment. You can drown in the thing you
+climbed into to avoid the tornado.</p></div>
+
+<h3>The three places a chaser dies</h3>
+
+<p>You don't chase. But you should know the vocabulary, because you'll hear it, and because
+knowing why these are lethal is part of understanding storm structure at all.</p>
+
+<table>
+<tr><th>Term</th><th>NWS definition <span class="tier t-off">Official</span></th></tr>
+<tr><td><b>Bear's cage</b></td>
+    <td>"A region of storm-scale rotation, in a thunderstorm, which is wrapped in heavy
+    precipitation."</td></tr>
+<tr><td><b>Core punch</b></td>
+    <td>"A penetration by a vehicle into the heavy precipitation core of a thunderstorm.
+    <b>Core punching is not a recommended procedure for storm spotting.</b>"</td></tr>
+<tr><td><b>Inflow notch</b></td>
+    <td>"A radar signature characterized by an indentation in the reflectivity pattern on the
+    inflow side of the storm."</td></tr>
+</table>
+
+<p>The bear's cage definition contains the entire danger in one line: <b>the rotation is there and
+the rain has wrapped around it, so you can't see it.</b> You can be inside a mesocyclone looking at
+nothing but grey. That's the standard failure mode on HP supercells — which is why HP storms are
+the most dangerous mode for a spotter. The same deep wrapping RFD that helps them produce is the
+thing that hides what they produced.</p>
+
+<p>Notice that the NWS wrote the warning <em>into</em> the definition of core punch. That's
+unusual for a glossary. NWS Paducah says it plainer: <b>"You can drive out of the rain and hail
+right into the tornado."</b></p>
+
+<p>The notch is the gap between the precipitation core and the wall cloud — the best view in storm
+chasing, and the exact real estate the tornado occupies. The RFD can wrap around behind you and
+close it while you're sitting in it. That's how a clear notch becomes a bear's cage, and it can
+happen in under a minute.</p>
+
+<div class="box warn"><h4>Number 1 threat: the highway</h4>
+<p style="margin-bottom:0">That's NWS Paducah's heading, not a paraphrase. The thing that kills
+spotters and chasers most is not tornadoes — it's <b>ordinary traffic.</b> Hydroplaning, no
+visibility, stopping on the shoulder, and drivers looking at the sky instead of the road. On
+<b>March 28, 2017</b>, near Spur, Texas, two chase vehicles collided at an intersection and killed
+three people: <b>Kelley Williamson, Randy Yarnall,</b> and <b>Corbin Lee Jaeger</b> — who was
+himself a trained SKYWARN spotter. There was no tornado involved. It was an intersection.</p></div>
+
+<h3>Lightning, which will hurt you long before a tornado does</h3>
+
+<p>There is <b>no safe place outside</b> when thunderstorms are around. Not a tree, not a shed,
+not a dugout, not a picnic shelter, not a tent, not lying flat. The NWS abandoned the old
+"lightning crouch" precisely because it made people think some outdoor posture worked.</p>
+
+<div class="box do"><h4>The two slogans that replaced all the old rules</h4>
+<p style="margin-bottom:0"><b>"When Thunder Roars, Go Indoors."</b> &nbsp;·&nbsp;
+<b>"See a Flash, Dash Inside."</b><br>
+If you can <em>hear</em> thunder, you are within striking distance. There's no counting, no
+distance threshold, no judgment call. Thunder itself is the trigger. Then wait <b>30 minutes after
+the last rumble</b> before going back out.</p></div>
+
+<p>Only two things count as shelter: a <b>substantial fully-enclosed building</b> with wiring and
+plumbing, or a <b>hard-topped metal vehicle</b> with the windows closed.</p>
+
+<div class="box why"><h4>It is not the rubber tires</h4>
+<p style="margin-bottom:0">A car protects you because the <b>metal shell</b> carries the current
+around the outside and into the ground — a Faraday cage. It has nothing to do with the tires
+insulating you. Which is why a convertible, a fiberglass-body car, or a golf cart protects you
+from exactly nothing.</p></div>
+
+<table>
+<tr><th>Lightning in the U.S.</th><th></th></tr>
+<tr><td>Deaths per year, 10-year average</td><td class="num2">~20</td></tr>
+<tr><td>Deaths per year, 30-year average</td><td class="num2">31</td></tr>
+<tr><td>Odds of being struck in a given year</td><td class="num2">1 in 1,222,000</td></tr>
+<tr><td>Odds of being struck in an 80-year life</td><td class="num2">1 in 15,300</td></tr>
+</table>
+
+<div class="box warn"><h4>The "30-30 rule" — a case study in reading carefully</h4>
+<p>You'll find the 30-30 rule everywhere: shelter if the flash-to-bang count is under 30 seconds,
+wait 30 minutes after the last thunder. Here's the actual status, which is more interesting than
+either "it's the rule" or "it's been retired."</p>
+<p style="margin-bottom:0">The <b>first half is gone</b> from every current national NWS lightning
+page — you no longer count seconds, because <em>any</em> thunder means go in. The <b>second half,
+the 30 minutes, is still current guidance.</b> But the NWS never published a document saying "we
+retired the 30-30 rule," so anyone who states that flatly is making it up. The honest version is
+the one above: half superseded, half retained. <em>(Also: old spotter guides cite
+<code>lightningsafety.noaa.gov</code>. That domain is dead. It's
+<a href="https://www.weather.gov/safety/lightning" target="_blank">weather.gov/safety/lightning</a>
+now.)</em></p></div>
+
+<h3>Flooding</h3>
+<p>Flooding kills more Americans in most years than tornadoes do, and the overwhelming majority of
+those deaths are in vehicles. <b>Turn Around, Don't Drown.</b> Six inches of moving water can knock
+an adult off their feet; a foot can float a car. You cannot tell how deep it is or whether the road
+is still under there. Ever.</p>
+
+<h3>And the one that matters most</h3>
+<div class="box danger"><h4>Read this before you decide you're the exception</h4>
+<p>Storm chasing kills experienced adults with degrees and decades of experience.</p>
+<p>On <b>May 31, 2013</b>, in El Reno, Oklahoma, it killed <b>Tim Samaras</b> — one of the most
+careful, most respected researchers in the entire field, a man who had spent his life studying how
+to do this safely — along with his son <b>Paul Samaras</b> and his partner <b>Carl Young</b>. An
+amateur chaser, <b>Richard Henderson</b>, was killed as well. Eight people died in that tornado.
+<b>Every one of them was in a vehicle.</b></p>
+<p>It was <b>2.6 miles wide</b> — the widest tornado ever recorded — with winds measured at
+<b>295 mph or more</b> by mobile radar. It made a sudden left turn and expanded enormously,
+overtaking drivers who had made completely reasonable escape decisions based on where it had been
+going a minute earlier.</p>
+<p style="margin-bottom:0">He was better at this than you will be for a very long time. He did
+everything right by the standards of the day, and the storm did something nobody expected. There
+is no skill level at which the atmosphere agrees to be fair. <b>You spot from safety.</b></p></div>
+
+<div class="box why"><h4>One more thing about El Reno, and it's a lesson about scales</h4>
+<p style="margin-bottom:0">It was announced as an <b>EF5</b> on June 4, 2013. On <b>August 30 it
+was changed to EF3</b>. The tornado didn't get weaker — <b>the Enhanced Fujita scale rates damage,
+not wind.</b> Those 295 mph winds were over open Oklahoma field with nothing standing in them to
+destroy, so there was no EF5 damage to survey. If you ever catch yourself thinking "EF3, that's
+manageable," remember that the widest, most violent tornado ever measured is officially an EF3.
+The number describes what it hit, not what it was.</p></div>
+
+<div class="box do"><h4>ACES — worth memorizing</h4>
+<ul style="margin-bottom:0">
+  <li><b>A</b>wareness — know the storm's structure and motion <em>before</em> you're near it</li>
+  <li><b>C</b>ommunication — never operate alone; somebody always knows where you are</li>
+  <li><b>E</b>scape routes — two of them, in different directions, at all times</li>
+  <li><b>S</b>afe zones — know where the nearest sturdy building is</li>
+</ul></div>
+</section>
+
+<!-- ═══════════════ 13 ═══════════════ -->
+<section id="tools">
+<h2>13 · Free tools for your PC</h2>
+
+<p>The Storm Deck in this lab reads live NWS data and runs off the flash drive with nothing
+installed. That's on purpose — it always works. But there is a point where you'll want the real
+thing: <b>Level 2 radar</b>, the full-resolution volume data straight off the NEXRAD dish, with
+every tilt and every dual-pol product. The professional tool for that costs $250 a year.</p>
+
+<p>You don't need it.</p>
+
+<h3>Supercell Wx — the one to install</h3>
+<div class="box do"><h4><a href="https://supercellwx.net/" target="_blank">supercellwx.net</a> · free · open source · Windows</h4>
+<ul style="margin-bottom:0">
+  <li>Reads <b>NEXRAD Level 2 and Level 3</b> — reflectivity, velocity, and the dual-pol products
+  from Section 8 (ZDR, CC, KDP). This is the same underlying data the National Weather Service is
+  looking at.</li>
+  <li>Live <b>warnings and alerts</b> drawn on the map.</li>
+  <li>Supports <b>GRLevelX-compatible color palettes</b> — meaning the palettes that experienced
+  chasers have spent years tuning will load straight into it.</li>
+  <li>Free and open source. Not a trial, not a nag screen, not a student discount that expires.</li>
+</ul></div>
+
+<p>This is the genuine free substitute for the paid radar software you'll see people using in
+videos. Install it, put it next to the Storm Deck, and use both: the Deck for the fast look and the
+alerts, Supercell Wx when you want to go down through the tilts and see what the storm is actually
+doing at 10,000 feet.</p>
+
+<div class="box why"><h4>Learn the palette before you trust it</h4>
+<p style="margin-bottom:0">The moment you load a custom color palette, every number in Section 5
+and Section 6 of this manual is still true but every <em>color</em> changed. Purple might now mean
+something completely different. Before you use a palette in anger, open it on a storm you already
+understand and check it against the scale. A color you misread confidently is worse than no radar
+at all.</p></div>
+
+<h3>Python, when you're ready to write your own</h3>
+<p>You've already written code in the Missions. When you want to go further and process real
+weather data yourself, Unidata — the same organization behind a lot of the software meteorologists
+actually use — publishes a free course:
+<a href="https://unidata.github.io/python-training/python/intro-to-python/" target="_blank">Introduction to Python for Atmospheric Science &amp; Meteorology</a>.</p>
+
+<p style="margin-bottom:0">Here's why that matters more than it looks: the federal job standard for
+a meteorologist (OPM series GS-1340) requires 24 semester hours of meteorology plus physics and
+differential equations — and <b>computer science is explicitly on the approved elective list</b>.
+The coding isn't a side hobby you're doing instead of weather. It counts.</p>
+</section>
+
+<p style="color:var(--dim);font-size:13px;margin-top:34px">
+Sources for this manual: NWS Glossary · NOAA JetStream · NSSL Severe Weather 101 · NSSL
+<em>A Guide for Interpreting Doppler Velocity Patterns</em> (Brown &amp; Wood) · SPC mesoanalysis
+parameter documentation · NWS Warning Decision Training Division · Mitchell et al. 1998 and Stumpf
+et al. 1998, <em>Weather and Forecasting</em> · Thompson et al. 2003, <em>Weather and
+Forecasting</em> · Ryzhkov et al. 2005, <em>Journal of Applied Meteorology</em> · Miller, Doswell,
+Brooks, Stumpf &amp; Rasmussen, <em>"Highway Overpasses as Tornado Shelters"</em> (24th NWA Annual
+Meeting, 1999 — a conference preprint, not peer-reviewed, and the manual says so rather than
+dressing it up) · NWS Paducah spotter resources · <em>NWS Storm Spotter's Field Guide</em> ·
+weather.gov/safety/lightning · NWS Norman, El Reno event summary. Where sources
+disagreed, this manual says so rather than picking one.</p>
+
+</main>
+</div>
+
+<script>
+const links = [].slice.call(document.querySelectorAll("nav a.sec"));
+const secs  = links.map(function(a){ return document.querySelector(a.getAttribute("href")); });
+function spy(){
+  let cur = 0;
+  secs.forEach(function(s,i){ if (s && s.getBoundingClientRect().top < 160) cur = i; });
+  links.forEach(function(a,i){ a.classList.toggle("cur", i === cur); });
+}
+window.addEventListener("scroll", spy, {passive:true});
+spy();
+</script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chase Log — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+body{display:block}
+.hdr{background:#0e141d;border-bottom:1px solid var(--line);padding:17px 30px;
+     display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hdr h1{font-size:21px;margin:0}
+.hdr .num{display:inline;font-size:11px;margin:0}
+.hdr .sp{flex:1}
+.wrap2{max-width:1120px;margin:0 auto;padding:26px 30px 80px}
+
+.cols{display:grid;grid-template-columns:400px 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.cols{grid-template-columns:1fr}}
+
+label.f{display:block;margin-bottom:13px}
+label.f b{display:block;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;
+          color:var(--dim);font-family:var(--mono);margin-bottom:5px}
+input,select,textarea{width:100%;background:#05070a;border:1px solid var(--line);border-radius:5px;
+       color:var(--text);padding:9px 11px;font-family:var(--sans);font-size:14px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{min-height:80px;resize:vertical;line-height:1.6}
+button{background:var(--accent);color:#06212a;border:none;border-radius:5px;padding:11px 20px;
+       font-weight:700;font-size:14px;cursor:pointer;font-family:var(--sans)}
+button:hover{filter:brightness(1.12)}
+button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);font-weight:400}
+button.ghost:hover{color:var(--text);border-color:var(--accent)}
+.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px}
+
+.entry{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+       border-radius:7px;padding:14px 17px;margin-bottom:11px}
+.entry .top{display:flex;gap:11px;align-items:baseline;margin-bottom:5px;flex-wrap:wrap}
+.entry .ev{font-weight:700;font-size:15px}
+.entry .tm{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:auto}
+.entry .meta{font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:6px}
+.entry .note{font-size:14px;line-height:1.62}
+.entry .del{float:right;background:none;border:none;color:#3d4c5e;cursor:pointer;font-size:16px;padding:0 3px}
+.entry .del:hover{color:var(--red)}
+.entry.sev{border-left-color:var(--amber)}
+.entry.tor{border-left-color:var(--red)}
+
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:18px}
+.stat div{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:11px;text-align:center}
+.stat b{display:block;font-size:24px;color:var(--accent)}
+.stat span{font-size:9px;letter-spacing:1.4px;color:var(--dim);text-transform:uppercase;font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1><span class="num">CHASE LOG</span></h1>
+  <div class="sp"></div>
+  <span id="wxNow" style="font-family:var(--mono);font-size:12px;color:var(--dim)">reading conditions…</span>
+  <button class="ghost" onclick="exportCSV()">Export to file</button>
+  <a href="../⚡ START HERE.html" style="color:var(--dim);font-size:13px">← Lab</a>
+</div>
+
+<div class="wrap2">
+<div class="cols">
+
+  <!-- ── LEFT: the form ─────────────────────────────── -->
+  <div>
+    <div class="box why"><h4>The report format</h4>
+    <p style="font-size:13.5px">The National Weather Service wants four things:
+    <b>what</b> you saw, <b>where</b>, <b>when</b>, and <b>who</b> you are.
+    Be specific and don't guess. "Quarter-size hail 3 miles south of town at 4:15"
+    beats "big hail" every time. If you aren't sure what you saw, say you aren't
+    sure — that's useful too, and it protects your credibility.</p></div>
+
+    <label class="f"><b>What did you see</b>
+      <select id="fEvent">
+        <optgroup label="Report these to NWS">
+          <option>Tornado</option>
+          <option>Funnel cloud</option>
+          <option>Wall cloud</option>
+          <option>Wall cloud — rotating</option>
+          <option>Hail</option>
+          <option>Damaging wind</option>
+          <option>Flash flooding</option>
+          <option>Storm damage</option>
+        </optgroup>
+        <optgroup label="Practice / study">
+          <option selected>Storm watched (practice)</option>
+          <option>Shelf cloud</option>
+          <option>Lightning</option>
+          <option>Interesting radar signature</option>
+          <option>Nothing happening — studying</option>
+        </optgroup>
+      </select>
+    </label>
+
+    <label class="f"><b>Hail size (if hail)</b>
+      <select id="fHail">
+        <option value="">— none —</option>
+        <option value="0.25">Pea — 0.25 in</option>
+        <option value="0.50">Marble — 0.50 in</option>
+        <option value="0.75">Penny — 0.75 in</option>
+        <option value="0.88">Nickel — 0.88 in</option>
+        <option value="1.00">QUARTER — 1.00 in ← SEVERE</option>
+        <option value="1.25">Half dollar — 1.25 in</option>
+        <option value="1.50">Ping pong ball — 1.50 in</option>
+        <option value="1.75">Golf ball — 1.75 in</option>
+        <option value="2.00">Hen egg — 2.00 in</option>
+        <option value="2.50">Tennis ball — 2.50 in</option>
+        <option value="2.75">Baseball — 2.75 in</option>
+        <option value="4.00">Softball — 4.00 in</option>
+      </select>
+    </label>
+
+    <label class="f"><b>Where exactly</b>
+      <input id="fWhere" placeholder="e.g. 3 mi S of Hot Springs, Garland Co.">
+    </label>
+
+    <label class="f"><b>What happened</b>
+      <textarea id="fNote" placeholder="What you saw, which direction it moved, how long it lasted, what the radar showed."></textarea>
+    </label>
+
+    <div class="row">
+      <button onclick="addEntry()">Log it</button>
+      <button class="ghost" onclick="fillTime()">Use current time</button>
+    </div>
+    <p style="color:var(--dim);font-size:12px;margin-top:11px">
+      Time, temperature and dewpoint fill in automatically from the nearest
+      weather station.</p>
+  </div>
+
+  <!-- ── RIGHT: the log ─────────────────────────────── -->
+  <div>
+    <div class="stat">
+      <div><b id="sTotal">0</b><span>Entries</span></div>
+      <div><b id="sSevere">0</b><span>Severe-criteria</span></div>
+      <div><b id="sDays">0</b><span>Days logged</span></div>
+    </div>
+    <div id="list"></div>
+  </div>
+
+</div>
+</div>
+
+<script src="../Storm Deck/my-settings.js"></script>
+<script>
+const KEY = "stormlab.chaselog";
+const get = () => JSON.parse(localStorage.getItem(KEY) || "[]");
+const put = a  => localStorage.setItem(KEY, JSON.stringify(a));
+
+let CONDITIONS = { temp:"—", dew:"—" };
+
+/* Pull live conditions so the log fills itself in. Same NWS API the Deck uses. */
+async function conditions(){
+  try{
+    const pt = await (await fetch("https://api.weather.gov/points/"+MY.lat+","+MY.lon)).json();
+    const st = await (await fetch(pt.properties.observationStations)).json();
+    const id = st.features[0].properties.stationIdentifier;
+    const ob = await (await fetch("https://api.weather.gov/stations/"+id+"/observations/latest")).json();
+    const F = c => c==null ? "—" : Math.round(c*9/5+32)+"°";
+    CONDITIONS = { temp:F(ob.properties.temperature.value), dew:F(ob.properties.dewpoint.value) };
+    document.getElementById("wxNow").textContent =
+      MY.townName + " · " + CONDITIONS.temp + " / dew " + CONDITIONS.dew + " · station " + id;
+  }catch(e){
+    document.getElementById("wxNow").textContent = "conditions unavailable (offline?)";
+  }
+}
+
+function fillTime(){ /* kept for the button; time is stamped on save */ }
+
+function addEntry(){
+  const ev = document.getElementById("fEvent").value;
+  const note = document.getElementById("fNote").value.trim();
+  const where = document.getElementById("fWhere").value.trim() || MY.townName;
+  const hail = document.getElementById("fHail").value;
+
+  const list = get();
+  list.unshift({
+    when: new Date().toISOString(),
+    event: ev,
+    hail: hail ? parseFloat(hail) : null,
+    where: where,
+    note: note,
+    temp: CONDITIONS.temp,
+    dew: CONDITIONS.dew,
+    spotter: MY.spotterName
+  });
+  put(list);
+  document.getElementById("fNote").value = "";
+  document.getElementById("fHail").value = "";
+  paint();
+}
+
+function del(i){ const a = get(); a.splice(i,1); put(a); paint(); }
+
+/* NWS severe criteria: hail 1.00 inch or larger, or wind 58 mph or greater,
+   or any tornado. That 1-inch line is the actual legal threshold for a
+   Severe Thunderstorm Warning — worth knowing cold. */
+function isSevere(e){
+  if (e.hail && e.hail >= 1.00) return true;
+  return /tornado|funnel|damaging wind|flash flood/i.test(e.event);
+}
+
+function paint(){
+  const a = get();
+  document.getElementById("sTotal").textContent  = a.length;
+  document.getElementById("sSevere").textContent = a.filter(isSevere).length;
+  document.getElementById("sDays").textContent   =
+    new Set(a.map(e => e.when.slice(0,10))).size;
+
+  const box = document.getElementById("list");
+  if (!a.length){
+    box.innerHTML = '<div class="box"><h4 style="color:var(--dim)">EMPTY</h4>' +
+      '<p>Nothing logged yet. Log a storm even when nothing happens — ' +
+      'learning what normal looks like is the only way to recognize abnormal.</p></div>';
+    return;
+  }
+  box.innerHTML = a.map(function(e,i){
+    const d = new Date(e.when);
+    const cls = /tornado|funnel/i.test(e.event) ? "tor" : (isSevere(e) ? "sev" : "");
+    const hail = e.hail ? " · " + e.hail.toFixed(2) + '" hail' : "";
+    return '<div class="entry '+cls+'">' +
+      '<button class="del" onclick="del('+i+')" title="delete">&times;</button>' +
+      '<div class="top"><span class="ev">' + e.event + '</span>' +
+        '<span class="tm">' + d.toLocaleString() + '</span></div>' +
+      '<div class="meta">' + e.where + hail + ' · ' + e.temp + ' / dew ' + e.dew + '</div>' +
+      (e.note ? '<div class="note">' + e.note.replace(/</g,"&lt;") + '</div>' : '') +
+      '</div>';
+  }).join("");
+}
+
+/* Export as CSV — opens in Excel, and is a real backup you can keep. */
+function exportCSV(){
+  const a = get();
+  if (!a.length) return alert("Nothing to export yet.");
+  const head = ["when","event","hail_in","where","temp","dewpoint","spotter","notes"];
+  const q = s => '"' + String(s==null?"":s).replace(/"/g,'""') + '"';
+  const csv = [head.join(",")].concat(
+    a.map(e => [e.when,e.event,e.hail||"",e.where,e.temp,e.dew,e.spotter,e.note].map(q).join(","))
+  ).join("\r\n");
+
+  const url = URL.createObjectURL(new Blob([csv], {type:"text/csv"}));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "chase-log-" + new Date().toISOString().slice(0,10) + ".csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+conditions();
+paint();
+</script>
+</body>
+</html>

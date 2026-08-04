@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Skew-T — Storm Chaser Lab</title>
+<link rel="stylesheet" href="../lab.css">
+<style>
+section{scroll-margin-top:20px}
+nav a.sec.cur{border-left-color:var(--accent);color:var(--accent);background:#161f2b}
+/* SVG chart frames */
+.chart{background:#05070a;border:1px solid var(--line);border-radius:7px;margin:0 0 8px;display:block;width:100%;height:auto}
+.chart-cap{font-size:12.5px;color:var(--dim);margin:0 0 20px;font-style:italic}
+.svg-lbl{font-family:var(--mono);font-size:9px;fill:var(--dim)}
+.svg-lbl-big{font-family:var(--mono);font-size:11px;letter-spacing:1px;fill:var(--accent)}
+.grid{stroke:#1a2836;stroke-width:1}
+.gridmajor{stroke:#26384a;stroke-width:1}
+.tempcurve{fill:none;stroke:var(--red);stroke-width:2.4}
+.dewcurve{fill:none;stroke:var(--green);stroke-width:2.4}
+.parcel{fill:none;stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4}
+.cape{fill:rgba(255,47,69,.20);stroke:none}
+.cin{fill:rgba(180,107,255,.28);stroke:none}
+.ann{font-family:var(--sans);font-size:10.5px;fill:var(--text)}
+.anndim{font-family:var(--sans);font-size:9.5px;fill:var(--dim)}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:0 0 8px}
+@media (max-width:720px){.twocol{grid-template-columns:1fr}}
+.leg{display:flex;gap:20px;flex-wrap:wrap;background:var(--card2);border:1px solid var(--line);border-radius:7px;padding:11px 16px;margin:0 0 18px;font-size:12.5px;color:var(--dim)}
+.swatch{display:inline-block;width:22px;height:0;border-top:3px solid;vertical-align:3px;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="navtitle">SKEW-T</div>
+  <a href="#balloon" class="sec">1 · Where it comes from</a>
+  <a href="#axes"    class="sec">2 · Reading the axes</a>
+  <a href="#lines"   class="sec">3 · The two lines</a>
+  <a href="#cape"    class="sec">4 · The parcel &amp; CAPE</a>
+  <a href="#compare" class="sec">5 · Two soundings compared</a>
+  <a href="#summit"  class="sec">6 · Why it's the summit</a>
+  <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
+  <a href="../⚡ START HERE.html">← The Station</a>
+  <a href="../Academy/academy.html">Academy</a>
+  <a href="../Field Manual/manual.html">Field Manual</a>
+  <a href="../Atlas/atlas.html">Storm Atlas</a>
+  <a href="../Trainers/radar.html">Radar Trainer</a>
+  <a href="../Trainers/decode.html">Decode</a>
+  <a href="../Gear Bench/gear.html">Gear Bench</a>
+  <a href="../Code School/python.html">Code School</a>
+  <a href="../Quiz/quiz.html">Flashcards</a>
+  <a href="../Chase Log/log.html">Chase Log</a>
+</nav>
+
+<main>
+
+<h1><span class="num">SKEW-T</span>The one chart that tells you if storms will fire — and how bad</h1>
+
+<p class="lede">A radar shows you the storm that already exists. A Skew-T shows you the storm <em>before it's born</em>. It's a picture of the whole column of air stacked above one spot — how warm, how wet, and how windy at every height from the grass to the jet stream. Forecasters spend more time staring at this one chart than almost anything else, because the shape of it answers the only question that matters the night before a chase: <b>is the atmosphere loaded, or is it a bust?</b> It looks like a mess of slanted lines the first time you see it. It isn't. There are really only two curves you have to read. Let's learn to read them.</p>
+
+<section id="balloon">
+<h2>1 · Where the data comes from</h2>
+
+<p>Every chart starts with real measurements, and you can't measure the upper air from the ground. A thermometer on your porch tells you the temperature at your porch. It says nothing about the air two miles up, which is where storms actually build their engines. So twice a day the atmosphere gets measured <em>from the inside</em> — by a balloon.</p>
+
+<h3>The radiosonde</h3>
+<p>A <b>radiosonde</b> is a small foam box, about the size of a coffee cup, hanging under a hydrogen or helium weather balloon. As the balloon rises it stretches from a beachball to the size of a house, and the little box radios back its readings the whole way up:</p>
+<ul>
+<li><b>Temperature</b> — how warm the air is at each height.</li>
+<li><b>Dewpoint</b> (from a humidity sensor) — how much moisture is in it.</li>
+<li><b>Pressure</b> — which tells you the <em>height</em> it's currently at.</li>
+<li><b>Wind</b> — tracked by GPS, giving speed and direction at each level.</li>
+</ul>
+<p>The balloon climbs for about two hours, past the cruising height of airliners, up to roughly 100,000 feet (~30 km), where the low pressure finally pops it. A tiny parachute drops the box back down. That single flight — one thin vertical line through the whole atmosphere — is called a <b>sounding</b>. Plot it on the right chart and you get a Skew-T.</p>
+
+<div class="box why">
+<h4>Why twice a day, everywhere</h4>
+<p>It's launched at <code>00Z</code> and <code>12Z</code> — two fixed moments in <a href="../Field Manual/manual.html">Zulu (UTC) time</a>, so the whole planet takes its snapshot at the same instant. About <b>800 sites worldwide</b> do it, <b>92 of them in the United States</b> (per the NWS). At exactly the same second, hundreds of balloons leave the ground from Alaska to Antarctica. Together those launches are the single biggest source of real, in-place data feeding every weather model on Earth. When a forecaster says a model run "looks good," it looks good because balloons like these agreed with it.</p>
+</div>
+
+<div class="box do">
+<h4>Cross-check the Gear Bench</h4>
+<p>The radiosonde is one of the instruments on your <a href="../Gear Bench/gear.html#air">Gear Bench</a> — the "measuring the air" section. Worth reading it there too, because this is a case where the professional instrument has no cheap substitute: you personally can't sample the air two miles up, so you rely on <em>their</em> balloon. Learning to read its output is how you borrow a $200 instrument for free, twice a day.</p>
+</div>
+
+<p><b>Why upper-air data beats a surface reading:</b> a hot, sticky surface can sit under a lid of dry or warm air aloft that kills every storm — or under cold air aloft that lets storms explode. From the ground those two days feel identical. Only the sounding tells them apart. The surface is one number; the sounding is the whole story.</p>
+</section>
+
+<section id="axes">
+<h2>2 · Reading the axes — and what "skew" means</h2>
+
+<p>"Skew-T Log-P" is just a description of the two axes. Once you see them drawn, the scary name dissolves.</p>
+
+<ul>
+<li><b>Up the left side = pressure</b>, and pressure stands in for <b>height</b>. The ground is at the <em>bottom</em>, around <code>1000 mb</code>. As you go up, pressure drops — <code>850</code>, <code>700</code>, <code>500</code>, up to <code>200 mb</code> near the jet stream at the top. (The "Log-P" part just means the pressure spacing is stretched so the important low levels near the ground get more room.)</li>
+<li><b>Along the bottom = temperature</b>, cold on the left, warm on the right — <em>but the lines are tilted</em>. That tilt is the "skew."</li>
+</ul>
+
+<h3>Why skew the temperature lines?</h3>
+<p>If temperature lines ran straight up-and-down, the temperature and dewpoint curves would crowd into a narrow vertical smear near the middle of the chart, impossible to read apart. So the constant-temperature lines are tilted 45° <b>up and to the right</b>. This spreads the whole picture across the page — it opens the curves out so you can actually see the gap between them, and it makes an important line (the path a rising parcel cools along) come out at a convenient angle. That's the entire trick. Skew = "we tilted the temperature grid so humans can read it."</p>
+
+<p>Here's the empty frame. Nothing plotted yet — just the grid you'll be reading on. Notice pressure/height climbing the left edge, and the temperature lines leaning to the right.</p>
+
+<svg class="chart" viewBox="0 0 560 420" role="img" aria-label="Empty Skew-T chart frame showing pressure levels up the left and skewed temperature gridlines">
+  <!-- plot box -->
+  <rect x="70" y="30" width="440" height="330" fill="none" stroke="#26384a" stroke-width="1.4"/>
+  <!-- pressure (horizontal) gridlines + labels; bottom=1000mb top=200mb -->
+  <!-- y positions: 1000->360, 850->295, 700->230, 500->150, 300->75, 200->30 -->
+  <g>
+    <line class="gridmajor" x1="70" y1="360" x2="510" y2="360"/>
+    <text class="svg-lbl" x="34" y="364">1000</text>
+    <line class="grid" x1="70" y1="295" x2="510" y2="295"/>
+    <text class="svg-lbl" x="42" y="299">850</text>
+    <line class="grid" x1="70" y1="230" x2="510" y2="230"/>
+    <text class="svg-lbl" x="42" y="234">700</text>
+    <line class="gridmajor" x1="70" y1="150" x2="510" y2="150"/>
+    <text class="svg-lbl" x="42" y="154">500</text>
+    <line class="grid" x1="70" y1="75" x2="510" y2="75"/>
+    <text class="svg-lbl" x="42" y="79">300</text>
+    <line class="grid" x1="70" y1="30" x2="510" y2="30"/>
+    <text class="svg-lbl" x="42" y="42">200</text>
+  </g>
+  <!-- skewed temperature lines: tilt up-right. Draw several parallels. -->
+  <g>
+    <!-- each line rises 330px over the box and shifts right; slope up-right -->
+    <line class="grid" x1="70"  y1="360" x2="180" y2="30"/>
+    <line class="grid" x1="150" y1="360" x2="260" y2="30"/>
+    <line class="grid" x1="230" y1="360" x2="340" y2="30"/>
+    <line class="grid" x1="310" y1="360" x2="420" y2="30"/>
+    <line class="gridmajor" x1="390" y1="360" x2="500" y2="30"/>
+    <line class="grid" x1="470" y1="360" x2="510" y2="240"/>
+  </g>
+  <!-- temperature labels along the bottom -->
+  <g>
+    <text class="svg-lbl" x="60"  y="378">-30°</text>
+    <text class="svg-lbl" x="140" y="378">-10°</text>
+    <text class="svg-lbl" x="222" y="378">10°</text>
+    <text class="svg-lbl" x="300" y="378">20°</text>
+    <text class="svg-lbl" x="382" y="378">30°C</text>
+  </g>
+  <!-- axis titles -->
+  <text class="svg-lbl-big" x="10" y="200" transform="rotate(-90 10 200)">PRESSURE (mb)  ↑ height</text>
+  <text class="svg-lbl-big" x="200" y="404">TEMPERATURE  → (skewed right)</text>
+  <text class="anndim" x="182" y="52">ground at the bottom · space at the top</text>
+</svg>
+<p class="chart-cap">The empty Skew-T frame. Pressure (height) up the left; skewed temperature lines leaning up-and-to-the-right. Every real sounding gets drawn on top of this grid.</p>
+</section>
+
+<section id="lines">
+<h2>3 · The two lines that matter</h2>
+
+<p>A real sounding draws two wiggly curves on that frame. Learn these two and you're 80% of the way there:</p>
+
+<div class="leg">
+  <span><span class="swatch" style="border-color:var(--red)"></span><b>Temperature</b> — how warm the air is at each height.</span>
+  <span><span class="swatch" style="border-color:var(--green)"></span><b>Dewpoint</b> — how much moisture is at each height.</span>
+</div>
+
+<p>The single most useful thing you can read is the <b>gap between them</b>:</p>
+<ul>
+<li><b>Far apart</b> = the air is <b>dry</b> at that height. Big spread near the ground often means it'll be hard for storms to survive.</li>
+<li><b>Together (curves hugging)</b> = the air is <b>saturated</b> — that layer is cloud, or about to be.</li>
+</ul>
+
+<svg class="chart" viewBox="0 0 560 420" role="img" aria-label="A sounding showing temperature and dewpoint curves with the LCL marked where they nearly meet">
+  <rect x="70" y="30" width="440" height="330" fill="none" stroke="#26384a" stroke-width="1.4"/>
+  <g>
+    <line class="gridmajor" x1="70" y1="360" x2="510" y2="360"/><text class="svg-lbl" x="34" y="364">1000</text>
+    <line class="grid" x1="70" y1="295" x2="510" y2="295"/><text class="svg-lbl" x="42" y="299">850</text>
+    <line class="grid" x1="70" y1="230" x2="510" y2="230"/><text class="svg-lbl" x="42" y="234">700</text>
+    <line class="gridmajor" x1="70" y1="150" x2="510" y2="150"/><text class="svg-lbl" x="42" y="154">500</text>
+    <line class="grid" x1="70" y1="75" x2="510" y2="75"/><text class="svg-lbl" x="42" y="79">300</text>
+  </g>
+  <g opacity="0.6">
+    <line class="grid" x1="150" y1="360" x2="260" y2="30"/>
+    <line class="grid" x1="310" y1="360" x2="420" y2="30"/>
+  </g>
+  <!-- DEWPOINT (green): starts moist near ground close to temp, then splays LEFT (drier) aloft -->
+  <path class="dewcurve" d="M 300 360 L 292 320 L 288 295 L 250 230 L 210 150 L 175 75"/>
+  <!-- TEMPERATURE (red): warm near ground to the right, cools going up (leftward), always right of dewpoint -->
+  <path class="tempcurve" d="M 355 360 L 340 320 L 330 295 L 300 230 L 250 150 L 205 75"/>
+  <!-- LCL marker: where curves are near meeting when lifted; mark around 850mb-ish gap -->
+  <circle cx="290" cy="308" r="5" fill="none" stroke="var(--amber)" stroke-width="2"/>
+  <line x1="290" y1="308" x2="410" y2="300" stroke="var(--amber)" stroke-width="1" stroke-dasharray="3 3"/>
+  <text class="ann" x="415" y="296" fill="var(--amber)">LCL ≈ cloud base</text>
+  <text class="anndim" x="415" y="310">where lifted air first saturates</text>
+  <!-- labels on curves -->
+  <text class="ann" x="210" y="72" fill="var(--red)">Temperature</text>
+  <text class="ann" x="120" y="80" fill="var(--green)">Dewpoint</text>
+  <!-- spread callouts -->
+  <text class="anndim" x="150" y="150">wide gap = DRY aloft</text>
+  <text class="anndim" x="300" y="352">curves close = moist &amp; sticky low down</text>
+  <text class="svg-lbl-big" x="10" y="200" transform="rotate(-90 10 200)">PRESSURE (mb)</text>
+</svg>
+<p class="chart-cap">A real sounding: the red temperature curve always sits to the right of the green dewpoint curve. Near the ground they're close (moist air). Higher up they split apart (dry air). The gap <em>is</em> the humidity, read at a glance.</p>
+
+<h3>The LCL — where the cloud starts</h3>
+<p>Grab a bubble of surface air and shove it upward. As it rises it cools. Because it's cooling, at some height it gets cold enough that its moisture condenses — and that exact height is the <b>LCL</b> (Lifting Condensation Level). In plain terms: <b>the LCL is the base of the cloud.</b> It's why the flat bottoms of cumulus clouds all sit at the same height on a given day — every bubble of air hits its LCL at the same level. A <em>low</em> LCL (moist air, curves close together low down) means low cloud bases, which chasers like for tornadoes; a high LCL means the cloud base is way up and rain often evaporates before it reaches the ground.</p>
+</section>
+
+<section id="cape">
+<h2>4 · The parcel &amp; CAPE — the storm's fuel</h2>
+
+<p>Now the payoff. Imagine picking up one "parcel" — a bubble — of warm surface air and letting it rise. Two things can happen:</p>
+<ul>
+<li>The parcel cools as it climbs. If it's <b>colder</b> than the air around it, it's heavier than its surroundings, sinks back down, and nothing happens. Stable. Boring.</li>
+<li>If the parcel stays <b>warmer</b> than the air around it, it's lighter — like a hot-air balloon — so it keeps rising <em>on its own</em>. That runaway rising is <b>instability</b>, and a rising column of warm moist air <em>is</em> a thunderstorm updraft.</li>
+</ul>
+
+<p>On the chart, we draw the path the parcel would take (the dashed amber line) and compare it to the environment's real temperature curve (red). Where the <b>parcel is warmer than the environment</b> — the parcel line sits to the <em>right</em> of the red line — the parcel is buoyant. The <b>area</b> of that gap is the single most important number on the chart:</p>
+
+<div class="box why">
+<h4>CAPE = Convective Available Potential Energy</h4>
+<p>CAPE is literally the size of that shaded area, measured in joules per kilogram (<code>J/kg</code>). It's the amount of fuel available to an updraft — how hard the air <em>wants</em> to rise. More area, more violent the storm can be. Rough field ranges:</p>
+<ul>
+<li><b>~1000 J/kg</b> — marginal. Storms possible, usually not severe.</li>
+<li><b>~2500+ J/kg</b> — strong instability. Serious severe-storm potential.</li>
+<li><b>~4000+ J/kg</b> — extreme. Rare, explosive; the sky is a loaded spring.</li>
+</ul>
+</div>
+
+<svg class="chart" viewBox="0 0 560 420" role="img" aria-label="Sounding with the shaded CAPE area between the parcel path and the environment temperature, plus a capping inversion">
+  <rect x="70" y="30" width="440" height="330" fill="none" stroke="#26384a" stroke-width="1.4"/>
+  <g>
+    <line class="gridmajor" x1="70" y1="360" x2="510" y2="360"/><text class="svg-lbl" x="34" y="364">1000</text>
+    <line class="grid" x1="70" y1="295" x2="510" y2="295"/><text class="svg-lbl" x="42" y="299">850</text>
+    <line class="grid" x1="70" y1="230" x2="510" y2="230"/><text class="svg-lbl" x="42" y="234">700</text>
+    <line class="gridmajor" x1="70" y1="150" x2="510" y2="150"/><text class="svg-lbl" x="42" y="154">500</text>
+    <line class="grid" x1="70" y1="75" x2="510" y2="75"/><text class="svg-lbl" x="42" y="79">300</text>
+  </g>
+  <!-- CAPE shaded area: between environment temp (red) on the left and parcel path (amber dashed) on the right, from ~750mb up to ~250mb -->
+  <path class="cape" d="M 300 218 L 285 150 L 270 75 L 300 75 L 340 150 L 360 218 Z"/>
+  <!-- small CIN (cap) shaded near 800-850mb where parcel is COLDER than env (parcel left of env) -->
+  <path class="cin" d="M 320 295 L 312 262 L 300 218 L 318 218 L 330 262 L 336 295 Z"/>
+  <!-- environment TEMPERATURE (red): note a warm bump ~850-800mb = the cap/inversion, then cools aloft -->
+  <path class="tempcurve" d="M 350 360 L 345 320 L 355 295 L 336 262 L 300 218 L 285 150 L 265 75"/>
+  <!-- PARCEL path (amber dashed): rises from surface, cools; left of env in cap layer, right of env above -->
+  <path class="parcel" d="M 350 360 L 340 320 L 328 295 L 312 262 L 300 218 L 300 150 L 300 75"/>
+  <!-- dewpoint faint for context -->
+  <path class="dewcurve" d="M 320 360 L 312 320 L 305 295 L 275 230 L 235 150" opacity="0.5"/>
+  <!-- labels -->
+  <text class="ann" x="360" y="120" fill="var(--red)">environment</text>
+  <text class="ann" x="360" y="134" fill="var(--red)">temperature</text>
+  <text class="ann" x="248" y="110" fill="var(--amber)">parcel path</text>
+  <text class="ann" x="368" y="200" fill="var(--red)">CAPE</text>
+  <text class="anndim" x="368" y="214">(shaded fuel)</text>
+  <text class="ann" x="345" y="272" fill="var(--purple)">CIN = cap</text>
+  <text class="anndim" x="345" y="286">holds it down</text>
+  <!-- LFC marker where parcel becomes warmer than env -->
+  <circle cx="300" cy="218" r="4.5" fill="none" stroke="#fff" stroke-width="1.6"/>
+  <text class="anndim" x="176" y="222">↑ above here the parcel is</text>
+  <text class="anndim" x="176" y="236">warmer than its surroundings</text>
+  <text class="svg-lbl-big" x="10" y="200" transform="rotate(-90 10 200)">PRESSURE (mb)</text>
+</svg>
+<p class="chart-cap">The shaded red area is CAPE — the region where the rising parcel (amber) is warmer than the environment (red), so it accelerates upward on its own. That's the updraft's fuel. The small purple wedge low down is the cap.</p>
+
+<h3>The cap (CIN) — the lid on the pot</h3>
+<p>Look at that small purple wedge near <code>850 mb</code>. There, the parcel is <em>colder</em> than the environment (a thin warm layer aloft — an inversion — sits on top of the cool surface). A rising bubble hits that warm layer and stalls, like a cork it can't push through. That's <b>CIN</b> — Convective Inhibition — usually just called <b>the cap</b>. It's negative energy: the parcel has to be forced through it before it can reach the free-rising CAPE above.</p>
+
+<div class="box warn">
+<h4>Why a broken cap means explosive storms</h4>
+<p>The cap sounds bad — it stops storms. But it's double-edged, and this is one of the most important ideas in severe weather. All morning, sunshine pumps heat and moisture into the air <em>under</em> the lid, and the CAPE above keeps building because nothing is releasing it. The pot is heating with the lid on. If afternoon heating or a front finally <b>breaks the cap</b>, all that stored CAPE releases at once through a few narrow holes — and you get sudden, violent, isolated supercells instead of a sky full of weak storms. A cap that holds too long = blue-sky bust. A cap that breaks at the right time = the biggest chase day of the year. Reading the cap is reading the day's whole personality.</p>
+</div>
+</section>
+
+<section id="compare">
+<h2>5 · Two soundings, compared — shape into forecast</h2>
+
+<p>This is the whole skill in one move: you glance at the <em>shape</em> of a sounding and know what kind of day it is. Here are the two you'll meet most. Same chart frame, completely different days.</p>
+
+<div class="twocol">
+  <div>
+    <svg class="chart" viewBox="0 0 300 400" role="img" aria-label="A loaded sounding: fat CAPE, moist low levels, good shear">
+      <rect x="46" y="24" width="234" height="320" fill="none" stroke="#26384a" stroke-width="1.4"/>
+      <line class="gridmajor" x1="46" y1="344" x2="280" y2="344"/><text class="svg-lbl" x="14" y="348">1000</text>
+      <line class="grid" x1="46" y1="284" x2="280" y2="284"/><text class="svg-lbl" x="22" y="288">850</text>
+      <line class="grid" x1="46" y1="220" x2="280" y2="220"/><text class="svg-lbl" x="22" y="224">700</text>
+      <line class="gridmajor" x1="46" y1="140" x2="280" y2="140"/><text class="svg-lbl" x="22" y="144">500</text>
+      <line class="grid" x1="46" y1="66" x2="280" y2="66"/><text class="svg-lbl" x="22" y="70">300</text>
+      <!-- fat CAPE -->
+      <path class="cape" d="M 168 300 L 150 140 L 132 66 L 170 66 L 205 140 L 220 300 Z"/>
+      <!-- env temp: warm surface, steady cooling, no strong cap -->
+      <path class="tempcurve" d="M 205 344 L 190 300 L 168 220 L 150 140 L 130 66"/>
+      <!-- dewpoint: hugs temp low down (moist), splays a bit aloft -->
+      <path class="dewcurve" d="M 185 344 L 172 300 L 150 220 L 122 140"/>
+      <!-- parcel -->
+      <path class="parcel" d="M 205 344 L 190 300 L 175 220 L 170 140 L 168 66"/>
+      <!-- wind barbs (shear): turning/strengthening with height on right edge -->
+      <g stroke="var(--accent)" stroke-width="1.4" fill="none">
+        <line x1="268" y1="344" x2="278" y2="340"/>
+        <line x1="266" y1="300" x2="278" y2="292"/><line x1="272" y1="296" x2="278" y2="293"/>
+        <line x1="264" y1="220" x2="278" y2="208"/><line x1="270" y1="216" x2="278" y2="210"/><line x1="273" y1="219" x2="278" y2="214"/>
+        <line x1="262" y1="140" x2="278" y2="124"/><line x1="268" y1="136" x2="278" y2="126"/><line x1="271" y1="139" x2="278" y2="129"/>
+      </g>
+      <text class="ann" x="180" y="240" fill="var(--red)">CAPE</text>
+      <text class="anndim" x="180" y="253">huge</text>
+      <text class="anndim" x="52" y="336">moist &amp; close</text>
+      <text class="anndim" x="238" y="120">wind ↑</text>
+      <text class="anndim" x="238" y="133">turns/grows</text>
+    </svg>
+    <p class="chart-cap" style="text-align:center"><b style="color:var(--red)">LOADED</b> — supercell day</p>
+  </div>
+
+  <div>
+    <svg class="chart" viewBox="0 0 300 400" role="img" aria-label="A capped, dry sounding: wide temp-dewpoint spread, strong cap, little CAPE">
+      <rect x="46" y="24" width="234" height="320" fill="none" stroke="#26384a" stroke-width="1.4"/>
+      <line class="gridmajor" x1="46" y1="344" x2="280" y2="344"/><text class="svg-lbl" x="14" y="348">1000</text>
+      <line class="grid" x1="46" y1="284" x2="280" y2="284"/><text class="svg-lbl" x="22" y="288">850</text>
+      <line class="grid" x1="46" y1="220" x2="280" y2="220"/><text class="svg-lbl" x="22" y="224">700</text>
+      <line class="gridmajor" x1="46" y1="140" x2="280" y2="140"/><text class="svg-lbl" x="22" y="144">500</text>
+      <line class="grid" x1="46" y1="66" x2="280" y2="66"/><text class="svg-lbl" x="22" y="70">300</text>
+      <!-- strong CIN wedge (cap) -->
+      <path class="cin" d="M 178 300 L 150 220 L 178 218 L 205 300 Z"/>
+      <!-- env temp: strong warm nose ~800mb = big cap, then cools -->
+      <path class="tempcurve" d="M 200 344 L 205 300 L 178 220 L 150 140 L 128 66"/>
+      <!-- dewpoint: FAR to the left (very dry), big spread -->
+      <path class="dewcurve" d="M 150 344 L 138 300 L 118 220 L 100 140"/>
+      <!-- parcel: stalls at the cap, barely gets right of env -->
+      <path class="parcel" d="M 200 344 L 188 300 L 172 220 L 165 140 L 160 66"/>
+      <text class="ann" x="150" y="255" fill="var(--purple)">strong</text>
+      <text class="ann" x="150" y="268" fill="var(--purple)">cap</text>
+      <text class="anndim" x="52" y="336">huge dry</text>
+      <text class="anndim" x="52" y="349" fill="var(--dim)">spread →</text>
+      <text class="anndim" x="120" y="120">no</text>
+      <text class="anndim" x="112" y="133">real CAPE</text>
+    </svg>
+    <p class="chart-cap" style="text-align:center"><b style="color:var(--purple)">CAPPED / DRY</b> — blue-sky bust</p>
+  </div>
+</div>
+
+<div class="box do">
+<h4>Read the shapes</h4>
+<p><b>LOADED (left):</b> the temp and dewpoint curves <em>hug each other</em> down low (moist, sticky surface = high dewpoints), then a big fat CAPE area opens up above with no serious cap to stop it. The wind barbs on the right edge <em>grow and turn</em> with height — that's <b>shear</b>, which tilts an updraft and lets it rotate. Fat CAPE + strong shear + weak cap = the recipe for <b>supercells and tornadoes</b>. When a forecaster sees this shape, they start packing the car.</p>
+<p><b>CAPPED / DRY (right):</b> the dewpoint curve sits <em>way</em> to the left of the temperature curve — a huge spread, meaning dry air. There's a strong warm nose (the purple cap) that the parcel can't punch through, and barely any CAPE above it. This is a day that <em>feels</em> hot and stormy at the surface but produces nothing but a clear blue sky and disappointed chasers. Learning to spot this shape is how you avoid driving 400 miles for zero storms.</p>
+</div>
+
+<p>That's the entire payoff of the chart. You don't compute anything — you learn what "loaded" and "capped" <em>look like</em>, and after enough soundings your eye reads the day in about three seconds. Everything else is refinement.</p>
+</section>
+
+<section id="summit">
+<h2>6 · Why this is the summit</h2>
+
+<p>Be honest with yourself about where this sits: you don't <em>need</em> the Skew-T to start chasing safely. Radar and watching the sky come first. The Skew-T is the mountain you climb <em>toward</em> — it's the difference between reacting to storms that already exist and forecasting them the night before. It's a <b>Rank 3</b> skill in the <a href="../Academy/academy.html">Academy</a>: aspirational, and completely worth it. The professionals live on this chart precisely because it's the earliest, deepest look at what the atmosphere is about to do.</p>
+
+<div class="box pro">
+<h4>You can draw these yourself in code</h4>
+<p>Every sounding in this trainer was drawn by hand, but the real ones are generated by a Python library called <b>MetPy</b> — the same tool meteorologists use. It downloads a real balloon launch and plots the exact Skew-T you've been reading, computes the CAPE number, marks the LCL, everything. When you're ready, <a href="../Code School/python.html">Code School</a> is where you make your own. There is genuinely no better feeling than pulling this morning's real sounding from a station near you and reading the day off it — in a chart your own code drew.</p>
+</div>
+
+<p>Start by just <em>looking</em>. Pull up a real sounding (the SPC's site and the University of Wyoming both post them free from those twice-daily launches) and find the two curves. Ask only: are they close or far apart down low? Is there a fat CAPE area, and is there a cap on it? That's it. That's reading a Skew-T. The rest is a thousand soundings' worth of practice — and every serious forecaster started exactly where you are now, staring at the slanted lines until, one day, they clicked.</p>
+
+<label class="chk">
+  <input type="checkbox" data-k="skewt_done">
+  <span>I can find the temperature and dewpoint curves, tell dry air from moist by their gap, spot a fat CAPE area, and tell a "loaded" sounding from a "capped" one.</span>
+</label>
+
+</section>
+
+</main>
+</div>
+
+<script>
+// mark current nav section by scroll
+const secs=[...document.querySelectorAll('main section')];
+const links=[...document.querySelectorAll('nav a.sec')];
+function mark(){let cur=secs[0]?.id;for(const s of secs){if(window.scrollY+120>=s.offsetTop)cur=s.id;}
+  links.forEach(a=>a.classList.toggle('cur',a.getAttribute('href')==='#'+cur));}
+window.addEventListener('scroll',mark,{passive:true});mark();
+</script>
+<script>const KEY="stormlab.progress",load=()=>JSON.parse(localStorage.getItem(KEY)||"{}"),save=o=>localStorage.setItem(KEY,JSON.stringify(o));function paint(){const p=load();document.querySelectorAll(".chk").forEach(l=>{const b=l.querySelector("input");b.checked=!!p[b.dataset.k];l.classList.toggle("on",b.checked);});}document.querySelectorAll(".chk input").forEach(b=>b.onchange=()=>{const p=load();p[b.dataset.k]=b.checked;save(p);paint();});paint();</script>
+</body>
+</html>
