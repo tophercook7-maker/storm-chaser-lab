@@ -70,6 +70,16 @@
 #spotter{--acc:var(--accent)}
 #analyst{--acc:var(--amber)}
 #chaser {--acc:var(--purple)}
+/* the capstone — finishing the whole thing */
+#graduate{--acc:#ffd24a}
+#graduate.cert{border-width:3px;
+  background:linear-gradient(180deg,#1c1810,#12100a);
+  box-shadow:0 0 40px rgba(255,210,74,.10)}
+#graduate .inner{padding-top:30px}
+#graduate .rankname{font-size:33px;letter-spacing:-.6px}
+#graduate .kicker{color:var(--acc);letter-spacing:4px}
+.gradintro{border-left-color:var(--amber) !important}
+.gradintro h4{color:#ffd24a !important}
 
 /* ══════════ PRINT ══════════ */
 @media print{
@@ -108,6 +118,7 @@
   <a href="#spotter">Spotter</a>
   <a href="#analyst">Analyst</a>
   <a href="#chaser">Chaser-in-Training</a>
+  <a href="#graduate">★ Storm Chaser (final)</a>
   <div style="border-top:1px solid var(--line);margin:14px 0 8px"></div>
   <a href="../⚡ START HERE.html">← The Station</a>
   <a href="../Academy/academy.html">The Academy</a>
@@ -124,7 +135,8 @@
   <h1><span class="num">CERTIFICATES</span>Rank Certificates</h1>
   <p class="lede">Real milestones, not participation ribbons. Each certificate below stays
      locked until you finish every step of that rank in the Academy. When you earn one,
-     print it and hang it up — you did the work.</p>
+     print it and hang it up — you did the work. Clear all four ranks and the final one
+     unlocks: <b>Storm Chaser</b> — for finishing the whole station.</p>
 
   <div class="box why" id="intronote">
     <h4>What this certificate is (and isn't)</h4>
@@ -252,6 +264,36 @@
   <div class="lockmsg" data-lockmsg-for="chaser"></div>
   <div class="certbtns" data-btns-for="chaser"></div>
 
+  <!-- GRADUATE — the whole thing -->
+  <div class="cert locked" id="graduate" data-rank="5">
+    <div class="inner">
+      <div class="status">Locked</div>
+      <svg class="seal" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" style="width:96px;height:96px">
+        <circle cx="50" cy="50" r="46" class="fillnone"/>
+        <circle cx="50" cy="50" r="39" class="fillnone" stroke-dasharray="1 3"/>
+        <!-- laurels -->
+        <path d="M26 40 C18 52 20 66 30 74" class="fillnone" stroke-width="2.5"/>
+        <path d="M74 40 C82 52 80 66 70 74" class="fillnone" stroke-width="2.5"/>
+        <!-- lightning bolt -->
+        <path d="M56 20 L36 54 L49 54 L44 80 L66 44 L53 44 Z" fill="currentColor" stroke="none"/>
+      </svg>
+      <div class="kicker">Storm Chaser Station · Full Certification</div>
+      <div class="rankname">Storm Chaser</div>
+      <p class="tagline">Completed the entire Storm Chaser Station — every rank, every lesson,
+         every trainer. Watches the sky, reads the radar, codes the data, and knows exactly
+         what it takes to do this for real.</p>
+      <div class="presented">This certifies that</div>
+      <div class="holder" data-holder>—</div>
+      <div class="callsign" data-callsign></div>
+      <div class="footline">
+        <div class="f"><div class="lab">Date earned</div><div class="val" data-date>—</div></div>
+        <div class="f issuer"><div class="lab">Issued by</div><div class="val">Storm Chaser Station</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lockmsg" data-lockmsg-for="graduate"></div>
+  <div class="certbtns" data-btns-for="graduate"></div>
+
   <p id="howto" style="color:var(--dim);font-size:14px;margin-top:24px">
     New here, or a certificate stuck at "locked"? Every step lives in
     <a href="../Academy/academy.html">The Academy</a> — check the boxes as you finish each one,
@@ -271,6 +313,9 @@
     analyst:{n:3,title:"Analyst",keys:["r3-spc","r3-nums","r3-skewt","r3-cap","r3-cs89","r3-station","r3-cocorahs"]},
     chaser:{n:4,title:"Chaser-in-Training",keys:["r4-longgame","r4-math","r4-ham","r4-mesonet","r4-numbers"]}
   };
+  // the capstone: earned only when every step of all four ranks is done
+  RANKS.graduate={n:5,title:"Storm Chaser",grad:true,
+    keys:[].concat(RANKS.rookie.keys,RANKS.spotter.keys,RANKS.analyst.keys,RANKS.chaser.keys)};
 
   function readProgress(){
     try{ var o=JSON.parse(localStorage.getItem(PKEY)||"{}"); return (o&&typeof o==="object")?o:{}; }
@@ -328,11 +373,18 @@
       if(dateEl) dateEl.textContent="—";
       var pct=Math.round(done/total*100);
       if(lockBox){
-        lockBox.innerHTML=
-          '<div><b>'+done+' of '+total+'</b> steps complete — finish Rank '+r.n+
-          ' in the Academy to unlock this certificate.</div>'+
-          '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
-          '<div><a href="../Academy/academy.html#rank'+r.n+'">Go to Rank '+r.n+' →</a></div>';
+        if(r.grad){
+          lockBox.innerHTML=
+            '<div><b>'+done+' of '+total+'</b> steps done across all four ranks — earn every rank to graduate.</div>'+
+            '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
+            '<div><a href="../Academy/academy.html">Go to the Academy →</a></div>';
+        }else{
+          lockBox.innerHTML=
+            '<div><b>'+done+' of '+total+'</b> steps complete — finish Rank '+r.n+
+            ' in the Academy to unlock this certificate.</div>'+
+            '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
+            '<div><a href="../Academy/academy.html#rank'+r.n+'">Go to Rank '+r.n+' →</a></div>';
+        }
       }
       if(btnBox) btnBox.innerHTML="";
     }
